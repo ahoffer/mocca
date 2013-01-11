@@ -1,0 +1,12 @@
+#!/bin/bash
+
+for filename in *.png
+do
+num=${filename:4:3}
+num=$((10#$num - 1))
+newnum=$(printf "%03d" "$num")
+newname="test"$newnum'.png'
+#echo $newname;
+mv $filename $newname
+
+done
