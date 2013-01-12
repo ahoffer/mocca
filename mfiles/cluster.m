@@ -1,40 +1,39 @@
-function results=cluster(data, width, ktrials, discrim_set_size, beta, num_clusters)
+function results=cluster(data, width, ktrials, discrim_set_size, beta, num_clusters, subspace_overlap, object_overlap)
   
-  %Initialize variables
+%  Subspace Overlap: This parameter allows the user to control the extent
+%  to which the subspaces spanned by two clusters may differ and yet still 
+%  be considered close enough to check for object overlap.
+%
+%  Object Overlap: This parameter controls how much the objects or points 
+%  of two clusters may overlap with one another. Object overlap is only 
+%  considered if the subspaces spanned by the two clusters are close enough 
+%  as determined by subspace overlap.
+  
+  
+  %--Initialize variables--
+  %These varaibles must be OUTSIDE the ktrials loop
   results = zeros;
   discrim_set_idxs = [];
-  shuffle_idx = 1;
   recorded_clusters = 0;
-  start = 1;
   num_dims = columns(data);
   num_points = rows(data);
+  shuffle_idx = 1;
   
   %--Randomize (indexes of) points in the dataset--
   %The number of samples needed for discriminating sets depends on the size 
   %of each sample and the number of trials
   shuffle_size = ktrials * discrim_set_size;
-
-  %Shuffle the points
-  %Note: Discriminating sets should not contain duplicate points.
-  %Using randperm instead of randi reduces likelihood that the 
-  %same point appears multiple times in the same discriminating set.
-  shuffle = randperm(num_points);
-  while(columns(shuffle) < shuffle_size)
-    shuffle = [shuffle randperm(num_points)];
-  end
+  shuffled_array = shuffle(shuffle_size, num_points);
 
   %--SEPC Algorithm--
   for i = 1:ktrials
-    %--Create discriminating set--
-    stop = start + discrim_set_size - 1;
-    discrim_set_idxs = shuffle(1, start:stop);
-    start = stop + 1;
-    
-    %Create discriminating set without duplicates
+
+    %--Create discriminating set without duplicates--
     %<<Should we pull discriminating points out of the pool after they successfully discover a cluster?>>
+   discrim_set_idxs = [];
     while (columns(discrim_set_idxs) < discrim_set_size)
-      discrim_set_idxs(1, end+1) = shuffle(1, shuffle_idx);
-      shuffle_idx = shuffle_idx +1
+      discrim_set_idxs(1, end+1) = shuffled_array(1, shuffle_idx);
+      shuffle_idx = shuffle_idx +1;
       discrim_set_idxs = unique(discrim_set_idxs);
     end   
 

@@ -1,13 +1,8 @@
 function myrun
-  global x;
-  x = [ 
-  50,75,0;
-  100,100,0;
-  150,85,5000;
-  0,0,0;
-  100,100,100;
-  10,10,10];
 
-  [dataName, attributeName, attributeType, data] = arffread("default.arff");
+  [dataName, attributeName, attributeType, data] = arffread('../data/S1500.arff');
+  scrubbed_data = data(:, 1:end-1);
   
-  sepc(data, 50, .2, 0.8)
+  %cluster(data, width, ktrials, discrim_set_size, beta, num_clusters, subspace_overlap, object_overlap)
+  results = cluster(scrubbed_data, 50, 10000, 2, .9, 15, -1, -1);
+  savecsv('results.txt', results, columns(scrubbed_data));

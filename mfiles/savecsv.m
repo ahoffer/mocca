@@ -1,4 +1,4 @@
-function savecsv(results, num_dims, filename)
+function savecsv(filename, results, num_dims)
 
   %--Open file--
   myfile = fopen(filename, 'w');

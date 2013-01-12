@@ -1,6 +1,35 @@
 function [subspace, mycluster]=trial(data, width, discrim_set_idxs)
+%INPUT/OUTPUT
+%
+%   subspace
+%       A row vector whose length is equal to number of dimensions in the 
+%       data set and whose values are "1" or "0". A value of "1" means 
+%       the cluster congregates in that dimension. A value of "0" means it 
+%       does not congregate in that dimesion.  For example, [1 1 0 0 1] 
+%       describes a subspace where points congregate in the first, second 
+%       and fifth dimensions. 
+%
+%   mycluster
+%       The cluster that was found. It is a row vector whose elements are 
+%       indexes into the data set. The indexes are 1-based, not zero-based. 
+%       The vectors legnth is equal to the number of points in the cluster.
+%       The variable is named "mycluster" because the work "cluster" conflicts
+%       with the "cluster.m" file
+%
+%   data
+%       The data set to cluster. 
+%       Rows correspond to points. 
+%       Column correspond to dimensions.
+%
+%   width
+%       The width as specificed in the SEPC algorithm.
+%
+%   discrim_set_idxs
+%       Indexes into rows of the data set. Sepcifies the points in the 
+%       data to sed as the SEPC discriminating set. It is a row vector.
+%
+%   
 
-  %--Create subspace vector--
   %Create combinations of every point in the discriminating set
   combos = nchoosek(discrim_set_idxs, 2);
   
@@ -22,12 +51,10 @@ function [subspace, mycluster]=trial(data, width, discrim_set_idxs)
     span = span + abs(diff);
   end
 
-  %Subspace is a logical (1s and 0s) vector
-  %If the discriminating set congregates in a dimension,
-  %The value of the element is 1. Otherwise the value is 0.
+  %--Create subspace vector--
   subspace = span < width;
 
-  %--Find the clusters--
+  %--Find congregating points--
   %Create vectors of max/min values of the columns in the
   %discriminating set. 
   disriminating_points = data(discrim_set_idxs, :);
