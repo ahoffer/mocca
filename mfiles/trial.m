@@ -1,16 +1,16 @@
-function [mycluster, subspace]=trial(data, width, discrim_set_idx)
+function [subspace, mycluster]=trial(data, width, discrim_set_idxs)
 
   %--Create subspace vector--
   %Create combinations of every point in the discriminating set
-  combos = nchoosek(discrim_set_idx, 2);
+  combos = nchoosek(discrim_set_idxs, 2);
   
   %Assume every column in the data represents one dimension
-  dims = size(data, 2);
-  num_points = size(data, 1);
+  num_dims = columns(data);
+  num_points = rows(data);
 
   %Span vector holds the sum of absolute differences between pairs
   %of points in the discriminating set
-  span = zeros(1, dims);
+  span = zeros(1, num_dims);
 
   %Iterate over every point combination and sum the absolute
   %differences
@@ -30,7 +30,7 @@ function [mycluster, subspace]=trial(data, width, discrim_set_idx)
   %--Find the clusters--
   %Create vectors of max/min values of the columns in the
   %discriminating set. 
-  disriminating_points = data(discrim_set_idx, :);
+  disriminating_points = data(discrim_set_idxs, :);
   max_vals = repmat(max(disriminating_points), num_points, 1);
   min_vals = repmat(min(disriminating_points), num_points, 1);
 
@@ -45,9 +45,8 @@ function [mycluster, subspace]=trial(data, width, discrim_set_idx)
   %logical NOT of the subspace vector.
   subspace_cluster = fullspace_cluster | repmat(~subspace, num_points, 1);
 
-  %Find the indexes of the instances in the subspace cluster
-  %That is, find the rows where all the columns are true
+  %Find the indexes of the rows where all the columns are true
   %All the values are true if every element in the row is 1
-  cluster_rows = sum(subspace_cluster, 2) == dims;
-  mycluster = find(cluster_rows);
-  
+  congregating_points = sum(subspace_cluster, 2) == num_dims;
+  mycluster = find(congregating_points)';
+ 
