@@ -1,4 +1,4 @@
-function [subspace, mycluster]=trial(data, width, discrim_set_idxs)
+function [subspace, mycluster]=trial(data, width, discrim_points)
 %INPUT/OUTPUT
 %
 %   subspace
@@ -24,56 +24,43 @@ function [subspace, mycluster]=trial(data, width, discrim_set_idxs)
 %   width
 %       The width as specificed in the SEPC algorithm.
 %
-%   discrim_set_idxs
-%       Indexes into rows of the data set. Sepcifies the points in the 
-%       data to sed as the SEPC discriminating set. It is a row vector.
-%
-%   
+%   discrim_set_size
+%       Scalar. Number of points to use in a discriminating set.
 
-  %Create combinations of every point in the discriminating set
-  combos = nchoosek(discrim_set_idxs, 2);
-  
-  %Assume every column in the data represents one dimension
-  num_dims = columns(data);
-  num_points = rows(data);
+  %--Create max and min values in each dimension from the discriminating set.
+  maxs = max(discrim_points);
+  mins = min(discrim_points);
 
-  %Span vector holds the sum of absolute differences between pairs
-  %of points in the discriminating set
-  span = zeros(1, num_dims);
-
-  %Iterate over every point combination and sum the absolute
-  %differences
-  %<<Is there a way to do this without a loop?>>
-  for ii = 1:size(combos, 1)
-    r1 = combos(ii, 1);
-    r2 = combos(ii, 2);
-    diff = data(r1,:) - data(r2,:);
-    span = span + abs(diff);
-  end
+  %--Create the extents of the discriminating points in all dimensions.
+  discrim_set_span = maxs - mins;
 
   %--Create subspace vector--
-  subspace = span < width;
+  subspace = discrim_set_span <= width;
 
   %--Find congregating points--
-  %Create vectors of max/min values of the columns in the
-  %discriminating set. 
-  disriminating_points = data(discrim_set_idxs, :);
-  max_vals = repmat(max(disriminating_points), num_points, 1);
-  min_vals = repmat(min(disriminating_points), num_points, 1);
+  %Create matrices of max/min values
+  num_points = rows(data);
+  allowance = width - discrim_set_span;
+  upper_bounds = maxs + allowance;
+  lower_bounds = mins - allowance;
 
   %The fullspace cluster is a logical matrix.
-  %It is the set of instances that congregate in all dimensions.
-  x1 = data <= (max_vals + width);
-  x2 = data >= (min_vals - width);
-  fullspace_cluster =  x1 & x2;
+  %If a point is inside the hypercude in a particular dimension,
+  %then value of the matrix for that point and dimesion is 1.
+  upper = repmat(upper_bounds, num_points, 1);
+  lower = repmat(lower_bounds, num_points, 1);
+  % size(lower)
+  % size(upper)
+  % size(data)
+  % num_points
+  fullspace_cluster = (data <= upper) & (data >= lower);
 
   %The subspace cluster is is less restrictive than the fullspace
   %cluster. It is the logical OR of the fullspace cluster with the
   %logical NOT of the subspace vector.
   subspace_cluster = fullspace_cluster | repmat(~subspace, num_points, 1);
 
-  %Find the indexes of the rows where all the columns are true
-  %All the values are true if every element in the row is 1
-  congregating_points = sum(subspace_cluster, 2) == num_dims;
+  %Find the indexes of the rows where all the values are true
+  congregating_points = all(subspace_cluster, 2);
   mycluster = find(congregating_points)';
  

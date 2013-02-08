@@ -1,121 +1,117 @@
-function results=cluster(data, width, ktrials, discrim_set_size, beta, num_clusters, max_subspace_overlap, max_object_overlap)
-global pts
-%  Subspace Overlap: This parameter allows the user to control the extent
+function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, num_clusters_threshold, subspace_overlap_threshold, object_overlap_threshold)
+
+%  Subspace Overlap: Range is (0,1). This parameter allows the user to control the extent
 %  to which the subspaces spanned by two clusters may differ and yet still 
 %  be considered close enough to check for object overlap.
 %
-%  Object Overlap: This parameter controls how much the objects or points 
+%  Object Overlap: Range is (0,1). This parameter controls how much the objects or points 
 %  of two clusters may overlap with one another. Object overlap is only 
 %  considered if the subspaces spanned by the two clusters are close enough 
 %  as determined by subspace overlap.
 
   %--Initialize variables--
   %These varaibles must be OUTSIDE the ktrials loop
-  results = zeros;
-  discrim_set_idxs = [];
   num_saved_clusters = 0;
   num_dims = columns(data);
   num_points = rows(data);
-  shuffle_idx = 1;
+  num_points_threshold = round(alpha * num_points);
   
-  %--Randomize (indexes of) points in the dataset--
-  %The number of samples needed for discriminating sets depends on the size 
-  %of each sample and the number of trials
-  shuffle_size = ktrials * discrim_set_size;
-  shuffled_array = shuffle(shuffle_size, num_points);
-
   %--SEPC Algorithm--
-  for i = 1:ktrials
+  for k = 1:ktrials
+    
+    %--Create the set of discriminating points as a row vector
+    indexes = randi(num_points, 1, discrim_set_size);
+    discrim_points = data(indexes, :);
+    [clstr.subspace, clstr.objects] = trial(data, width, discrim_points);
 
-    %--Create discriminating set without duplicates--
-    %<<Should we pull discriminating points out of the pool after they successfully discover a cluster?>>
-   discrim_set_idxs = [];
-    while (columns(discrim_set_idxs) < discrim_set_size)
-      discrim_set_idxs(1, end+1) = shuffled_array(1, shuffle_idx);
-      shuffle_idx = shuffle_idx +1;
-      discrim_set_idxs = unique(discrim_set_idxs);
-    end   
+    %--Compute cluster quality--      
+    num_congregating_dims = sum(clstr.subspace);
+    clstr.cardinality = columns(clstr.objects);
+    clstr.quality = quality(clstr.cardinality, num_congregating_dims, beta);
+    clstr.num_congregating_dims = num_congregating_dims;
 
-    %--Create cluster from the discriminating set--
-    [subspace, mycluster] = trial(data, width, discrim_set_idxs);  
+    %--Decide to accept or reject the cluster--
+    %------------------------------------------
+    %--If this is the first cluster, save it--
+     if (num_saved_clusters < 1)   
+      results(1) = clstr;
+      num_saved_clusters = 1;
+    else
+      %----Test for similarity to other subspaces----
+      dims_too_similar = false;        
+      %Find the number of dimensions which are different between the recorded
+      %subspaces and the current subspace. 
+      %Sum along the rows to create an (n x 1) column vector.
+      subspace_copies = repmat(clstr.subspace, num_saved_clusters, 1);
 
-    %--Computer cluster quality--      
-    num_congregating_dims = sum(subspace);
-    cluster_cardinality = columns(mycluster);
-    quality = cluster_cardinality / (beta ^ num_congregating_dims);
-   
-    %--Test for similarity to recorded clusters--
-    %
-    %If there is at least one other cluster, test its dissimilarity
-    %to the current cluster
-    
-    too_similar_dims = false;  
-    
-    if (num_saved_clusters > 0)
-      subspaces = results(:,2:num_dims+1);
-      subspace_copies = repmat(subspace, num_saved_clusters, 1);
-      
-      %Find the number of dimension which are different between the recorded
-      %subspaces and the current subspace and then sum along the rows to
-      %create a column vector. 
-      overlap = sum(not(xor(subspace_copies, subspaces)), 2);
-      normalized_overlap = max(overlap) / num_dims;
-      too_similar_dims = normalized_overlap > max_subspace_overlap;
-    end      
-    
-    %Matlab does not like jagged arrays. Pad cluster indexes with 0s. 
-    %Use num_points+1 to avoid overwriting the last element in the array
-    mycluster = pad(mycluster, num_points+1);
-    
-    %Check for object overlap
-    %Do not check if subspace overlap is too large - waste
-    num_common = 0;
-    normalized_common = 0;
-    pts = 0;
-   
-    if (num_saved_clusters > 0)      
-      cluster_copies = repmat(mycluster, num_saved_clusters, 1);
-      saved_clusters = results(:, num_dims+3:end);
-      %<<Need a Matlab guru to remove iteration>>
-       for j = 1:rows(results)
-        num_common = max(num_common, columns(intersect(mycluster, saved_clusters(j,end-1))));
-        pts = results(j, num_dims+2);
-        normalized_common = num_common / (cluster_cardinality + pts);
-       end
-    end  
-    
-    too_similar_objects = normalized_common > max_object_overlap;
-    
-    %--Record or do not record a cluster--
-    %If input parameter <num_clusters> is -1,  record all clusters
-    %If there are fewer cluster than <num_clusters>,  store the cluster
-    capture = not(too_similar_objects || too_similar_dims);
-    
-
-    %If maximum number of cluster are saved, check quality and replace the 
-    %lowest quality cluster, if necessary.
-    if(capture && num_saved_clusters == num_clusters)
-      %Get lowest quality cluster and its index
-      [min_quality, min_row_idx] = min(results(:, 1));
-      if (quality > min_quality)
-        %Delete lowest quality cluster
-        results(min_row_idx, :) = [];
-      else
-        capture = false;
-      end 
-    end 
-      
-    %Update results. Append a row to the array.
-    if (capture)
-      if(num_saved_clusters == 0)
-        results = [quality, subspace, cluster_cardinality, mycluster];
-      else 
-        results = [results; quality, subspace, cluster_cardinality, mycluster];
+      max_overlapping_dims = 0;
+      normalized_overlap = 0;
+      for i = 1:num_saved_clusters
+        num_overlapping_dims = sum(clstr.subspace & results(i).subspace);
+        if num_overlapping_dims > max_overlapping_dims
+          max_overlapping_dims = num_overlapping_dims;
+          num_dims_other_clstr = results(i).num_congregating_dims;
+          normalized_overlap = max_overlapping_dims / min(clstr.num_congregating_dims, num_dims_other_clstr)
+        end
       end
-      %Update number of recorded clusters
-      num_saved_clusters = rows(results);
-    end
+      dims_too_similar = normalized_overlap > subspace_overlap_threshold;
+     
+      %Take the largest number in the column and normalize it by the number of dimension
+      %in the lower dimensional subspace
 
-  end %for loop
+        % [max_num_overlap, index] = max(num_overlapping_dims)
+        % num_dims_other_clstr = results(index).num_congregating_dims
 
+      %---------------------------------------------------------- 
+      
+      %----Test for similarity to other clusters' point sets----
+      objects_too_similar = false;
+      max_num_common = 0;
+      normalized_common = 0;
+      
+      for j = 1:num_saved_clusters
+        num_common = columns(intersect(clstr.objects, results(j).objects));
+        if (num_common > max_num_common);
+          max_num_common = num_common;
+          normalized_common = num_common / min(clstr.cardinality, results(j).cardinality);
+        end
+      end    
+      objects_too_similar = normalized_common > object_overlap_threshold;
+      %----------------------------------------------------------    
+
+      %----Test for minimum number of points----
+      too_few_objects = clstr.cardinality < num_points_threshold;
+      
+      %-----Record or do not record a cluster-----
+      capture = not(objects_too_similar && dims_too_similar || too_few_objects);
+
+      %----Drop lowest quality cluster if necessary-----
+      %If maximum number of cluster are saved, check quality and replace the 
+      %lowest quality cluster, if necessary.
+      if(capture && num_saved_clusters == num_clusters_threshold)
+        %Get lowest quality cluster and its index
+        [min_quality, min_row_idx] = min([results.quality]);
+        if (clstr.quality > min_quality)
+          %Delete lowest quality cluster
+          results(min_row_idx) = [];
+        else
+          capture = false;
+        end 
+      end 
   
+      %Update results. Append a row to the array.
+      if (capture)
+        results(num_saved_clusters+1) = clstr;
+      end
+    end 
+    %Results is a (1 x n) row vector of individual clusters
+    %That is how structures work
+    num_saved_clusters = columns(results);
+    
+    %Progress report
+    if mod(k, 1000) == 0
+      fprintf('%d of %d ktrials\n', k, ktrials)
+    end
+    
+  end %for loop
+ 
