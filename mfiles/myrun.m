@@ -10,9 +10,9 @@ fname = '../data/N30.arff';
   width = 10;
   alpha = 0.1;
   beta = 0.3;
-  num_clusters = 15;
+  num_clusters = 5;
   max_subspace_overlap = .9;
-  max_object_overlap = 1.0;
+  max_object_overlap = 0.8;
   epsilon = 0.05;
   num_dims = columns(scrubbed_data);
   
@@ -24,3 +24,9 @@ fname = '../data/N30.arff';
 
   results = cluster(scrubbed_data, width, k, s, alpha, beta, num_clusters, max_subspace_overlap, max_object_overlap);
   %savecsv('results.txt', results, num_dims);
+  
+  results.cardinality
+  results.quality
+  
+
+  

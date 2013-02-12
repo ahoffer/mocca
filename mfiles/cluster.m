@@ -51,7 +51,7 @@ function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, nu
         if num_overlapping_dims > max_overlapping_dims
           max_overlapping_dims = num_overlapping_dims;
           num_dims_other_clstr = results(i).num_congregating_dims;
-          normalized_overlap = max_overlapping_dims / min(clstr.num_congregating_dims, num_dims_other_clstr)
+          normalized_overlap = max_overlapping_dims / min(clstr.num_congregating_dims, num_dims_other_clstr);
         end
       end
       dims_too_similar = normalized_overlap > subspace_overlap_threshold;
@@ -70,7 +70,7 @@ function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, nu
       normalized_common = 0;
       
       for j = 1:num_saved_clusters
-        num_common = columns(intersect(clstr.objects, results(j).objects));
+        num_common = columns(intersect(clstr.objects, results(j).objects))
         if (num_common > max_num_common);
           max_num_common = num_common;
           normalized_common = num_common / min(clstr.cardinality, results(j).cardinality);
@@ -110,7 +110,7 @@ function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, nu
     
     %Progress report
     if mod(k, 1000) == 0
-      fprintf('%d of %d ktrials\n', k, ktrials)
+      fprintf('%d of %i ktrials\n', k, ktrials)
     end
     
   end %for loop
