@@ -1,3 +1,4 @@
 # Build folder and log file
+hs*log
 build/
 build.log

@@ -1,4 +1,4 @@
-function [subspace, mycluster]=trial(data, width, discrim_points)
+function [subspace, clstr]=trial(data, width, discrim_points)
 %INPUT/OUTPUT
 %
 %   subspace
@@ -9,12 +9,10 @@ function [subspace, mycluster]=trial(data, width, discrim_points)
 %       describes a subspace where points congregate in the first, second
 %       and fifth dimensions.
 %
-%   mycluster
+%   clstr
 %       The cluster that was found. It is a row vector whose elements are
 %       indexes into the data set. The indexes are 1-based, not zero-based.
 %       The vectors legnth is equal to the number of points in the cluster.
-%       The variable is named "mycluster" because the work "cluster" conflicts
-%       with the "cluster.m" file
 %
 %   data
 %       [n x d]
@@ -26,18 +24,19 @@ function [subspace, mycluster]=trial(data, width, discrim_points)
 %       The width as specificed in the SEPC algorithm.
 %
 %   discrim_points
-%       [p, d]
-%       The actual point values of the discriminating set
+%       [o x d]
+%       The actual object values of the discriminating set. Each object
+%       is a row in the matrix.
 
 %--Create max and min values in each dimension from the discriminating set.
-maxs = max(discrim_points)
-mins = min(discrim_points)
+maxs = max(discrim_points);
+mins = min(discrim_points);
 
 %--Create the extents of the discriminating points in all dimensions.
-discrim_set_span = maxs - mins
+discrim_set_span = maxs - mins;
 
 %--Create subspace vector--
-subspace = discrim_set_span <= width
+subspace = discrim_set_span <= width;
 
 %--If the entire subspace is zero, it means the discriminating set does
 %not congregate in any dimension. If the algorithm is allowed to continue
@@ -48,9 +47,9 @@ subspace = discrim_set_span <= width
 %congreating points. The results is that every point in the data sets is
 %included in the cluster.
 %Problem solves with an early return.
-if ~any(subspace)
+if isnull(subspace)
     subspace = [];
-    mycluster = [];
+    clstr = [];
     return
 end
 
@@ -79,4 +78,4 @@ subspace_cluster = fullspace_cluster | repmat(~subspace, num_points, 1);
 
 %Find the indexes of the rows where all the values are true
 congregating_points = all(subspace_cluster, 2);
-mycluster = find(congregating_points)';
+clstr = find(congregating_points)';
