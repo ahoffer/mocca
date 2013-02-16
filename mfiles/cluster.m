@@ -13,118 +13,199 @@ function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, nu
 %These varaibles must be OUTSIDE the ktrials loop
 num_saved_clusters = 0; %#ok<*NASGU>
 num_objs = rows(data);
+num_dims = columns(data);
 num_objs_threshold = round(alpha * num_objs);
+
+%************ DEBUG**************
+% ktrials=3
 
 %--SEPC Algorithm--
 for k = 1:ktrials
+  
+  %--Create discriminating set points as a row vector
+  discrim_set = randi(num_objs, 1, discrim_set_size);
+  discrim_objects=data(discrim_set, :);
+  
+  %*********** DEBUG **************
+%   d=[20 22; 21 21; 21 21; 21 22; 10 11; 11 10];
+%   discrim_set_size=2;
+%   idx = k*2 - 1;
+%   discrim_set = [idx, idx+1];
+%   discrim_objects=d(discrim_set, :);
+  
+  
+  %--Search for a new cluster--
+  [clstr.subspace, clstr.objects] = trial(data, width, discrim_objects);
+  
+  %--If the subspace is null, we failed to detect a cluster.
+  %Return to top of loop
+  if notnull(clstr.subspace)
     
-    %--Create discriminating set points as a row vector
-    discrim_set = randi(num_objs, 1, discrim_set_size);
-    discrim_objects = data(discrim_indexes, :)
-    [clstr.subspace, clstr.objects] = trial(data, width, discrim_objects);
+    %--Compute cluster quality--
+    clstr.cardinality = columns(clstr.objects);
     
-    %--If the subspace is null, we failed to detect a cluster.
-    %Return to top of loop
-    if notnull(clstr.subspace)
+    %----Test for minimum number of points----
+    if clstr.cardinality > num_objs_threshold
+      clstr.discrim_set = discrim_set;
+      clstr.num_congregating_dims = sum(clstr.subspace);
+      clstr.quality =...
+        quality(clstr.cardinality, clstr.num_congregating_dims, beta);
+      
+      
+      %--Decide to accept or reject the cluster--
+      %------------------------------------------
+      %--If this is the first cluster, save it
+      if (num_saved_clusters < 1)
+        results(1) = clstr;
+        num_saved_clusters = 1; %#ok<*NASGU>
+      else
+        %----Test for similarity to other subspaces----
         
-        %--Compute cluster quality--
-        clstr.discrim_set = discrim_set;
-        clstr.cardinality = columns(clstr.objects);
-        clstr.num_congregating_dims = sum(clstr.subspace);
-        clstr.quality = quality(clstr.cardinality, clstr.num_congregating_dims, beta);
+        %NOTE: Ask Clark about his case. There could be a cluster that
+        %overlaps in fewer dimesions but has a larger normalized
+        %overlap. Does that present challenges?
+        %
+        %For example:
+        %   subspace A = [0 1 1 1 1]
+        %   subspace B = [1 0 0 0 0]
+        %   subspace C = [1 1 0 1 1]
+        %
+        %   A overlap B = 1/min(1,4) =   1 = 100%
+        %   A overlap C = 3/min(5,4) = 3/4 = 75%
         
-        %--Decide to accept or reject the cluster--
-        %------------------------------------------
-        %--If this is your first cluster, save it
-        if (num_saved_clusters < 1)
-            results(1) = clstr;
-            num_saved_clusters = 1;
-            
-            %DEBUG
-            disp('loop!');
-            
-        else
-            %----Test for similarity to other subspaces----
-            
-            %--Initialize variable. Assume this cluster subspace does not 
-            %overlap with another cluster's subspace.
-            dims_too_similar = false;
-            
-            %Find the number of dimensions which are different between
-            %the recorded subspaces and the current subspace.
-            %Sum along the rows to create an (n x 1) column vector.
-            
-            subspace_copies = repmat(clstr.subspace, num_saved_clusters, 1);
-            max_overlapping_dims = 0;
-            normalized_overlap = 0;
-            for i = 1:num_saved_clusters
-                num_overlapping_dims = sum(clstr.subspace & results(i).subspace);
-                if num_overlapping_dims > max_overlapping_dims
-                    max_overlapping_dims = num_overlapping_dims;
-                    num_dims_other_clstr = results(i).num_congregating_dims;
-                    normalized_overlap = max_overlapping_dims / min(clstr.num_congregating_dims, num_dims_other_clstr);
-                end
-            end
-            dims_too_similar = normalized_overlap > subspace_overlap_threshold;
-            
-            %DEBUG
-            return
-            
-            %Take the largest number in the column and normalize it by the number of dimension
-            %in the lower dimensional subspace
-            
-            % [max_num_overlap, index] = max(num_overlapping_dims)
-            % num_dims_other_clstr = results(index).num_congregating_dims
-            
-            %----------------------------------------------------------
-            
-            %----Test for similarity to other clusters' point sets----
-            objects_too_similar = false;
-            max_num_common = 0;
-            normalized_common = 0;
-            
-            for j = 1:num_saved_clusters
-                num_common = columns(intersect(clstr.objects, results(j).objects))
-                if (num_common > max_num_common);
-                    max_num_common = num_common;
-                    normalized_common = num_common / min(clstr.cardinality, results(j).cardinality);
-                end
-            end
-            objects_too_similar = normalized_common > object_overlap_threshold;
-            %----------------------------------------------------------
-            
-            %----Test for minimum number of points----
-            too_few_objects = clstr.cardinality < num_objs_threshold;
-            
-            %-----Record or do not record a cluster-----
-            capture = not(objects_too_similar && dims_too_similar || too_few_objects);
-            
-            %----Drop lowest quality cluster if necessary-----
-            %If maximum number of cluster are saved, check quality and replace the
-            %lowest quality cluster, if necessary.
-            if(capture && num_saved_clusters == num_clusters_threshold)
-                %Get lowest quality cluster and its index
-                [min_quality, min_row_idx] = min([results.quality]);
-                if (clstr.quality > min_quality)
-                    %Delete lowest quality cluster
-                    results(min_row_idx) = [];
-                else
-                    capture = false;
-                end
-            end
-            
-            %Update results. Append a row to the array.
-            if (capture)
-                results(num_saved_clusters+1) = clstr;
-            end
-        end
-        %Results is a (1 x n) row vector of individual clusters
-        %That is how structures work
+        
+        %TODO: Ask Clark about this defintion of subsapce overlap.
+        %Determine normalized overlap between clusters A and B is defined:
+        %
+        %   (#dims in common) / min(#dims in A, #dims in B)
+        %
+        
+        %Create a column vector whose values are the number of
+        %overlapping dimensions between the current cluster and the
+        %recorded clusters. For example:
+        %
+        %  subspace of current cluster = [1 0 1]
+        %  subsapce of recorded clusters =
+        %     [0 1 1]
+        %     [1 1 1]
+        %     [1 0 1]
+        %     [0 0 1]
+        %
+        % Resulting column vector =
+        %     [1]
+        %     [2]
+        %     [3]
+        %     [1]
+        
+        %NOTE: results is a structure for results.subspace returns a comma
+        %sepated list. That list can be turned into a row vector by
+        %enclosing the list in brackets [ ]. The actual layout of the
+        %matrices puts the subspaces in columns concatenated together.
+        subspace_curr=repmat([clstr.subspace]', 1, num_saved_clusters);
+        subspace_recorded=reshape([results.subspace], num_dims, []);
+        temp=subspace_curr & subspace_recorded;
+        overlapping_dims=sum(temp);
+        
+        %Create vectors for the number of dims in the current cluster
+        num_dims_current_cluster=...
+          repmat(clstr.num_congregating_dims, 1, num_saved_clusters);
+        num_dims_recorded_clusters=[results.num_congregating_dims];
+        
+        %Create "divisor" vector
+        divisor = min(num_dims_current_cluster, num_dims_recorded_clusters);
+        
+        %Create normalized overlap column vector
+        normalized_overlap=overlapping_dims ./ divisor;
+        
+        %--If any value in the normalized overlap vector is greater than
+        %the overlap threshold, then the current cluster overlaps at least
+        %one recorded cluster's subspace
+        temp = normalized_overlap > subspace_overlap_threshold;
+        overlapping_cluster_indexes=find(temp);
+        
+        %----Test for similarity to other clusters' point sets----
+        %Subspace overlap cannot, by itself, disquality a cluster.
+        %Current cluster is disqualified if its subspace overlaps too much with
+        %a cluster whose AND there is too much object overlap.
+        
+        %IDEA: I could use bit vectors to record which objects
+        %are in a cluster. Then I could use vector operations to
+        %determine overlap. For example:
+        %
+        %  cluster objects A = [1 1 0 0 0 1]
+        %  cluster objects B = [1 0 0 0 0 1]
+        %  sum(A & B)
+        %
+        %Clusters A and B have two object in common.
+        %This works well for clusters with a small number of
+        %objects. BETTER IDEA! Use sparse arrays instead of regular
+        %vectors. But wait, would that really be any better? Sparse arrays
+        %are probably implemented as some kind of linked data structure and
+        %I bet you loose the benefit of fast vector operatrions on linked
+        %data structures.
+        
+        %TODO: Mention in student report that a bit vector is a
+        %fine way to describer a lower dimensional subspace, but
+        %at some point it becomes dumb. If there are 12,000
+        %dimensions, then it would be much easier to store the
+        %list of congregating dimeions instead of representing the
+        %subsapce as a bit vector.
+        
+        %----Test for similarity to other clusters' point sets----
+        %         objects_too_similar = false;
+        %         max_num_common = 0;
+        %         normalized_common = 0;
+        %
+        %TODO: Implement FAST intersection code. As long the lists of
+        %objects in the clusters are sorted, use this trick to speed up set
+        %intersections by several orders of magnitude
+        %
+        % a = randi(1000,100,1);
+        % b = randi(1000,100,1);
+        % intersection = a(ismembc(a,b))'
+        %
+        
+        %TODO: Implement as parallel for. Instead of saving values to un-
+        %synchronized varaibles, store each value in a vector indexed by
+        %the loop variable, j. For example: vec(j) = num_common. The value
+        %of j.
+        
+        max_num_common=0;
+        normalized_common=0;
+        num_overlapping_subspaces=columns(overlapping_cluster_indexes);
+        
+        for j = 1:num_overlapping_subspaces
+          idx=overlapping_cluster_indexes(j);
+          other_clstr=results(idx);
+          num_common=columns(intersect(clstr.objects, other_clstr.objects));
+          if (num_common > max_num_common);
+            max_num_common=num_common;
+            smallest_cardinality = ...
+              min(clstr.cardinality, other_clstr.cardinality);
+            normalized_common=num_common / smallest_cardinality;
+          end %if-test
+        end %for-loop
+        
+        if normalized_common < object_overlap_threshold
+          
+          %-----Record cluster-----
+          %Results is a (1 x n) row vector of individual clusters
+          %That is how structures work
+          results(num_saved_clusters+1) = clstr;
+          
+        end %if-test for first cluster
+        
         num_saved_clusters = columns(results);
         
         %Progress report
         if mod(k, 1000) == 0
-            fprintf('%d of %i ktrials\n', k, ktrials)
-        end
-    end % if subspace not null
+          fprintf('%d of %i ktrials\n', k, ktrials)
+        end %if-test for printing progress
+      end %if-test subspace/object overlap
+    end %if-test for alpha (min. cluster size)
+  end %if-test subspace not null
+  
+  %--Clean out the old cluster object--
+  clstr = [];
+  
 end %for loop
