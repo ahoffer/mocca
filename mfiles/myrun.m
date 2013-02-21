@@ -1,32 +1,25 @@
-function myrun
-%fname = '../data/DB1500.arff';
-fname = '../data/N30.arff';
+function [out, all_results]=myrun
+javaaddpath('C:\Program Files\Weka-3-7\weka.jar');
+wekaOBJ = loadARFF('iris.arff');
+[mdata,featureNames,targetNDX,stringVals,relationName] = weka2matlab(wekaOBJ);
+data=mdata(:, 1:end-1);
+actual_classes=mdata(:, end);
 
-  [dataName, attributeName, attributeType, data] = arffread(fname);
-  scrubbed_data = data(:, 1:end-1);
-  %scrubbed_data = data(:, 1:9);
+width=1.5;
+alpha=.2;
+beta=.2;
+epsilon=0.01;
+subspace_overlap_threshold=.9;
+object_overlap_threshold=.5;
 
-  k = 10000;
-  width = 10;
-  alpha = 0.1;
-  beta = 0.3;
-  num_clusters = 5;
-  max_subspace_overlap = .9;
-  max_object_overlap = 0.8;
-  epsilon = 0.05;
-  num_dims = columns(scrubbed_data);
-  
-  k = ktrials(epsilon, alpha, beta, num_dims)
-  s = s_est(num_dims, beta)
-  
-  % discrim_set = scrubbed_data(10:12, :);
-  % [subspace, mycluster]=trial(scrubbed_data(1:75, :), width, discrim_set);
-
-  results = cluster(scrubbed_data, width, k, s, alpha, beta, num_clusters, max_subspace_overlap, max_object_overlap);
-  %savecsv('results.txt', results, num_dims);
-  
-  results.cardinality
-  results.quality
-  
-
-  
+idx=0;
+for width = linspace(0,4,500)
+  result=sepc(data, width, alpha, beta, epsilon, subspace_overlap_threshold, object_overlap_threshold);
+  if ~isempty(result)
+    idx = idx+1;
+    fone=f1(actual_classes, result);
+    out(idx, 1) = width;
+    out(idx, 2) = fone;
+    all_results(idx).result=result;
+  end
+end

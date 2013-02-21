@@ -1,4 +1,8 @@
-function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, num_clusters_threshold, subspace_overlap_threshold, object_overlap_threshold) %#ok<*STOUT>
+function results=cluster(data, width, alpha, beta, ...
+  subspace_overlap_threshold,...
+  object_overlap_threshold, ...
+  num_trials, ...
+  discrim_set_size)
 
 %  Subspace Overlap: Range is (0,1). This parameter allows the user to control the extent
 %  to which the subspaces spanned by two clusters may differ and yet still
@@ -10,28 +14,29 @@ function results=cluster(data, width, ktrials, discrim_set_size, alpha, beta, nu
 %  as determined by subspace overlap.
 
 %--Initialize variables--
-%These varaibles must be OUTSIDE the ktrials loop
+%These varaibles must be OUTSIDE the num_trials loop
 num_saved_clusters = 0; %#ok<*NASGU>
 num_objs = rows(data);
 num_dims = columns(data);
-num_objs_threshold = round(alpha * num_objs);
+min_cluster_cardinality = round(alpha * num_objs);
+found_at_least_one_cluster = false;
 
 %************ DEBUG**************
-% ktrials=3
+% num_trials=3
 
 %--SEPC Algorithm--
-for k = 1:ktrials
+for k = 1:num_trials
   
   %--Create discriminating set points as a row vector
   discrim_set = randi(num_objs, 1, discrim_set_size);
   discrim_objects=data(discrim_set, :);
   
   %*********** DEBUG **************
-%   d=[20 22; 21 21; 21 21; 21 22; 10 11; 11 10];
-%   discrim_set_size=2;
-%   idx = k*2 - 1;
-%   discrim_set = [idx, idx+1];
-%   discrim_objects=d(discrim_set, :);
+  %   d=[20 22; 21 21; 21 21; 21 22; 10 11; 11 10];
+  %   discrim_set_size=2;
+  %   idx = k*2 - 1;
+  %   discrim_set = [idx, idx+1];
+  %   discrim_objects=d(discrim_set, :);
   
   
   %--Search for a new cluster--
@@ -45,7 +50,7 @@ for k = 1:ktrials
     clstr.cardinality = columns(clstr.objects);
     
     %----Test for minimum number of points----
-    if clstr.cardinality > num_objs_threshold
+    if clstr.cardinality > min_cluster_cardinality
       clstr.discrim_set = discrim_set;
       clstr.num_congregating_dims = sum(clstr.subspace);
       clstr.quality =...
@@ -56,6 +61,7 @@ for k = 1:ktrials
       %------------------------------------------
       %--If this is the first cluster, save it
       if (num_saved_clusters < 1)
+        found_at_least_one_cluster = true;
         results(1) = clstr;
         num_saved_clusters = 1; %#ok<*NASGU>
       else
@@ -156,14 +162,7 @@ for k = 1:ktrials
         %         max_num_common = 0;
         %         normalized_common = 0;
         %
-        %TODO: Implement FAST intersection code. As long the lists of
-        %objects in the clusters are sorted, use this trick to speed up set
-        %intersections by several orders of magnitude
-        %
-        % a = randi(1000,100,1);
-        % b = randi(1000,100,1);
-        % intersection = a(ismembc(a,b))'
-        %
+        
         
         %TODO: Implement as parallel for. Instead of saving values to un-
         %synchronized varaibles, store each value in a vector indexed by
@@ -177,7 +176,19 @@ for k = 1:ktrials
         for j = 1:num_overlapping_subspaces
           idx=overlapping_cluster_indexes(j);
           other_clstr=results(idx);
-          num_common=columns(intersect(clstr.objects, other_clstr.objects));
+          
+          % FAST intersection code. As long the lists of objects in the clusters
+          %are sorted, use this trick to speed up set
+          %intersections by several orders of magnitude
+          %
+          % a = randi(1000,100,1);
+          % b = randi(1000,100,1);
+          % intersection = a(ismembc(a,b))'
+          %
+          object_intersection=...
+            clstr.objects(ismembc(clstr.objects, other_clstr.objects));
+          
+          num_common=columns(object_intersection);
           if (num_common > max_num_common);
             max_num_common=num_common;
             smallest_cardinality = ...
@@ -199,13 +210,18 @@ for k = 1:ktrials
         
         %Progress report
         if mod(k, 1000) == 0
-          fprintf('%d of %i ktrials\n', k, ktrials)
+          fprintf('%d of %i num_trials\n', k, num_trials)
         end %if-test for printing progress
       end %if-test subspace/object overlap
-    end %if-test for alpha (min. cluster size)
+    end %if-test for min. cluster size
   end %if-test subspace not null
   
   %--Clean out the old cluster object--
   clstr = [];
   
 end %for loop
+
+%Weird error about results not assigned
+if ~found_at_least_one_cluster
+  results = [];
+end

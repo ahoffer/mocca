@@ -30,7 +30,7 @@ if nargin > 1,
 	error('Too many input arguments!');
 end
 % read whole string
-wholeData = textread(fileName,'%s','delimiter','\n','whitespace','');
+wholeData = textscan(fileName,'%s','delimiter','\n','whitespace','');
 atRelation = '@relation';
 atAttribute = '@attribute';
 atData = '@data';
@@ -39,7 +39,7 @@ k=0;
 %************************************************************************
 %% Finding data name
 for i=1:noOfLines
-	k = findstr(wholeData{i},atRelation);
+	k = strfind(wholeData{i},atRelation);
 	if k ~= 0;
 		lineAtRelation = i;
 		[token,dataName] = strtok(wholeData{lineAtRelation});
