@@ -202,6 +202,8 @@ for k = 1:num_trials
           %-----Record cluster-----
           %Results is a (1 x n) row vector of individual clusters
           %That is how structures work
+          clstr.objects
+          
           results(num_saved_clusters+1) = clstr;
           
         end %if-test for first cluster
