@@ -1,4 +1,4 @@
-%Test SEPC on randomly skewed data
+%Test SEPC on randomly data
 
 %Bring Figure window to the foreground
 shg;
@@ -10,24 +10,23 @@ yy = 2;
 
 %Iterature over the covariance of the X and Y values to provide
 %different amount of correlation (+, 0, -)
-for xy = linspace(-2, 2, 3)
+for xy = linspace(-2, 2, 15)
   %Reset the drawing context
-  hold off
-  
-  
+  hold off;
+   
   %Create distribution data
-  A = mvnrnd([0 0] , [xx xy; xy yy], 100);
+  A = mvnrnd([0 0], [xx xy; xy yy], 100);
   
   %Get principal components of data
   coeff = pca(A);
   
   %Get SEPC clsuters
-  results=sepc(A,1, 0.1, 0.3, 0.01, .4, 0.1);
+  results=sepc(A,1, 0.1, 0.3, 0.01, .4, 0.1, false);
   
   %Get number of clusters and a color map for the cluster
   num_clus= columns(results);
-  cmap = hsv(num_clus);
-  
+  cmap = colormap(prism(num_clus));
+  fprintf('Number of clusters %d\n', num_clus);
   
   %Iterature over the clusters and draw each one in a different color.
   for i=1:num_clus
@@ -40,11 +39,15 @@ for xy = linspace(-2, 2, 3)
     color_vec=cmap(i,:);
     
     %Plot the cluster
-    scatter(clusX, clusY, 50, color_vec, 'filled');
-    
+    if results(i).num_congregating_dims == 2      
+      scatter(clusX, clusY, 80, color_vec, 'filled', 'o');      
+    else
+      scatter(clusX, clusY, 80, color_vec, '+');      
+    end
+        
     %Format the plot
     axis('square')
-    grid on;
+    %grid on;
     xlabel('X Axis');
     ylabel('Y Axis');
     xlim([-5, 6]);
@@ -71,13 +74,14 @@ for xy = linspace(-2, 2, 3)
   %B = A*coeff;
   %plot(B(:,1), B(:,2), 'g.');
   
-  
-  
   %Pause until keystroke
   w = waitforbuttonpress;
-  if w == 0
-    if CurrentCharacter == 'e'
-      return
-    end
+  key = get(gcf,'CurrentCharacter');
+  disp(key);
+  if key == 'e'
+    closereq
+    return
   end
 end
+
+closereq

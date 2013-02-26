@@ -5,7 +5,7 @@ function value=subspaceoverlap(subspace1, subspace2)
 % do not intersct.
   value = -1;
   
-  same_size = size(subspace1) == size(subspace2)
+  same_size = size(subspace1) == size(subspace2);
   if ( || rows(subspace1) > 1)
     disp 'ERROR COMPUTING SUBSPACE OVERLAP');
     return
@@ -14,4 +14,3 @@ function value=subspaceoverlap(subspace1, subspace2)
   dims = columns(suspace1);
   similarity = sum(not(xor(subspace1, subspace2)))
   value = similarity / dims;
-

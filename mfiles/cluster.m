@@ -2,7 +2,8 @@ function results=cluster(data, width, alpha, beta, ...
   subspace_overlap_threshold,...
   object_overlap_threshold, ...
   num_trials, ...
-  discrim_set_size)
+  discrim_set_size, ...
+  use_pca)
 
 %  Subspace Overlap: Range is (0,1). This parameter allows the user to control the extent
 %  to which the subspaces spanned by two clusters may differ and yet still
@@ -17,7 +18,7 @@ function results=cluster(data, width, alpha, beta, ...
 %These varaibles must be OUTSIDE the num_trials loop
 num_saved_clusters = 0; %#ok<*NASGU>
 num_objs = rows(data);
-num_dims = columns(data);
+num_dims=columns(data);
 min_cluster_cardinality = round(alpha * num_objs);
 found_at_least_one_cluster = false;
 
@@ -27,10 +28,6 @@ found_at_least_one_cluster = false;
 %--SEPC Algorithm--
 for k = 1:num_trials
   
-  %--Create discriminating set points as a row vector
-  discrim_set = randi(num_objs, 1, discrim_set_size);
-  discrim_objects=data(discrim_set, :);
-  
   %*********** DEBUG **************
   %   d=[20 22; 21 21; 21 21; 21 22; 10 11; 11 10];
   %   discrim_set_size=2;
@@ -38,9 +35,29 @@ for k = 1:num_trials
   %   discrim_set = [idx, idx+1];
   %   discrim_objects=d(discrim_set, :);
   
+  %Randomly select discriminating objects
+  discrim_set = randi(num_objs, 1, discrim_set_size);
+  discrim_objects=data(discrim_set, :);
   
+  %PCA
+  if use_pca
+    %Get principal components of data
+    [V,D] = eig(cov(discrim_objects));
+    
+    %%TODO: Use eigen vectors
+    
+    %Rotate the entire data set
+    transformed_data = data * coeff;
+    discrim_objects=data(discrim_set, :);
+    x=data(discrim_set, :);
+    
+  else
+    %No transformation
+    transformed_data = data;
+  end
+   
   %--Search for a new cluster--
-  [clstr.subspace, clstr.objects] = trial(data, width, discrim_objects);
+  [clstr.subspace, clstr.objects] = trial(transformed_data, width, discrim_objects);
   
   %--If the subspace is null, we failed to detect a cluster.
   %Return to top of loop
@@ -202,7 +219,6 @@ for k = 1:num_trials
           %-----Record cluster-----
           %Results is a (1 x n) row vector of individual clusters
           %That is how structures work
-          clstr.objects
           
           results(num_saved_clusters+1) = clstr;
           
