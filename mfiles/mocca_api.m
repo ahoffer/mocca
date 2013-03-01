@@ -29,7 +29,8 @@ end
 
 if discrim_set_size >= rotation_set_size
   fprintf('Size of discriminating set, %d, cannot be >= size of rotation set, %d\nExiting...\n', discrim_set_size, rotation_set_size);
-
+  return
+end
 %fprintf('Number of trials=%d\n', num_trials);
 
 results=mocca(data, width, alpha, beta, ...

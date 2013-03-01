@@ -7,17 +7,18 @@ function results=mocca(data, width, alpha, beta, ...
   rot_set_size,...
   num_pcs)
 
-%  Subspace Overlap: Range is (0,1). This parameter allows the user to control the extent
-%  to which the subspaces spanned by two clusters may differ and yet still
-%  be considered close enough to check for object overlap.
+%  Subspace Overlap: Range is (0,1). This parameter allows the user to
+%  control the extent to which the subspaces spanned by two clusters may
+%  differ and yet still be considered close enough to check for object
+%  overlap.
 %
-%  Object Overlap: Range is (0,1). This parameter controls how much the objects or points
-%  of two clusters may overlap with one another. Object overlap is only
-%  considered if the subspaces spanned by the two clusters are close enough
-%  as determined by subspace overlap.
+%  Object Overlap: Range is (0,1). This parameter controls how much the
+%  objects or points of two clusters may overlap with one another. Object
+%  overlap is only considered if the subspaces spanned by the two clusters
+%  are close enough as determined by subspace overlap.
 
-%--Initialize variables--
-%These varaibles must be OUTSIDE the num_trials loop
+%--Initialize variables-- These varaibles must be OUTSIDE the num_trials
+%loop
 num_saved_clusters = 0; %#ok<*NASGU>
 num_objs = rows(data);
 num_dims=columns(data);
@@ -25,42 +26,40 @@ min_cluster_cardinality = round(alpha * num_objs);
 found_at_least_one_cluster = false;
 
 if use_pca
-  %TODO: Prune unwanted principal components-- run the idea past
-  %Clark. Usually this is controlld by alpha, some percetange of
-  %significance, past which PCs are ignored.
-  fprintf('cluster.m - num_pcs not implemented\n');
+  %TODO: Prune unwanted principal components-- run the idea past Clark.
+  %Usually this is controlld by alpha, some percetange of significance,
+  %past which PCs are ignored.
+  fprintf('mocca.m - num_pcs not implemented\n');
 end
 
 for k = 1:num_trials
   if use_pca
     %Randomly select rotation set and discriminating set
-    rot_set=randi(num_objs, 1, rotation_set_size);
-    discrim_set=randi(rotation_set_size, 1, discrim_set_size);
+    rot_set=randi(num_objs, 1, rot_set_size);
+    discrim_set=randi(rot_set_size, 1, discrim_set_size);
     
     %Find the principal components
-    rot_objs=data(rot_obj, :);
-    coeff=pca(rot_objects);
+    rot_objs=data(rot_set, :);
+    coeff=pca(rot_objs);
     
-    %The most significant principal component is the first column
-    %Re-order the coeff matrix so that the LEAST significant PC
-    %is the first column.
+    %The most significant principal component is the first column Re-order
+    %the coeff matrix so that the LEAST significant PC is the first column.
     rot_mat=fliplr(coeff);
     transformed_data=data*rot_mat;
-    discrim_objects=transformed_data(discrim_set);
+    discrim_objs=transformed_data(discrim_set, :);
 
   else
     %Randomly select discriminating objects
     discrim_set = randi(num_objs, 1, discrim_set_size);
-    discrim_objects=data(discrim_set, :);
+    discrim_objs=data(discrim_set, :);
     transformed_data=data;
   end
   
-  
   %--Search for a new cluster--
-  [clstr.subspace, clstr.objects] = trial(transformed_data, width, discrim_objects);
+  [clstr.subspace, clstr.objects] = trial(transformed_data, width, discrim_objs);
   
-  %--If the subspace is null, we failed to detect a cluster.
-  %Return to top of loop
+  %--If the subspace is null, we failed to detect a cluster. Return to top
+  %of loop
   if notnull(clstr.subspace)
     
     %--Compute cluster quality--
@@ -75,8 +74,8 @@ for k = 1:num_trials
       
       
       %--Decide to accept or reject the cluster--
-      %------------------------------------------
-      %--If this is the first cluster, save it
+      %------------------------------------------ --If this is the first
+      %cluster, save it
       if (num_saved_clusters < 1)
         found_at_least_one_cluster = true;
         results(1) = clstr;
@@ -85,16 +84,15 @@ for k = 1:num_trials
         %----Test for similarity to other subspaces----
         
         %NOTE: Ask Clark about his case. There could be a cluster that
-        %overlaps in fewer dimesions but has a larger normalized
-        %overlap. Does that present challenges?
+        %overlaps in fewer dimesions but has a larger normalized overlap.
+        %Does that present challenges?
         %
         %For example:
-        %   subspace A = [0 1 1 1 1]
-        %   subspace B = [1 0 0 0 0]
-        %   subspace C = [1 1 0 1 1]
+        %   subspace A = [0 1 1 1 1] subspace B = [1 0 0 0 0] subspace C =
+        %   [1 1 0 1 1]
         %
-        %   A overlap B = 1/min(1,4) =   1 = 100%
-        %   A overlap C = 3/min(5,4) = 3/4 = 75%
+        %   A overlap B = 1/min(1,4) =   1 = 100% A overlap C = 3/min(5,4)
+        %   = 3/4 = 75%
         
         
         %TODO: Ask Clark about this defintion of subsapce overlap.
@@ -103,22 +101,16 @@ for k = 1:num_trials
         %   (#dims in common) / min(#dims in A, #dims in B)
         %
         
-        %Create a column vector whose values are the number of
-        %overlapping dimensions between the current cluster and the
-        %recorded clusters. For example:
+        %Create a column vector whose values are the number of overlapping
+        %dimensions between the current cluster and the recorded clusters.
+        %For example:
         %
-        %  subspace of current cluster = [1 0 1]
-        %  subsapce of recorded clusters =
-        %     [0 1 1]
-        %     [1 1 1]
-        %     [1 0 1]
-        %     [0 0 1]
+        %  subspace of current cluster = [1 0 1] subsapce of recorded
+        %  clusters =
+        %     [0 1 1] [1 1 1] [1 0 1] [0 0 1]
         %
         % Resulting column vector =
-        %     [1]
-        %     [2]
-        %     [3]
-        %     [1]
+        %     [1] [2] [3] [1]
         
         %NOTE: results is a structure for results.subspace returns a comma
         %sepated list. That list can be turned into a row vector by
@@ -146,37 +138,33 @@ for k = 1:num_trials
         temp = normalized_overlap > subspace_overlap_threshold;
         overlapping_cluster_indexes=find(temp);
         
-        %----Test for similarity to other clusters' point sets----
-        %Subspace overlap cannot, by itself, disquality a cluster.
-        %Current cluster is disqualified if its subspace overlaps too much with
-        %a cluster whose AND there is too much object overlap.
+        %----Test for similarity to other clusters' point sets---- Subspace
+        %overlap cannot, by itself, disquality a cluster. Current cluster
+        %is disqualified if its subspace overlaps too much with a cluster
+        %whose AND there is too much object overlap.
         
-        %IDEA: I could use bit vectors to record which objects
-        %are in a cluster. Then I could use vector operations to
-        %determine overlap. For example:
+        %IDEA: I could use bit vectors to record which objects are in a
+        %cluster. Then I could use vector operations to determine overlap.
+        %For example:
         %
-        %  cluster objects A = [1 1 0 0 0 1]
-        %  cluster objects B = [1 0 0 0 0 1]
-        %  sum(A & B)
+        %  cluster objects A = [1 1 0 0 0 1] cluster objects B = [1 0 0 0 0
+        %  1] sum(A & B)
         %
-        %Clusters A and B have two object in common.
-        %This works well for clusters with a small number of
-        %objects. BETTER IDEA! Use sparse arrays instead of regular
-        %vectors. But wait, would that really be any better? Sparse arrays
-        %are probably implemented as some kind of linked data structure and
-        %I bet you loose the benefit of fast vector operatrions on linked
-        %data structures.
+        %Clusters A and B have two object in common. This works well for
+        %clusters with a small number of objects. BETTER IDEA! Use sparse
+        %arrays instead of regular vectors. But wait, would that really be
+        %any better? Sparse arrays are probably implemented as some kind of
+        %linked data structure and I bet you loose the benefit of fast
+        %vector operatrions on linked data structures.
         
-        %TODO: Mention in student report that a bit vector is a
-        %fine way to describer a lower dimensional subspace, but
-        %at some point it becomes dumb. If there are 12,000
-        %dimensions, then it would be much easier to store the
-        %list of congregating dimeions instead of representing the
-        %subsapce as a bit vector.
+        %TODO: Mention in student report that a bit vector is a fine way to
+        %describer a lower dimensional subspace, but at some point it
+        %becomes dumb. If there are 12,000 dimensions, then it would be
+        %much easier to store the list of congregating dimeions instead of
+        %representing the subsapce as a bit vector.
         
         %----Test for similarity to other clusters' point sets----
-        %         objects_too_similar = false;
-        %         max_num_common = 0;
+        %         objects_too_similar = false; max_num_common = 0;
         %         normalized_common = 0;
         %
         
@@ -194,13 +182,13 @@ for k = 1:num_trials
           idx=overlapping_cluster_indexes(j);
           other_clstr=results(idx);
           
-          % FAST intersection code. As long the lists of objects in the clusters
-          %are sorted, use this trick to speed up set
-          %intersections by several orders of magnitude
+          % FAST intersection code. As long the lists of objects in the
+          % clusters
+          %are sorted, use this trick to speed up set intersections by
+          %several orders of magnitude
           %
-          % a = randi(1000,100,1);
-          % b = randi(1000,100,1);
-          % intersection = a(ismembc(a,b))'
+          % a = randi(1000,100,1); b = randi(1000,100,1); intersection =
+          % a(ismembc(a,b))'
           %
           object_intersection=...
             clstr.objects(ismembc(clstr.objects, other_clstr.objects));
@@ -216,9 +204,8 @@ for k = 1:num_trials
         
         if normalized_common < object_overlap_threshold
           
-          %-----Record cluster-----
-          %Results is a (1 x n) row vector of individual clusters
-          %That is how structures work
+          %-----Record cluster----- Results is a (1 x n) row vector of
+          %individual clusters That is how structures work
           
           results(num_saved_clusters+1) = clstr;
           
