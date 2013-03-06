@@ -31,7 +31,7 @@ for xy = linspace(-2, 2, 15)
   %   B = fliplr(B);
   
   %Get SEPC clsuters
-  results=mocca_api(A, 1, 0.1, 0.3, 0.01, .4, 0.1, false, 10, -1);
+  results=mocca_api(A, 1, 0.1, 0.3, 0.01, .4, 0.1, true, 10, -1);
   
   %Get number of clusters and a color map for the cluster
   num_clus= columns(results);
@@ -39,7 +39,7 @@ for xy = linspace(-2, 2, 15)
   fprintf('Number of clusters %d\n', num_clus);
   
   %Iterature over the clusters and draw each one in a different color.
-  h(1) = [];
+%  h(1) = [];
   
   for i=1:num_clus
     
@@ -52,9 +52,9 @@ for xy = linspace(-2, 2, 15)
     
     %Plot the cluster
     if results(i).num_congregating_dims == 2
-      h(i)=scatter(clusX, clusY, 80, color_vec, 'filled', 'o');
+      scatter(clusX, clusY, 120, color_vec, 'filled', 'o');
     else
-      h(i)=scatter(clusX, clusY, 80, color_vec, '.');
+      scatter(clusX, clusY, 120, color_vec, 'filled', 'o');
     end
     
     %Turn on hold because we want to plot all the clusters
