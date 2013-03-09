@@ -1,0 +1,301 @@
+[
+  {
+    "symbolicName": "commons-math-1.1",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "9c899e3cf7dcc5a76c8b558623f88a5085161e7a",
+    "jarFileModificationDate": "2009-03-12T18:22:14-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\commons-math-1.1.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "7693a8b190c0d1cc8312dae4e641f1e066403dda",
+    "jarFileModificationDate": "2013-01-20T20:33:41.417-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\jsse.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "fe587c5ea7c6a6e7323ea685f72bb4ff73a67809",
+    "jarFileModificationDate": "2013-01-20T20:33:35.532-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\zipfs.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "890947da04f2c417e475dc332bf1f810c245093c",
+    "jarFileModificationDate": "2013-01-20T20:33:35.519-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\access-bridge-64.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "01babbef30bda72abfc92094958246e23c1a9e57",
+    "jarFileModificationDate": "2013-01-20T20:33:41.502-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\localedata.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "javax.vecmath",
+    "version": {
+      "major": 1,
+      "minor": 5,
+      "micro": 1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "eef9274de6b2d1544bf73b85dff9dbedfaeb0adf",
+    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\vecmath.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "j3dutils",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "39446a9ef38d164a90ea407c021837e7a2495302",
+    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\j3dutils.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "899ef742a79f8a2d04f6e264eb6a74110204ede5",
+    "jarFileModificationDate": "2013-01-20T20:33:35.520-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\dnsns.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "j3dcore",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "6ee13ddf1f6dd1bb21959ab22f36af5eeb714f12",
+    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\j3dcore.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "c4c7923b11e98bc8d1d32bfd2ff6363d212ead80",
+    "jarFileModificationDate": "2013-01-20T20:33:35.528-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\sunec.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "f831655c50b92c41e366442d09511ea84270c45e",
+    "jarFileModificationDate": "2013-01-20T20:33:35.577-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\jce.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "i9-weka",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "6865bd8cf04af6da4f6b32625fc2b27829f571a3",
+    "jarFileModificationDate": "2009-09-14T16:34:28-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-weka.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "i9-subspace",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "a3d5174410a028c4ebb086e02306873b6d8fc06d",
+    "jarFileModificationDate": "2009-08-18T17:02:48-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "a3d1a9689f1c8e36ab64fb669df92076771c42f2",
+    "jarFileModificationDate": "2013-01-20T20:33:35.531-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\sunmscapi.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "3e75ab5e3cc89e4060f50d86aff7c8bd0e16cf00",
+    "jarFileModificationDate": "2013-01-20T20:33:40.968-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\charsets.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "Jama",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "9b34d094c2cc0db66be480334cf881e7da66c9b4",
+    "jarFileModificationDate": "2009-03-10T15:03:46-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\Jama.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "db40bdf56758dd65cf109836063e1eb7c603888c",
+    "jarFileModificationDate": "2013-01-20T20:33:35.579-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\jfr.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "14a816fe223bd2763f3000b132cb48013c1c7fb0",
+    "jarFileModificationDate": "2013-01-20T20:33:35.522-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\jaccess.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jsc",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "af986b6902cbea3cd917abb1e0f8ab0f1ab22277",
+    "jarFileModificationDate": "2009-03-12T18:22:14-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\jsc.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "weka",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "63ff446a3f1f7b86168185d92e37ac77b50eba58",
+    "jarFileModificationDate": "2008-07-15T17:50:34-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\weka.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "23e83d875419762c0f2ff297992e14dde6593a31",
+    "jarFileModificationDate": "2013-01-20T20:33:40.834-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "f791fe49ee9f241e20753364efb79d28e6c67eba",
+    "jarFileModificationDate": "2013-01-20T20:33:35.654-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\resources.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "565df41f8aaa6dceaacc765dde6bec4572c06eed",
+    "jarFileModificationDate": "2013-01-20T20:33:35.529-08:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\sunjce_provider.jar",
+    "javaRuntime": true
+  }
+]
