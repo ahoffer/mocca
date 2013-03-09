@@ -1,6 +1,9 @@
 package weka.subspaceClusterer;
 
 import i9.subspace.base.ArffStorage;
+import i9.subspace.base.Cluster;
+
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 import weka.core.Instances;
@@ -15,27 +18,47 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		runSubspaceClusterer(new Mocca(), argv);
 	}
 
+	/********* ALGORITHM PARAMETERS ************/
 	private double alpha = 0.08;
 	private double beta = 0.35;
 	private double epsilon = 0.05;
-	// Zero means "do not use PCA"
-	private double gamma = 0.00;
+	private double gamma = 0.00; // Zero means "do not use PCA"
 	private double instanceOverlapThreshold = 0.50;
-
 	private double subspaceOverlapThreshold = 0.20;
-
 	private double width = 100.0;
+
+	/********* LOOP INVARIANTS *************/
+	Instances data;
+	int numDims;
+	int numInstances;
+	int numTrials;
+	int discrimSetSize;
+	int rotationSetSize;
+	int minNumInstances;
+
+	/********** LOOP VARIANT STATE **************/
+	ArrayList<Cluster> results = new ArrayList<Cluster>();
 
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
 
-		// Create an ARFF storage object from the Instances object
-		// What is the advantage of that?
-		ArffStorage arffstorage = new ArffStorage(data);
+		// Set loop invariants
+		this.data=data;
+		numDims = data.numAttributes();
+		numInstances = data.numInstances();
+		numTrials = calcNumTrials();
+		minNumInstances = Utils.round(alpha * numInstances);
+		discrimSetSize = calcDiscrimSetSize();
+		rotationSetSize = Utils.round(gamma * numInstances);
+
+		if (!gammaIsValid()) {
+			throw new Exception(
+					"Gamma is invalid. Rotation set size is not equal to or larger than the discriminating set size.");
+		}
 
 		// TODO
-		// Call setSubscapceClusster(List<Cluster>)
-		// setSubspaceClustering();
+		// Call setSubscapceCluster(List<Cluster>)
+		setSubspaceClustering(results);
 
 		// Print results
 		toString();
@@ -218,14 +241,76 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			this.width = w;
 	}
 
-	// TODO: Figure out how to use this feature
-	// @Override
-	// public TechnicalInformation getTechnicalInformation() {
-	// TechnicalInformation info = new TechnicalInformation(Type.ARTICLE);
-	//
-	// info.
-	//
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-}
+	public int calcNumTrials() {
+		double d = numDims;
+		double ln4 = Math.log(4);
+		double log10alpha = Math.log10(alpha);
+		double log10beta = Math.log10(beta);
+
+		// @formatter:off
+		double est =  1 + 4/alpha * Math.pow(d/ln4, log10alpha/log10beta) * Math.log(1 / epsilon);
+		// @formatter:on
+
+		return Utils.round(est);
+	}
+
+	public int calcDiscrimSetSize() {
+		double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
+		int temp = Utils.round(s_est);
+		// Need at least two discriminating points to find a cluster
+		return Math.max(2, temp);
+	}
+
+	private boolean gammaIsValid() {
+		// The rotation set size must equal to or greater than the rotation set
+		// size because the discriminating set is sampled (without replacement)
+		// from the rotation set.
+		// If the algorithm is not using PCA, then the value of gamma is
+		// relevant, and therefore always valid.
+		return !usePca() || rotationSetSize >= discrimSetSize;
+	}
+
+	private boolean usePca() {
+		//If gamma is not greater than zero, then we do not use PCA.
+		return gamma > 0;
+	}
+
+	
+	private void doMocca() throws Exception {
+		
+		weka.filters.unsupervised.instance.Resample sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setInputFormat(data);
+		sampler.setRandomSeed(1); //Make successive invocations repeatable.
+		String filterOpt="-B 1.0";
+		
+		for (int k=0; k < numTrials; k++) {
+			
+			  if (usePca()){
+//			    //Randomly select rotation set and discriminating set
+//			    rot_set=randi(num_objs, 1, rot_set_size);
+//			    discrim_set=randi(rot_set_size, 1, discrim_set_size);
+//			    
+//			    %Find the principal components
+//			    rot_objs=data(rot_set, :);
+//			    coeff=pca(rot_objs);
+//			    
+//			    %The most significant principal component is the first column Re-order
+//			    %the coeff matrix so that the LEAST significant PC is the first column.
+//			    rot_mat=fliplr(coeff);
+//			    transformed_data=data*rot_mat;
+//			    discrim_objs=transformed_data(discrim_set, :);
+//			
+//			    else {
+//			        %Randomly select discriminating objects
+//			        discrim_set = randi(num_objs, 1, discrim_set_size);
+//			        discrim_objs=data(discrim_set, :);
+//			        transformed_data=data;
+//			    }
+			  }//end if
+			
+		}//end for
+		
+	}//end method
+	
+	
+} //end class

@@ -945,3 +945,49 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.eclipse.m2e.logback.appender 4 0 2013-03-08 21:04:02.295
 !MESSAGE Failed to open search index.
+!SESSION 2013-03-09 07:24:18.534 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_11
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2013-03-09 07:24:37.179
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 2 0 2013-03-09 07:24:37.184
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\ahoffer'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.jobs 4 2 2013-03-09 09:57:11.702
+!MESSAGE An internal error occurred during: "Check Debug Command".
+!STACK 0
+java.lang.RuntimeException: Cycle while computing valueorg.eclipse.ui.internal.handlers.LegacyHandlerService$HandlerSelectionFunction@7cc8ebbe
+	at org.eclipse.e4.core.internal.contexts.ValueComputation.get(ValueComputation.java:56)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.internalGet(EclipseContext.java:221)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.get(EclipseContext.java:209)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceImpl.lookUpHandler(HandlerServiceImpl.java:45)
+	at org.eclipse.ui.internal.handlers.E4HandlerProxy.handlerChanged(E4HandlerProxy.java:99)
+	at org.eclipse.core.commands.AbstractHandler.fireHandlerChanged(AbstractHandler.java:78)
+	at org.eclipse.ui.internal.handlers.HandlerProxy.access$0(HandlerProxy.java:1)
+	at org.eclipse.ui.internal.handlers.HandlerProxy$2.handlerChanged(HandlerProxy.java:382)
+	at org.eclipse.core.commands.AbstractHandler.fireHandlerChanged(AbstractHandler.java:78)
+	at org.eclipse.jface.commands.ActionHandler.access$0(ActionHandler.java:1)
+	at org.eclipse.jface.commands.ActionHandler$1.propertyChange(ActionHandler.java:80)
+	at org.eclipse.jface.action.AbstractAction.firePropertyChange(AbstractAction.java:48)
+	at org.eclipse.jface.action.AbstractAction.firePropertyChange(AbstractAction.java:71)
+	at org.eclipse.jface.action.Action.setEnabled(Action.java:577)
+	at org.eclipse.debug.ui.actions.DebugCommandAction.setEnabled(DebugCommandAction.java:167)
+	at org.eclipse.debug.ui.actions.DebugCommandAction$1.setEnabled(DebugCommandAction.java:84)
+	at org.eclipse.debug.internal.ui.commands.actions.UpdateActionsRequest.done(UpdateActionsRequest.java:46)
+	at org.eclipse.debug.core.commands.AbstractDebugCommand$UpdateJob.run(AbstractDebugCommand.java:115)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)

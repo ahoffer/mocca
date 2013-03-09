@@ -6,6 +6,11 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="weka.subspaceClusterer.Mocca"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-t &quot;N30.arff&quot;-c last -a 0.1 -b 0.3 -e 0.05 -s 0.9 -i 0.2 -w 100 -g 0"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="OpenSubspace"/>
 </launchConfiguration>
