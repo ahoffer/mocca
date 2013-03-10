@@ -3,7 +3,6 @@ package weka.subspaceClusterer;
 import i9.subspace.base.Cluster;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Random;
 import java.util.Vector;
 import weka.core.Instances;
 import weka.core.Option;
@@ -35,8 +34,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	int discrimSetSize;
 	int rotationSetSize;
 	int minNumInstances;
-	Random random;
-	weka.filters.unsupervised.instance.Resample sampler;
 
 	/********** LOOP VARIANT STATE **************/
 	ArrayList<Cluster> results = new ArrayList<Cluster>();
@@ -45,13 +42,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	public void buildSubspaceClusterer(Instances data) throws Exception {
 
 		// Set loop invariants
-		sampler = new weka.filters.unsupervised.instance.Resample();
-		sampler.setRandomSeed(1); // Make successive runs repeatable.
-		sampler.setInputFormat(data);
-		sampler.setNoReplacement(true);
-
-		long seed = 1;
-		random = new Random(seed);
 		this.data = data;
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
@@ -286,21 +276,22 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	private void doMocca() throws Exception {
 
+		weka.filters.unsupervised.instance.Resample sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setRandomSeed(1); // Make successive runs repeatable.
+		sampler.setInputFormat(data);
+		sampler.setSampleSizePercent(gamma);
+		sampler.setNoReplacement(false);
 
 		for (int k = 0; k < numTrials; k++) {
 
 			if (usePca()) {
-				//Randomly select rotation set and discriminating set
-				Instances rotationSet = subSamplePercentage(data, gamma);
-				Instances discriminatingSet = subSampleAmount(rotationSet, discrimSetSize);
-		 
-				//Find the principal components
-				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
-				pca.setNormalize(true);
-				
-				pca.setMaximumAttributeNames(-1); //Do not discard any data
-				pca.buildEvaluator(rotationSet);
-				
+				// //Randomly select rotation set and discriminating set
+				Instances rotationSet = Filter.useFilter(data, sampler);
+
+				int x = 0;
+				// discrim_set=randi(rot_set_size, 1, discrim_set_size);
+				//
+				// %Find the principal components
 				// rot_objs=data(rot_set, :);
 				// coeff=pca(rot_objs);
 				//
@@ -324,23 +315,4 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	}// end method
 
-	private Instances subSamplePercentage(Instances dataSet, double percentage)
-			throws Exception {
-
-		double one = 0.99999;
-		if (percentage >= one) {
-			return new Instances(dataSet);
-		}
-
-		sampler.setSampleSizePercent(percentage);
-		return Filter.useFilter(dataSet, sampler);
-	}//end method
-	
-	private Instances subSampleAmount(Instances dataSet, int num) {
-		//Damn you Weka. You win this round.
-		Instances shuffleCopy = new Instances(data);
-		shuffleCopy.randomize(random);
-		return new Instances(data, 0, discrimSetSize);
-	} //end
-	
 } // end class

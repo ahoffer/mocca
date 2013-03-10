@@ -286,21 +286,21 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	private void doMocca() throws Exception {
 
+		weka.filters.unsupervised.instance.Resample sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setRandomSeed(1); // Make successive runs repeatable.
+		sampler.setInputFormat(data);
+		sampler.setSampleSizePercent(gamma);
+		sampler.setNoReplacement(true);
 
 		for (int k = 0; k < numTrials; k++) {
-
+data.numInstances();
 			if (usePca()) {
-				//Randomly select rotation set and discriminating set
-				Instances rotationSet = subSamplePercentage(data, gamma);
-				Instances discriminatingSet = subSampleAmount(rotationSet, discrimSetSize);
-		 
-				//Find the principal components
-				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
-				pca.setNormalize(true);
-				
-				pca.setMaximumAttributeNames(-1); //Do not discard any data
-				pca.buildEvaluator(rotationSet);
-				
+				// //Randomly select rotation set and discriminating set
+				Instances rotationSet = subSample(gamma);
+				int x = 0;
+				// discrim_set=randi(rot_set_size, 1, discrim_set_size);
+				//
+				// %Find the principal components
 				// rot_objs=data(rot_set, :);
 				// coeff=pca(rot_objs);
 				//
@@ -324,23 +324,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	}// end method
 
-	private Instances subSamplePercentage(Instances dataSet, double percentage)
-			throws Exception {
+	private Instances subSample(double percentage) throws Exception {
 
 		double one = 0.99999;
 		if (percentage >= one) {
-			return new Instances(dataSet);
+			return new Instances(data);
 		}
-
 		sampler.setSampleSizePercent(percentage);
-		return Filter.useFilter(dataSet, sampler);
-	}//end method
-	
-	private Instances subSampleAmount(Instances dataSet, int num) {
-		//Damn you Weka. You win this round.
-		Instances shuffleCopy = new Instances(data);
-		shuffleCopy.randomize(random);
-		return new Instances(data, 0, discrimSetSize);
-	} //end
-	
+		return Filter.useFilter(data, sampler);
+
+	}
 } // end class

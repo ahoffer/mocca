@@ -1,15 +1,15 @@
 package weka.subspaceClusterer;
 
+import i9.subspace.base.ArffStorage;
 import i9.subspace.base.Cluster;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Random;
 import java.util.Vector;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
-import weka.filters.Filter;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 	private static final long serialVersionUID = 5624336775621682596L;
@@ -35,8 +35,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	int discrimSetSize;
 	int rotationSetSize;
 	int minNumInstances;
-	Random random;
-	weka.filters.unsupervised.instance.Resample sampler;
 
 	/********** LOOP VARIANT STATE **************/
 	ArrayList<Cluster> results = new ArrayList<Cluster>();
@@ -45,14 +43,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	public void buildSubspaceClusterer(Instances data) throws Exception {
 
 		// Set loop invariants
-		sampler = new weka.filters.unsupervised.instance.Resample();
-		sampler.setRandomSeed(1); // Make successive runs repeatable.
-		sampler.setInputFormat(data);
-		sampler.setNoReplacement(true);
-
-		long seed = 1;
-		random = new Random(seed);
-		this.data = data;
+		this.data=data;
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
 		numTrials = calcNumTrials();
@@ -66,7 +57,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		}
 
 		// TODO
-		doMocca();
+		// Call setSubscapceCluster(List<Cluster>)
 		setSubspaceClustering(results);
 
 		// Print results
@@ -193,7 +184,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	}
 
 	public void setGamma(double g) {
-		if (g >= 0.0 && g <= 1.0) {
+		if (g > 0 && g < 1) {
 			gamma = g;
 		}
 	}
@@ -280,67 +271,46 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	}
 
 	private boolean usePca() {
-		// If gamma is not greater than zero, then we do not use PCA.
+		//If gamma is not greater than zero, then we do not use PCA.
 		return gamma > 0;
 	}
 
+	
 	private void doMocca() throws Exception {
-
-
-		for (int k = 0; k < numTrials; k++) {
-
-			if (usePca()) {
-				//Randomly select rotation set and discriminating set
-				Instances rotationSet = subSamplePercentage(data, gamma);
-				Instances discriminatingSet = subSampleAmount(rotationSet, discrimSetSize);
-		 
-				//Find the principal components
-				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
-				pca.setNormalize(true);
-				
-				pca.setMaximumAttributeNames(-1); //Do not discard any data
-				pca.buildEvaluator(rotationSet);
-				
-				// rot_objs=data(rot_set, :);
-				// coeff=pca(rot_objs);
-				//
-				// %The most significant principal component is the first column
-				// Re-order
-				// %the coeff matrix so that the LEAST significant PC is the
-				// first column.
-				// rot_mat=fliplr(coeff);
-				// transformed_data=data*rot_mat;
-				// discrim_objs=transformed_data(discrim_set, :);
-				//
-				// else {
-				// %Randomly select discriminating objects
-				// discrim_set = randi(num_objs, 1, discrim_set_size);
-				// discrim_objs=data(discrim_set, :);
-				// transformed_data=data;
-				// }
-			}// end if
-
-		}// end for
-
-	}// end method
-
-	private Instances subSamplePercentage(Instances dataSet, double percentage)
-			throws Exception {
-
-		double one = 0.99999;
-		if (percentage >= one) {
-			return new Instances(dataSet);
-		}
-
-		sampler.setSampleSizePercent(percentage);
-		return Filter.useFilter(dataSet, sampler);
+		
+		weka.filters.unsupervised.instance.Resample sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setInputFormat(data);
+		sampler.setRandomSeed(1); //Make successive invocations repeatable.
+		String filterOpt="-B 1.0";
+		
+		for (int k=0; k < numTrials; k++) {
+			
+			  if (usePca()){
+//			    //Randomly select rotation set and discriminating set
+//			    rot_set=randi(num_objs, 1, rot_set_size);
+//			    discrim_set=randi(rot_set_size, 1, discrim_set_size);
+//			    
+//			    %Find the principal components
+//			    rot_objs=data(rot_set, :);
+//			    coeff=pca(rot_objs);
+//			    
+//			    %The most significant principal component is the first column Re-order
+//			    %the coeff matrix so that the LEAST significant PC is the first column.
+//			    rot_mat=fliplr(coeff);
+//			    transformed_data=data*rot_mat;
+//			    discrim_objs=transformed_data(discrim_set, :);
+//			
+//			    else {
+//			        %Randomly select discriminating objects
+//			        discrim_set = randi(num_objs, 1, discrim_set_size);
+//			        discrim_objs=data(discrim_set, :);
+//			        transformed_data=data;
+//			    }
+			  }//end if
+			
+		}//end for
+		
 	}//end method
 	
-	private Instances subSampleAmount(Instances dataSet, int num) {
-		//Damn you Weka. You win this round.
-		Instances shuffleCopy = new Instances(data);
-		shuffleCopy.randomize(random);
-		return new Instances(data, 0, discrimSetSize);
-	} //end
 	
-} // end class
+} //end class

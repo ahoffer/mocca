@@ -297,9 +297,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				//Find the principal components
 				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
 				pca.setNormalize(true);
-				
 				pca.setMaximumAttributeNames(-1); //Do not discard any data
-				pca.buildEvaluator(rotationSet);
 				
 				// rot_objs=data(rot_set, :);
 				// coeff=pca(rot_objs);
