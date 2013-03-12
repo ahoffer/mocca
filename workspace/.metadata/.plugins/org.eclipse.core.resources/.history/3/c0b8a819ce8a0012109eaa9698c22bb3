@@ -1,0 +1,106 @@
+package weka.subspaceClusterer;
+
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Center;
+import weka.filters.unsupervised.attribute.Remove;
+
+import weka.core.Instances;
+import weka.subspaceClusterer.PCA.PrincipleComponent;
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
+
+public class PCA2 {
+
+	// Instances removeClassAttribute(Instances input) throws Exception {
+	//
+	// int classIdx = input.classIndex();
+	// if (classIdx >= 0) {
+	// // get rid of the class column
+	//
+	// int[] todelete = new int[1];
+	// todelete[0] = classIdx;
+	// Remove removeFilter = new Remove();
+	// removeFilter.setAttributeIndicesArray(todelete);
+	// removeFilter.setInvertSelection(false);
+	// removeFilter.setInputFormat(input);
+	// return Filter.useFilter(input, removeFilter);
+	// } else {
+	// return input;
+	// }
+	// }// end method
+
+	// Instance variables
+	Matrix covMatrix;
+	EigenvalueDecomposition eigenstuff;
+	double[] eigenvalues;
+	Matrix eigenvectors;
+	SortedSet<PrincipleComponent> principleComponents;
+	double[] means;
+	public Instances output;
+
+	// Constructor
+	public PCA2(Instances input) throws Exception {
+		Instances centered = center(input);
+		Matrix covMatrix = covariance(centered);
+	}
+
+	// public PCA(double[][] input) {
+	// means = new double[input[0].length];
+	// double[][] cov = getCovariance(input, means);
+	// covMatrix = new Matrix(cov);
+	// eigenstuff = covMatrix.eig();
+	// eigenvalues = eigenstuff.getRealEigenvalues();
+	// eigenvectors = eigenstuff.getV();
+	// double[][] vecs = eigenvectors.getArray();
+	// int numComponents = eigenvectors.getColumnDimension(); // same as num
+	// // rows.
+	// principleComponents = new TreeSet<PrincipleComponent>();
+	// for (int i = 0; i < numComponents; i++) {
+	// double[] eigenvector = new double[numComponents];
+	// for (int j = 0; j < numComponents; j++) {
+	// eigenvector[j] = vecs[i][j];
+	// }
+	// principleComponents.add(new PrincipleComponent(eigenvalues[i],
+	// eigenvector));
+	// }
+	// }// end method
+
+	public Instances center(Instances input) throws Exception {
+		Center filter = new Center();
+		filter.setInputFormat(input);
+		return Filter.useFilter(input, filter);
+	}
+
+	public Matrix covariance(Instances input) throws Exception {
+		// Allocate the covariance matrix
+		// PRECONDITION: There is no class column in the input
+		int dims = input.numAttributes();
+		int numInst = input.numInstances();
+		Matrix covarMatrix = new Matrix(dims, dims);
+
+		// Center the data by subtracting the column means
+		Instances centered = center(input);
+
+		// now compute the covariance matrix
+		for (int row = 0; row < dims; row++) {
+			for (int col = row; col < dims; col++) {
+				double cov_ij, sum = 0;
+				for (int k = 0; k < numInst; k++) {
+					double value1 = centered.instance(k).value(row);
+					double value2 = centered.instance(k).value(col);
+					sum += value1 * value2;
+				}// end for k
+				cov_ij = sum / (double) (numInst - 1);
+				covarMatrix.set(row, col, cov_ij);
+				covarMatrix.set(col, row, cov_ij);
+
+			}// end for j
+		}// end for k
+		return covarMatrix;
+	}// end method
+
+}// end class

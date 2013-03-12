@@ -2,6 +2,13 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
-<fullyQualifiedTypeName name="weka.filters.Filter"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="weka.core.Instances"/>
+<fullyQualifiedTypeName name="weka.filters.Filter"/>
+<fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Center"/>
+<fullyQualifiedTypeName name="i9.data.core.Instance"/>
+<fullyQualifiedTypeName name="weka.core.Instance"/>
+<fullyQualifiedTypeName name="weka.core.Matrix"/>
+<fullyQualifiedTypeName name="Jama.EigenvalueDecomposition"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
 </qualifiedTypeNameHistroy>

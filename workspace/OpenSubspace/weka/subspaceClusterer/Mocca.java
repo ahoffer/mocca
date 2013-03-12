@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
+
+import Jama.EigenvalueDecomposition;
 import weka.core.Instances;
+import weka.core.Matrix;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
@@ -43,6 +46,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
+		//NOTE: The class column has already been removed from the instances
+		
+
+		Jama.Matrix x = Pca.principalComponents(data);
 
 		// Set loop invariants
 		sampler = new weka.filters.unsupervised.instance.Resample();

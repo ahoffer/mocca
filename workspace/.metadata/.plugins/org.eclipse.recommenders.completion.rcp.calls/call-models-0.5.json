@@ -18,5 +18,15 @@
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
     "status": "UNRESOLVED",
     "error": "No call model found for \u0027C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar\u0027. Neither fingerprint \u0027a3d5174410a028c4ebb086e02306873b6d8fc06d\u0027 nor symbolic name \u0027i9-subspace\u0027 are known."
+  },
+  "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace": {
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\u0027. Skipped."
+  },
+  "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\Jama.jar": {
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\Jama.jar",
+    "status": "UNRESOLVED",
+    "error": "No call model found for \u0027C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\Jama.jar\u0027. Neither fingerprint \u00279b34d094c2cc0db66be480334cf881e7da66c9b4\u0027 nor symbolic name \u0027Jama\u0027 are known."
   }
 }

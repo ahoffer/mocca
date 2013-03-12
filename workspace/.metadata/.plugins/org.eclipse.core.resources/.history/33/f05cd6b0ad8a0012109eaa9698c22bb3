@@ -1,0 +1,352 @@
+package weka.subspaceClusterer;
+
+import i9.subspace.base.Cluster;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Random;
+import java.util.Vector;
+import weka.core.Instances;
+import weka.core.Option;
+import weka.core.OptionHandler;
+import weka.core.Utils;
+import weka.filters.Filter;
+
+public class Mocca extends SubspaceClusterer implements OptionHandler {
+	private static final long serialVersionUID = 5624336775621682596L;
+
+	public static void main(String[] argv) {
+		runSubspaceClusterer(new Mocca(), argv);
+	}
+
+	/********* ALGORITHM PARAMETERS ************/
+	private double alpha = 0.08;
+	private double beta = 0.35;
+	private double epsilon = 0.05;
+	private double gamma = 0.00; // Zero means "do not use PCA"
+	private double instanceOverlapThreshold = 0.50;
+	private double subspaceOverlapThreshold = 0.20;
+	private double width = 100.0;
+
+	/********* LOOP INVARIANTS *************/
+	Instances data;
+	int numDims;
+	int numInstances;
+	int numTrials;
+	int discrimSetSize;
+	int rotationSetSize;
+	int minNumInstances;
+	Random random;
+	weka.filters.unsupervised.instance.Resample sampler;
+
+	/********** LOOP VARIANT STATE **************/
+	ArrayList<Cluster> results = new ArrayList<Cluster>();
+
+	@Override
+	public void buildSubspaceClusterer(Instances data) throws Exception {
+
+		//TEST
+		//int x = 0;
+		//PCA2 p = new PCA2(data);
+		//Instances output=p.output;
+		
+		output.toString();
+		// Set loop invariants
+		sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setRandomSeed(1); // Make successive runs repeatable.
+		sampler.setInputFormat(data);
+		sampler.setNoReplacement(true);
+
+		long seed = 1;
+		random = new Random(seed);
+		this.data = data;
+		numDims = data.numAttributes();
+		numInstances = data.numInstances();
+		numTrials = calcNumTrials();
+		minNumInstances = Utils.round(alpha * numInstances);
+		discrimSetSize = calcDiscrimSetSize();
+		rotationSetSize = Utils.round(gamma * numInstances);
+
+		if (!gammaIsValid()) {
+			throw new Exception(
+					"Gamma is invalid. Rotation set size is not equal to or larger than the discriminating set size.");
+		}
+
+		// TODO
+		doMocca();
+		setSubspaceClustering(results);
+
+		// Print results
+		toString();
+	}
+
+	public double getAlpha() {
+		return alpha;
+	}
+
+	public double getBeta() {
+		return beta;
+	}
+
+	public double getEpsilon() {
+		return epsilon;
+	}
+
+	public double getGamma() {
+		return gamma;
+	}
+
+	public double getInstanceOverlapThreshold() {
+		return instanceOverlapThreshold;
+	}
+
+	@Override
+	public String getName() {
+		return "MOCCA";
+	}
+
+	/**
+	 * Gets the current option settings for the OptionHandler.
+	 * 
+	 * @return String[] The list of current option settings as an array of
+	 *         strings
+	 */
+	public String[] getOptions() {
+		String[] options = new String[14]; // = 2 * the number of arguments
+		int current = 0;
+		options[current++] = "-a";
+		options[current++] = "" + alpha;
+		options[current++] = "-b";
+		options[current++] = "" + beta;
+		options[current++] = "-e";
+		options[current++] = "" + epsilon;
+		options[current++] = "-s";
+		options[current++] = "" + subspaceOverlapThreshold;
+		options[current++] = "-i";
+		options[current++] = "" + instanceOverlapThreshold;
+		options[current++] = "-w";
+		options[current++] = "" + width;
+		options[current++] = "-g";
+		options[current++] = "" + gamma;
+		return options;
+	}
+
+	@Override
+	public String getParameterString() {
+		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon
+				+ "; subspace overlap threshold=" + subspaceOverlapThreshold
+				+ "; instance overlap threshold=" + instanceOverlapThreshold
+				+ "; width=" + width + "; gamma=" + gamma;
+	}
+
+	public double getSubspaceOverlapThreshold() {
+		return subspaceOverlapThreshold;
+	}
+
+	public double getWidth() {
+		return width;
+	}
+
+	public String globalInfo() {
+		return "Monte Carlo Cluster Analysis (MOCCA): A Monte "
+				+ "Carlo algorithm that performs sames a few points and determines the dimensions in which the congregate. "
+				+ "The congregating dimeions are defined at the dimensions in which the points are not more farther apart "
+				+ "than some arbitrary width. If the points cluster in any dimensions, the rest of the datat set is searched"
+				+ "to find other instances which also congregate in the found suspace.";
+	}
+
+	/**
+	 * Returns an enumeration of all the available options.
+	 * 
+	 * @return Enumeration An enumeration of all available options.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Enumeration listOptions() {
+		Vector vector = new Vector();
+
+		// Option(description, name, numArguments, synopsis)
+		vector.addElement(new Option("\talpha (default = 0.08)", "alpha", 1,
+				"-a <double>"));
+		vector.addElement(new Option("\tbeta (default = 0.35)", "beta", 1,
+				"-b <double>"));
+		vector.addElement(new Option("\tepsilon (default = 0.05)", "epsilon",
+				1, "-e <double>"));
+		vector.addElement(new Option(
+				"\tsubspace overlap threshold (default = 0.90)",
+				"subsapceOverlapThreshold", 1, "-s <double>"));
+		vector.addElement(new Option(
+				"\tinstance overlap threshold (default = 0.2)",
+				"instanceOverlapThreshold", 1, "-i <double>"));
+		vector.addElement(new Option("\twidth (default = 1.0)", "width", 1,
+				"-w <double>"));
+		vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1,
+				"-g <double>"));
+		return vector.elements();
+	}
+
+	public void setAlpha(double alpha) {
+		if (alpha > 0.0 && alpha < 1.0)
+			this.alpha = alpha;
+	}
+
+	public void setBeta(double beta) {
+		if (beta > 0.0 && beta < 1.0)
+			this.beta = beta;
+	}
+
+	public void setEpsilon(double epsilon) {
+		if (epsilon > 0.0 && epsilon < 1.0)
+			this.epsilon = epsilon;
+	}
+
+	public void setGamma(double g) {
+		if (g >= 0.0 && g <= 1.0) {
+			gamma = g;
+		}
+	}
+
+	public void setInstanceOverlapThreshold(double maxOverlap) {
+		if (maxOverlap > 0.0)
+			subspaceOverlapThreshold = maxOverlap;
+	}
+
+	public void setOptions(String[] options) throws Exception {
+
+		String optionString = Utils.getOption("a", options);
+		if (optionString.length() != 0) {
+			setAlpha(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("b", options);
+		if (optionString.length() != 0) {
+			setBeta(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("e", options);
+		if (optionString.length() != 0) {
+			setEpsilon(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("s", options);
+		if (optionString.length() != 0) {
+			setSubspaceOverlapThreshold(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("i", options);
+		if (optionString.length() != 0) {
+			setInstanceOverlapThreshold(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("w", options);
+		if (optionString.length() != 0) {
+			setWidth(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("g", options);
+		if (optionString.length() != 0) {
+			setGamma(Double.parseDouble(optionString));
+		}
+	}
+
+	public void setSubspaceOverlapThreshold(double maxOverlap) {
+		subspaceOverlapThreshold = maxOverlap;
+	}
+
+	public void setWidth(double w) {
+		if (w > 0.0)
+			this.width = w;
+	}
+
+	public int calcNumTrials() {
+		double d = numDims;
+		double ln4 = Math.log(4);
+		double log10alpha = Math.log10(alpha);
+		double log10beta = Math.log10(beta);
+
+		// @formatter:off
+		double est =  1 + 4/alpha * Math.pow(d/ln4, log10alpha/log10beta) * Math.log(1 / epsilon);
+		// @formatter:on
+
+		return Utils.round(est);
+	}
+
+	public int calcDiscrimSetSize() {
+		double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
+		int temp = Utils.round(s_est);
+		// Need at least two discriminating points to find a cluster
+		return Math.max(2, temp);
+	}
+
+	private boolean gammaIsValid() {
+		// The rotation set size must equal to or greater than the rotation set
+		// size because the discriminating set is sampled (without replacement)
+		// from the rotation set.
+		// If the algorithm is not using PCA, then the value of gamma is
+		// relevant, and therefore always valid.
+		return !usePca() || rotationSetSize >= discrimSetSize;
+	}
+
+	private boolean usePca() {
+		// If gamma is not greater than zero, then we do not use PCA.
+		return gamma > 0;
+	}
+
+	private void doMocca() throws Exception {
+
+
+		for (int k = 0; k < numTrials; k++) {
+
+			if (usePca()) {
+				//Randomly select rotation set and discriminating set
+				Instances rotationSet = subSamplePercentage(data, gamma);
+				Instances discriminatingSet = subSampleAmount(rotationSet, discrimSetSize);
+		 
+				//Find the principal components
+				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
+				pca.setNormalize(true);
+				
+				pca.setMaximumAttributeNames(-1); //Do not discard any data
+				pca.buildEvaluator(rotationSet);
+				
+				// rot_objs=data(rot_set, :);
+				// coeff=pca(rot_objs);
+				//
+				// %The most significant principal component is the first column
+				// Re-order
+				// %the coeff matrix so that the LEAST significant PC is the
+				// first column.
+				// rot_mat=fliplr(coeff);
+				// transformed_data=data*rot_mat;
+				// discrim_objs=transformed_data(discrim_set, :);
+				//
+				// else {
+				// %Randomly select discriminating objects
+				// discrim_set = randi(num_objs, 1, discrim_set_size);
+				// discrim_objs=data(discrim_set, :);
+				// transformed_data=data;
+				// }
+			}// end if
+
+		}// end for
+
+	}// end method
+
+	private Instances subSamplePercentage(Instances dataSet, double percentage)
+			throws Exception {
+
+		double one = 0.99999;
+		if (percentage >= one) {
+			return new Instances(dataSet);
+		}
+
+		sampler.setSampleSizePercent(percentage);
+		return Filter.useFilter(dataSet, sampler);
+	}//end method
+	
+	private Instances subSampleAmount(Instances dataSet, int num) {
+		//Damn you Weka. You win this round.
+		Instances shuffleCopy = new Instances(data);
+		shuffleCopy.randomize(random);
+		return new Instances(data, 0, discrimSetSize);
+	} //end
+	
+} // end class
