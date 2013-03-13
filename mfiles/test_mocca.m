@@ -39,8 +39,7 @@ for xy = linspace(-2, 2, 15)
   fprintf('Number of clusters %d\n', num_clus);
   
   %Iterature over the clusters and draw each one in a different color.
-%  h(1) = [];
-  
+ 
   for i=1:num_clus
     
     %X and Y values of each point in the cluster
