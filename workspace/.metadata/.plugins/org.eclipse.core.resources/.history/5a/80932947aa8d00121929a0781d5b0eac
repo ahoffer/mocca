@@ -1,0 +1,96 @@
+package weka.subspaceClusterer;
+
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Center;
+import weka.core.Instance;
+import weka.core.Instances;
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
+
+public class Pca {
+
+	// Constructor
+	private Pca(Instances input) {
+		this.input = input;
+	}
+
+	// Instance variables
+	public Matrix components;
+	public Instances input;
+
+	// Given an Instances object, return a copy where the attributes
+	// of the instances are mean centered.
+	public static Instances center(Instances input) throws Exception {
+		Center filter = new Center();
+		filter.setInputFormat(input);
+		return Filter.useFilter(input, filter);
+	}
+
+	// Given an Instances object, return (symmetric) covariance matrix
+	// The matrix is a Jama matrix.
+	// PRECONDITION: The instances should be mean-centered before performing
+	// this step
+	public static Matrix covariance(Instances input) throws Exception {
+		// Allocate the covariance matrix
+		// PRECONDITION: There is no class column in the input
+		int dims = input.numAttributes();
+		int numInst = input.numInstances();
+		Matrix covMatrix = new Matrix(dims, dims);
+
+		// Now compute the covariance matrix
+		for (int i = 0; i < dims; i++) {
+			for (int j = i; j < dims; j++) {
+				double cov_ij, sum = 0;
+				for (int k = 0; k < numInst; k++) {
+					Instance inst = input.instance(k);
+					sum += inst.value(i) * inst.value(j);
+				}// end for k
+				cov_ij = sum / (double) (numInst - 1);
+				covMatrix.set(i, j, cov_ij);
+				covMatrix.set(j, i, cov_ij);
+			}// end for j
+		}// end for k
+		return covMatrix;
+	}// end method
+
+	public Pca eval() throws Exception {
+		// Center the data by subtracting the column means
+		Matrix cov = covariance(center(input));
+
+		// Rank should tell us how many non-zero eigenvalues we can expect.
+		int covRank = cov.rank();
+
+		// Calculate the eigvenvectors and eigenvalues of the covariance matrix
+		EigenvalueDecomposition eigenDecomp = cov.eig();
+
+		// Count number of principal components
+		double[] eigenvalues = eigenDecomp.getRealEigenvalues();
+		int numNonZeroEigenVals = 0;
+		for (int i = 0; i < eigenvalues.length; ++i) {
+			if (eigenvalues[i] > 1e-12) {
+				numNonZeroEigenVals++;
+			}
+		}
+
+		// Verify number of non zero eigenvalues is the same as the rank of the
+		// covariance matrix
+		if (numNonZeroEigenVals != covRank) {
+			System.out.println("SOMETHING WHACKY IN PCA");
+		}
+
+		Matrix eigenvectors = eigenDecomp.getV();
+
+		// Strip out eigvenvectors whose corresponding eigenvalues are zero.
+		int size = eigenvectors.getRowDimension();
+		if (size != eigenvectors.getColumnDimension()) {
+			System.out.println("EIGEN VECTORS SHOULD BE SQUARE MATRIX");
+		}
+
+		// Set instance variables
+		components = eigenvectors.getMatrix(0, size - 1, size - covRank,
+				size - 1);
+
+		return this;
+	}// end method
+
+}// end class
