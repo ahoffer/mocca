@@ -1,2 +1,3 @@
 covariance
-eigvenvectors
+eigenvector
+eigenvectors

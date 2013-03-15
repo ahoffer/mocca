@@ -156,6 +156,12 @@
     "javaRuntime": false
   },
   {
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
     "jarFileModificationDate": "2013-03-11T16:43:02.791-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\weka 3.7.3\\src",
     "javaRuntime": false

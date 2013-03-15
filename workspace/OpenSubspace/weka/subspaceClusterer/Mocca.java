@@ -1,18 +1,19 @@
 package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
-import Jama.EigenvalueDecomposition;
 import weka.core.Instances;
-import weka.core.Matrix;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.filters.Filter;
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 	private static final long serialVersionUID = 5624336775621682596L;
@@ -46,11 +47,18 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
-		//NOTE: The class column has already been removed from the instances
+		// NOTE: The class column has already been removed from the instances
+		//System.out.println(data.toString());
+		//Instances c = Pca.center(data);
+		//Matrix cov = Pca.covariance(c);
+		//System.out.println(c.toString());
+		//cov.print(4, 2);
+		//EigenvalueDecomposition eigs = cov.eig();
+		//eigs.getV().print(8, 4);
+		Matrix pc = (new Pca(data)).components;
+		//System.out.println(cov.toString());
+		pc.print(8, 4);
 		
-
-		Jama.Matrix x = Pca.principalComponents(data);
-
 		// Set loop invariants
 		sampler = new weka.filters.unsupervised.instance.Resample();
 		sampler.setRandomSeed(1); // Make successive runs repeatable.
@@ -293,21 +301,21 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	private void doMocca() throws Exception {
 
-
 		for (int k = 0; k < numTrials; k++) {
 
 			if (usePca()) {
-				//Randomly select rotation set and discriminating set
+				// Randomly select rotation set and discriminating set
 				Instances rotationSet = subSamplePercentage(data, gamma);
-				Instances discriminatingSet = subSampleAmount(rotationSet, discrimSetSize);
-		 
-				//Find the principal components
+				Instances discriminatingSet = subSampleAmount(rotationSet,
+						discrimSetSize);
+
+				// Find the principal components
 				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
 				pca.setNormalize(true);
-				
-				pca.setMaximumAttributeNames(-1); //Do not discard any data
+
+				pca.setMaximumAttributeNames(-1); // Do not discard any data
 				pca.buildEvaluator(rotationSet);
-				
+
 				// rot_objs=data(rot_set, :);
 				// coeff=pca(rot_objs);
 				//
@@ -341,13 +349,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		sampler.setSampleSizePercent(percentage);
 		return Filter.useFilter(dataSet, sampler);
-	}//end method
-	
+	}// end method
+
 	private Instances subSampleAmount(Instances dataSet, int num) {
-		//Damn you Weka. You win this round.
+		// Damn you Weka. You win this round.
 		Instances shuffleCopy = new Instances(data);
 		shuffleCopy.randomize(random);
 		return new Instances(data, 0, discrimSetSize);
-	} //end
-	
+	} // end
+
 } // end class
