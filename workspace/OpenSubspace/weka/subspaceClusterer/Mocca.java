@@ -4,15 +4,12 @@ import i9.subspace.base.Cluster;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Random;
 import java.util.Vector;
 
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
-import weka.filters.Filter;
-import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
@@ -25,50 +22,37 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	/********* ALGORITHM PARAMETERS ************/
 	private double alpha = 0.08;
 	private double beta = 0.35;
-	/********* LOOP INVARIANTS *************/
-	Instances data;
-	int discrimSetSize;
 	private double epsilon = 0.05;
 	private double gamma = 0.00; // Zero means "do not use PCA"
 	private double instanceOverlapThreshold = 0.50;
+	private double subspaceOverlapThreshold = 0.20;
+	private double width = 100.0;
 
+	/********* LOOP INVARIANTS *************/
+	Instances data;
+	int discrimSetSize;
+	private StatUtils stats;
 	int minNumInstances;
 	int numDims;
 	int numInstances;
 	int numTrials;
-	Random random;
+
 	/********** LOOP VARIANT STATE **************/
 	ArrayList<Cluster> results = new ArrayList<Cluster>();
-	int rotationSetSize;
-	weka.filters.unsupervised.instance.Resample sampler;
-	private double subspaceOverlapThreshold = 0.20;
 
-	private double width = 100.0;
-
+	
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
 		// NOTE: The class column has already been removed from the instances
 
-		Matrix input = MatrixUtils.toMatrix(data);
-		input.print(8, 4);
-
-
-		// Set loop invariants
-		sampler = new weka.filters.unsupervised.instance.Resample();
-		sampler.setRandomSeed(1); // Make successive runs repeatable.
-		sampler.setInputFormat(data);
-		sampler.setNoReplacement(true);
-
 		// Set instance variables
-		long seed = 1;
-		random = new Random(seed);
 		this.data = data;
+		stats = new StatUtils(1, data);
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
 		numTrials = calcNumTrials();
 		minNumInstances = Utils.round(alpha * numInstances);
 		discrimSetSize = calcDiscrimSetSize();
-		rotationSetSize = Utils.round(gamma * numInstances);
 
 		if (!gammaIsValid()) {
 			throw new Exception(
@@ -107,48 +91,98 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		for (int k = 0; k < numTrials; k++) {
 
+			Instances dataToCluster;
+
 			if (usePca()) {
-				// Randomly select rotation set and discriminating set
-				Instances rotationSet = subSamplePercentage(data, gamma);
-				Instances discriminatingSet = subSampleAmount(rotationSet,
-						discrimSetSize);
+				// Randomly select rotation set based on gamma
+				Instances rotationSet = stats.subSamplePercentage(data, gamma);
 
-				// Find the principal components
-				weka.attributeSelection.PrincipalComponents pca = new weka.attributeSelection.PrincipalComponents();
-				pca.setNormalize(true);
+				// Find the principal components and rotate the data
+				Pca pca = new Pca(MatrixUtils.toMatrix(rotationSet));
+				Matrix rotatedData = pca.rotate(MatrixUtils.toMatrix(data));
+				dataToCluster = MatrixUtils.toInstances(data, rotatedData);
 
-				pca.setMaximumAttributeNames(-1); // Do not discard any data
-				pca.buildEvaluator(rotationSet);
-
-				// rot_objs=data(rot_set, :);
-				// coeff=pca(rot_objs);
-				//
-				// %The most significant principal component is the first column
-				// Re-order
-				// %the coeff matrix so that the LEAST significant PC is the
-				// first column.
-				// rot_mat=fliplr(coeff);
-				// transformed_data=data*rot_mat;
-				// discrim_objs=transformed_data(discrim_set, :);
-				//
-				// else {
-				// %Randomly select discriminating objects
-				// discrim_set = randi(num_objs, 1, discrim_set_size);
-				// discrim_objs=data(discrim_set, :);
-				// transformed_data=data;
-				// }
 			}// end if
+			else {
+				dataToCluster = data;
+			}
+
+			Instances discrimSet = stats.subSampleAmount(dataToCluster,
+					discrimSetSize);
+			
+			
+//			%--Create max and min values in each dimension from the discriminating set.
+//			maxs = max(discrim_points);
+//			mins = min(discrim_points);
+//
+//			%--Create the extents of the discriminating points in all dimensions.
+//			discrim_set_span = maxs - mins;
+//
+//			%--Create subspace vector--
+//			subspace = discrim_set_span <= width;
+//
+//			%--If the entire subspace is zero, it means the discriminating set does
+//			%not congregate in any dimension. If the algorithm is allowed to continue
+//			%then the "allowance" varaible calculated below becomes worse than
+//			%meaningless. The allowance takes on negative values which leads to
+//			%a bounding box with negative volume. The real bummer occurs when the
+//			%logical NOT of the subscapce vector is logically OR-ed with the set of
+//			%congreating points. The results is that every point in the data sets is
+//			%included in the cluster.
+//			%Problem solves with an early return.
+//			if isnull(subspace)
+//			    subspace = [];
+//			    clstr = [];
+//			    return
+//			end
+//
+//			%--Find congregating points--
+//			%Create matrices of max/min values
+//			num_points = rows(data);
+//			allowance = width - discrim_set_span;
+//			upper_bounds = maxs + allowance;
+//			lower_bounds = mins - allowance;
+//
+//			%The fullspace cluster is a logical matrix.
+//			%If a point is inside the hypercude in a particular dimension,
+//			%then value of the matrix for that point and dimesion is 1.
+//			upper = repmat(upper_bounds, num_points, 1);
+//			lower = repmat(lower_bounds, num_points, 1);
+//			% size(lower)
+//			% size(upper)
+//			% size(data)
+//			% num_points
+//			fullspace_cluster = (data <= upper) & (data >= lower);
+//
+//			%The subspace cluster is is less restrictive than the fullspace
+//			%cluster. It is the logical OR of the fullspace cluster with the
+//			%logical NOT of the subspace vector.
+//			subspace_cluster = fullspace_cluster | repmat(~subspace, num_points, 1);
+//
+//			%Find the indexes of the rows where all the values are true
+//			congregating_points = all(subspace_cluster, 2);
+//			clstr = find(congregating_points)';
+
+			
+			
+			
+			
+			
+			
+			
 
 		}// end for
 
 	}// end method
 
 	private boolean gammaIsValid() {
-		// The rotation set size must equal to or greater than the rotation set
-		// size because the discriminating set is sampled (without replacement)
-		// from the rotation set.
-		// If the algorithm is not using PCA, then the value of gamma is
-		// relevant, and therefore always valid.
+		/*
+		 * The rotation set size must equal to or greater than the rotation set
+		 * size because the discriminating set is sampled (without replacement)
+		 * from the rotation set. If the algorithm is not using PCA, then the
+		 * value of gamma is relevant, and therefore always valid.
+		 */
+		int rotationSetSize = Utils.round(gamma * numInstances);
 		return !usePca() || rotationSetSize >= discrimSetSize;
 	}
 
@@ -329,27 +363,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			this.width = w;
 	}
 
-	private Instances subSampleAmount(Instances dataSet, int num) {
-		// Damn you Weka. You win this round.
-		Instances shuffleCopy = new Instances(data);
-		shuffleCopy.randomize(random);
-		return new Instances(data, 0, discrimSetSize);
-	} // end
-
-	private Instances subSamplePercentage(Instances dataSet, double percentage)
-			throws Exception {
-
-		double one = 0.99999;
-		if (percentage >= one) {
-			return new Instances(dataSet);
-		}
-
-		sampler.setSampleSizePercent(percentage);
-		return Filter.useFilter(dataSet, sampler);
-	}// end method
-
 	private boolean usePca() {
-		// If gamma is not greater than zero, then we do not use PCA.
+		// If gamma is greater than zero, use PCA.
 		return gamma > 0;
 	}
 

@@ -7,7 +7,6 @@ public class Pca {
 
 	// Instance variables
 	Matrix input;
-	Matrix output;
 	Matrix principleComponents;
 
 	// Constructor
@@ -63,11 +62,12 @@ public class Pca {
 		int firstCol = size - covRank;
 		principleComponents = eigenvectors.getMatrix(0, last, firstCol, last);
 
-		// Rotate the input
-		output = input.times(principleComponents);
-
 		// Return this instance
 		return this;
-
 	}// end method
+
+	public Matrix rotate(Matrix input) {
+		return input.times(principleComponents);
+	}// end method
+
 }// end class

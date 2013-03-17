@@ -12,4 +12,5 @@
 <fullyQualifiedTypeName name="weka.subspaceClusterer.PcaInterface"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="Jama.EigenvalueDecomposition"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MatrixUtils"/>
 </qualifiedTypeNameHistroy>

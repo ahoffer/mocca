@@ -1,0 +1,38 @@
+package weka.subspaceClusterer;
+
+import weka.core.Instances;
+import weka.filters.Filter;
+
+public class StatUtils {
+
+	// Instance variables
+	weka.filters.unsupervised.instance.Resample sampler;
+
+	// Set loop invariants
+	public StatUtils(int seed, Instances data) {
+		sampler = new weka.filters.unsupervised.instance.Resample();
+		sampler.setRandomSeed(seed); // Make successive runs repeatable.
+		sampler.setInputFormat(data);
+		sampler.setNoReplacement(true);
+	}
+
+	private Instances subSampleAmount(Instances dataSet, int num) {
+		// Damn you Weka. You win this round.
+		Instances shuffleCopy = new Instances(dataSet);
+		shuffleCopy.randomize(random);
+		return new Instances(data, 0, num);
+	} // end
+
+	private Instances subSamplePercentage(Instances dataSet, double percentage)
+			throws Exception {
+
+		double one = 0.99999;
+		if (percentage >= one) {
+			return new Instances(dataSet);
+		}
+
+		sampler.setSampleSizePercent(percentage);
+		return Filter.useFilter(dataSet, sampler);
+	}// end method
+
+}

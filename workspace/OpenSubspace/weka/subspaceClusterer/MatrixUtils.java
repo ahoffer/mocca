@@ -77,7 +77,20 @@ public class MatrixUtils {
 		}// end for
 
 		return sum;
+	}// end method
 
+	public static Instances toInstances(Instances template, Matrix values) {
+		double array[][] = values.getArray();
+		weka.core.Instances output = new Instances(template,
+				template.numInstances());
+
+		for (int i = 0; i < values.getRowDimension(); ++i) {
+			for (int j = 0; j < values.getColumnDimension(); ++j) {
+				output.instance(i).setValue(j, array[i][j]);
+			}// end for
+		}// end for
+
+		return output;
 	}// end method
 
 	public static Matrix toMatrix(Instances input) {
@@ -93,5 +106,40 @@ public class MatrixUtils {
 		return mat;
 	}// end method
 
-}// end class
+	// Return the largest value from each column
+	public static Matrix max(Matrix input) {
+		int cols = input.getColumnDimension();
+		Matrix maxs = new Matrix(1, cols);
+		double largest, val;
+		for (int j = 0; j < cols; ++j) {
+			largest = Double.NEGATIVE_INFINITY;
+			for (int i = 0; i < input.getRowDimension(); ++i) {
+				val = input.get(i, j);
+				if (val > largest) {
+					largest = val;
+				}// end if
+				maxs.set(0, j, largest);
+			}// end for
+		}// end for
+		return maxs;
+	}// end method
 
+	// Return the largest value from each column
+	public static Matrix min(Matrix input) {
+		int cols = input.getColumnDimension();
+		Matrix mins = new Matrix(1, cols);
+		double smallest, val;
+		for (int j = 0; j < cols; ++j) {
+			smallest = Double.POSITIVE_INFINITY;
+			for (int i = 0; i < input.getRowDimension(); ++i) {
+				val = input.get(i, j);
+				if (val < smallest) {
+					smallest = val;
+				}// end if
+				mins.set(0, j, smallest);
+			}// end for
+		}// end for
+		return mins;
+	}// end method
+
+}// end class
