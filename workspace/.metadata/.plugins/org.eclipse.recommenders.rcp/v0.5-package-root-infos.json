@@ -8,7 +8,7 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "9c899e3cf7dcc5a76c8b558623f88a5085161e7a",
-    "jarFileModificationDate": "2009-03-12T18:22:14-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:08.963-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\commons-math-1.1.jar",
     "javaRuntime": false
   },
@@ -73,7 +73,7 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "eef9274de6b2d1544bf73b85dff9dbedfaeb0adf",
-    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:09.099-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\vecmath.jar",
     "javaRuntime": false
   },
@@ -86,7 +86,7 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "39446a9ef38d164a90ea407c021837e7a2495302",
-    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:09.067-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\j3dutils.jar",
     "javaRuntime": false
   },
@@ -112,7 +112,7 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "6ee13ddf1f6dd1bb21959ab22f36af5eeb714f12",
-    "jarFileModificationDate": "2009-03-10T19:05:36-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:09.036-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\j3dcore.jar",
     "javaRuntime": false
   },
@@ -151,19 +151,21 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "6865bd8cf04af6da4f6b32625fc2b27829f571a3",
-    "jarFileModificationDate": "2009-09-14T16:34:28-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:08.980-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-weka.jar",
     "javaRuntime": false
   },
   {
+    "symbolicName": "i9-subspace",
     "version": {
       "major": -1,
       "minor": -1,
       "micro": -1,
       "qualifier": ""
     },
-    "jarFileModificationDate": "2013-03-11T16:43:02.791-07:00",
-    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\weka 3.7.3\\src",
+    "jarFileFingerprint": "a3d5174410a028c4ebb086e02306873b6d8fc06d",
+    "jarFileModificationDate": "2013-03-15T18:52:08.972-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
     "javaRuntime": false
   },
   {
@@ -193,19 +195,6 @@
     "javaRuntime": true
   },
   {
-    "symbolicName": "i9-subspace",
-    "version": {
-      "major": -1,
-      "minor": -1,
-      "micro": -1,
-      "qualifier": ""
-    },
-    "jarFileFingerprint": "a3d5174410a028c4ebb086e02306873b6d8fc06d",
-    "jarFileModificationDate": "2009-08-18T17:02:48-07:00",
-    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
-    "javaRuntime": false
-  },
-  {
     "symbolicName": "Jama",
     "version": {
       "major": -1,
@@ -214,7 +203,7 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "9b34d094c2cc0db66be480334cf881e7da66c9b4",
-    "jarFileModificationDate": "2009-03-10T15:03:46-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:08.958-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\Jama.jar",
     "javaRuntime": false
   },
@@ -253,8 +242,21 @@
       "qualifier": ""
     },
     "jarFileFingerprint": "af986b6902cbea3cd917abb1e0f8ab0f1ab22277",
-    "jarFileModificationDate": "2009-03-12T18:22:14-07:00",
+    "jarFileModificationDate": "2013-03-15T18:52:09.090-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\jsc.jar",
+    "javaRuntime": false
+  },
+  {
+    "symbolicName": "weka",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "63ff446a3f1f7b86168185d92e37ac77b50eba58",
+    "jarFileModificationDate": "2013-03-15T18:52:09.182-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\weka.jar",
     "javaRuntime": false
   },
   {
@@ -269,19 +271,6 @@
     "jarFileModificationDate": "2013-01-20T20:33:40.834-08:00",
     "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
     "javaRuntime": true
-  },
-  {
-    "symbolicName": "weka",
-    "version": {
-      "major": -1,
-      "minor": -1,
-      "micro": -1,
-      "qualifier": ""
-    },
-    "jarFileFingerprint": "63ff446a3f1f7b86168185d92e37ac77b50eba58",
-    "jarFileModificationDate": "2008-07-15T17:50:34-07:00",
-    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\weka.jar",
-    "javaRuntime": false
   },
   {
     "symbolicName": "jre",

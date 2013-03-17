@@ -9,6 +9,7 @@
 <fullyQualifiedTypeName name="i9.data.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Matrix"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.PcaInterface"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="Jama.EigenvalueDecomposition"/>
 </qualifiedTypeNameHistroy>

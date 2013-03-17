@@ -1,86 +1,43 @@
 package weka.subspaceClusterer;
 
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Center;
-import weka.core.Instance;
-import weka.core.Instances;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
 public class Pca {
 
+	// Instance variables
+	Matrix input;
+	Matrix output;
+	Matrix principleComponents;
+
 	// Constructor
-	public Pca(Instances input) throws Exception {
+	public Pca(Matrix input) {
 		this.input = input;
 		eval();
 	}
 
-	// Instance variables
-	public Matrix components;
-	public Instances input;
-
-	// Pick a small values that means zero.
-	public static double epsilon = 1E-8;
-
-	// Given an Instances object, return a copy where the attributes
-	// of the instances are mean centered.
-	public static Instances center(Instances input) throws Exception {
-		Center filter = new Center();
-		filter.setInputFormat(input);
-		return Filter.useFilter(input, filter);
-	}
-
-	// Given an Instances object, return (symmetric) covariance matrix
-	// The matrix is a Jama matrix.
-	// PRECONDITION: The instances should be mean-centered before performing
-	// this step
-	public static Matrix covariance(Instances input) throws Exception {
-		// Allocate the covariance matrix
-		// PRECONDITION: There is no class column in the input
-		int dims = input.numAttributes();
-		int numInst = input.numInstances();
-		Matrix covMatrix = new Matrix(dims, dims);
-
-		// Now compute the covariance matrix
-		for (int i = 0; i < dims; i++) {
-			for (int j = i; j < dims; j++) {
-				double cov_ij, sum = 0;
-				for (int k = 0; k < numInst; k++) {
-					Instance inst = input.instance(k);
-					sum += inst.value(i) * inst.value(j);
-				}// end for k
-				cov_ij = sum / (double) (numInst - 1);
-				covMatrix.set(i, j, cov_ij);
-				covMatrix.set(j, i, cov_ij);
-			}// end for j
-		}// end for k
-		return covMatrix;
-	}// end method
-
-	public Pca eval() throws Exception {
-
-		// Center the data by subtracting the column means
-		Matrix cov = covariance(center(input));
-
+	public Pca eval() {
+		Matrix covar = MatrixUtils.covariance(MatrixUtils.center(input,
+				MatrixUtils.columnMeans(input)));
 		// Rank tell us the maximum number of non-zero eigenvalues to expect.
-		int covRank = cov.rank();
+		int covRank = covar.rank();
 
-		// Calculate the eigvenvectors and eigenvalues of the covariance matrix
-		EigenvalueDecomposition eigenDecomp = cov.eig();
+		// Calculate the eigenvectors and eigenvalues of the covariance
+		EigenvalueDecomposition eigenDecomp = covar.eig();
 
 		// Count number of principal components
 		double[] eigenvalues = eigenDecomp.getRealEigenvalues();
 		int numNonZeroEigenVals = 0;
 		for (int i = 0; i < eigenvalues.length; ++i) {
-			if (eigenvalues[i] > epsilon) {
+			if (eigenvalues[i] > MatrixUtils.epsilon) {
 				numNonZeroEigenVals++;
-			}
-		}
+			}// end if
+		}// end for
 
-		// Verify number of non zero eigenvalues is the same as the rank of the
-		// covariance matrix
+		// Verify number of non zero eigenvalues is the same as the rank of
+		// the covariance matrix
 		if (numNonZeroEigenVals != covRank) {
-			System.out.println("SOMETHING WHACKY IN PCA");
+			System.err.println("SOMETHING WHACKY IN PCA");
 		}
 
 		/*
@@ -93,12 +50,6 @@ public class Pca {
 		 */
 		Matrix eigenvectors = eigenDecomp.getV();
 
-		// Silly sanity check. Probably not needed.
-		int size = eigenvectors.getRowDimension();
-		if (size != eigenvectors.getColumnDimension()) {
-			System.out.println("EIGEN VECTORS SHOULD BE SQUARE MATRIX");
-		}
-
 		/*
 		 * The eigenvectors matrix can contain garbage. If the eigenvalue is
 		 * smaller than some epsilon, it must be considered zero and the
@@ -107,10 +58,16 @@ public class Pca {
 		 * getMatrix(Initial row index, Final row index, Initial column index,
 		 * Final column index)
 		 */
+		int size = eigenvectors.getRowDimension();
 		int last = size - 1;
 		int firstCol = size - covRank;
-		components = eigenvectors.getMatrix(0, last, firstCol, last);
+		principleComponents = eigenvectors.getMatrix(0, last, firstCol, last);
+
+		// Rotate the input
+		output = input.times(principleComponents);
+
+		// Return this instance
 		return this;
-		
+
 	}// end method
 }// end class
