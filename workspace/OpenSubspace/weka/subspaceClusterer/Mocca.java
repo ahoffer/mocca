@@ -82,16 +82,15 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		double log10alpha = Math.log10(alpha);
 		double log10beta = Math.log10(beta);
 
-		// @formatter:off
-		double est =  1 + 4/alpha * Math.pow(d/ln4, log10alpha/log10beta) * Math.log(1 / epsilon);
-		// @formatter:on
-
+		double est = 1 + 4 / alpha * Math.pow(d / ln4, log10alpha / log10beta) * Math.log(1 / epsilon);
 		return Utils.round(est);
 	}
 
 	private void doMocca() throws Exception {
 		Matrix originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
 		Matrix dataToCluster;
+		double[] upper = new double[numDims];
+		double[] lower = new double[numDims];
 
 		for (int k = 0; k < numTrials; k++) {
 
@@ -150,20 +149,38 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			}
 
 			/*
-			 * We know we have a cluster. At the very least, the discriminating
-			 * set is inside the bounds of the hyper volume. Find congregating
-			 * points
+			 * Calculate upper and lower bounds of the hyper volume that
+			 * surrounds the cluster.
 			 */
-			// TODO: Why does OpenSubspace use a List to hold point indices? A
-			// Set would make more sense.
+			double[] minimums = mins.getArray()[0];
+			double[] maximums = maxs.getArray()[0];
+			double sheath;
+			for (int i = 0; i < numDims; ++i) {
+				sheath = width - boundsAsArray[i];
+				lower[i] = minimums[i] - sheath;
+				upper[i] = maximums[i] + sheath;
+			}
+
+			/*
+			 * Find congregating points
+			 */
 			ArrayList<Integer> objectIndexes = new ArrayList<Integer>(1000);
 			double[][] objects = dataToCluster.getArray();
 			for (int i = 0; i < numInstances; ++i) {
 				double[] object = objects[i];
-				if (stats.inside(object, mins.getArray()[0], maxs.getArray()[0])) {
-					objectIndexes.add(Integer.valueOf(i));
+				// Only check bounds if the cluster congregates in this
+				// dimension
+				if (subspace[i]) {
+					if (stats.inside(object, lower, upper)) {
+						objectIndexes.add(Integer.valueOf(i));
+					}// end if
 				}// end if
 			}// end for
+
+			if (objectIndexes.isEmpty()) {
+				// BAD!
+				System.err.println("EMPTY CLUSTER!");
+			}
 
 			clusters.add(new Cluster(subspace, objectIndexes));
 
