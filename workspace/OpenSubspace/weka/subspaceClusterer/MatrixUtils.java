@@ -81,8 +81,7 @@ public class MatrixUtils {
 
 	public static Instances toInstances(Instances template, Matrix values) {
 		double array[][] = values.getArray();
-		weka.core.Instances output = new Instances(template,
-				template.numInstances());
+		weka.core.Instances output = new Instances(template, template.numInstances());
 
 		for (int i = 0; i < values.getRowDimension(); ++i) {
 			for (int j = 0; j < values.getColumnDimension(); ++j) {
@@ -106,40 +105,54 @@ public class MatrixUtils {
 		return mat;
 	}// end method
 
-	// Return the largest value from each column
-	public static Matrix max(Matrix input) {
-		int cols = input.getColumnDimension();
-		Matrix maxs = new Matrix(1, cols);
-		double largest, val;
-		for (int j = 0; j < cols; ++j) {
-			largest = Double.NEGATIVE_INFINITY;
-			for (int i = 0; i < input.getRowDimension(); ++i) {
-				val = input.get(i, j);
-				if (val > largest) {
-					largest = val;
-				}// end if
-				maxs.set(0, j, largest);
-			}// end for
+	public static boolean[] lessThanOrEqualTo(double[] input, double value) {
+		int length = input.length;
+		boolean result[] = new boolean[length];
+		for (int i = 0; i < length; ++i) {
+			result[i] = (input[i] <= value) ? true : false;
+		}
+		return result;
+	}
+
+	public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
+		int length = input.length;
+		boolean result[] = new boolean[length];
+		for (int i = 0; i < length; ++i) {
+			result[i] = (input[i] >= value) ? true : false;
+		}
+		return result;
+	}
+
+	public static int countTrueValues(boolean[] input) {
+		int count = 0;
+		for (boolean b : input) {
+			if (b) {
+				count++;
+			}// end if
 		}// end for
-		return maxs;
+		return count;
 	}// end method
 
-	// Return the largest value from each column
-	public static Matrix min(Matrix input) {
-		int cols = input.getColumnDimension();
-		Matrix mins = new Matrix(1, cols);
-		double smallest, val;
-		for (int j = 0; j < cols; ++j) {
-			smallest = Double.POSITIVE_INFINITY;
-			for (int i = 0; i < input.getRowDimension(); ++i) {
-				val = input.get(i, j);
-				if (val < smallest) {
-					smallest = val;
-				}// end if
-				mins.set(0, j, smallest);
-			}// end for
+	public static int[] getSequence(int numberOfElements) {
+
+		// Return a sequence that ranges from 0 to numberofElements-1
+		int sequence[] = new int[numberOfElements];
+
+		for (int i = 0; i < numberOfElements; ++i) {
+			sequence[i] = i;
 		}// end for
-		return mins;
+
+		return sequence;
+
+	}// end method
+
+	/*
+	 * Return a sub-matrix given the rows indexes as input
+	 */
+	public static Matrix getRowsByIndex(Matrix input, int[] indexes) {
+		int cols = input.getColumnDimension();
+		return input.getMatrix(indexes, 0, cols - 1);
+
 	}// end method
 
 }// end class

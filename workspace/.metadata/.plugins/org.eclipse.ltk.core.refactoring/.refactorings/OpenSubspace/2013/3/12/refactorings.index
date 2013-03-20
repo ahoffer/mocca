@@ -1,2 +1,6 @@
 1363499939118	Rename field 'eigenvectors'
 1363500072813	Rename type 'PcaInterface'
+1363631593107	Move member 'max'
+1363631602598	Move member 'min'
+1363744106991	Rename field 'data'
+1363748109506	Rename local variable 'originalData'

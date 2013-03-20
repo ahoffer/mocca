@@ -67,6 +67,7 @@ public class Pca {
 	}// end method
 
 	public Matrix rotate(Matrix input) {
+		//Does not modify input
 		return input.times(principleComponents);
 	}// end method
 

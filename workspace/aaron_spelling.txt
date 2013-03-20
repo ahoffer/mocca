@@ -1,3 +1,7 @@
 covariance
 eigenvector
 eigenvectors
+min
+reshuffle
+reshuffling
+yates

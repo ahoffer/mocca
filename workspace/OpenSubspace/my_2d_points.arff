@@ -1,0 +1,14 @@
+@relation AARON
+@attribute dim0 real
+@attribute dim1 real
+@attribute class {A}
+@data
+%9,0,8,2,A
+%8,8,7,7,A
+%10,9,4,0,A
+%7,7,7,3,A
+%1,2,3,4,A
+
+9,0,8,A
+1,2,3,A
+-1,-5,-7,A

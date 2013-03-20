@@ -4,6 +4,7 @@ import i9.subspace.base.Cluster;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import weka.core.Instances;
@@ -22,46 +23,47 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	/********* ALGORITHM PARAMETERS ************/
 	private double alpha = 0.08;
 	private double beta = 0.35;
+	/********** LOOP VARIANT STATE **************/
+	ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+	/********* LOOP INVARIANTS *************/
+	Instances dataAsInstances;
+	int discrimSetSize;
 	private double epsilon = 0.05;
 	private double gamma = 0.00; // Zero means "do not use PCA"
-	private double instanceOverlapThreshold = 0.50;
-	private double subspaceOverlapThreshold = 0.20;
-	private double width = 100.0;
 
-	/********* LOOP INVARIANTS *************/
-	Instances data;
-	int discrimSetSize;
-	private StatUtils stats;
+	private double instanceOverlapThreshold = 0.50;
 	int minNumInstances;
 	int numDims;
 	int numInstances;
 	int numTrials;
+	int rotationSetSize;
+	private StatUtils stats;
+	private double subspaceOverlapThreshold = 0.20;
 
-	/********** LOOP VARIANT STATE **************/
-	ArrayList<Cluster> results = new ArrayList<Cluster>();
+	private double width = 100.0;
 
-	
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
 		// NOTE: The class column has already been removed from the instances
 
 		// Set instance variables
-		this.data = data;
-		stats = new StatUtils(1, data);
+		this.dataAsInstances = data;
+		stats = new StatUtils(1);
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
 		numTrials = calcNumTrials();
 		minNumInstances = Utils.round(alpha * numInstances);
 		discrimSetSize = calcDiscrimSetSize();
+		rotationSetSize = (int) Math.round(gamma * numInstances);
 
+		// gammaIsValid SHOULD ONLY BE CALLED AFTER xxxSetSize variables are
+		// initialized
 		if (!gammaIsValid()) {
-			throw new Exception(
-					"Gamma is invalid. Rotation set size is not equal to or larger than the discriminating set size.");
+			throw new Exception("Gamma is invalid.");
 		}
 
-		// TODO
 		doMocca();
-		setSubspaceClustering(results);
+		setSubspaceClustering(clusters);
 
 		// Print results
 		toString();
@@ -88,91 +90,84 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	}
 
 	private void doMocca() throws Exception {
+		Matrix originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
+		Matrix dataToCluster;
 
 		for (int k = 0; k < numTrials; k++) {
 
-			Instances dataToCluster;
+			int indexes[] = MatrixUtils.getSequence(numInstances);
 
 			if (usePca()) {
 				// Randomly select rotation set based on gamma
-				Instances rotationSet = stats.subSamplePercentage(data, gamma);
+				int rotationIndexes[] = stats.sampleNoReplacment(indexes, rotationSetSize);
+
+				// Get rotation objects
+				Matrix roationObjs = MatrixUtils.getRowsByIndex(originalDataAsMatrix, rotationIndexes);
 
 				// Find the principal components and rotate the data
-				Pca pca = new Pca(MatrixUtils.toMatrix(rotationSet));
-				Matrix rotatedData = pca.rotate(MatrixUtils.toMatrix(data));
-				dataToCluster = MatrixUtils.toInstances(data, rotatedData);
+				Pca pca = new Pca(roationObjs);
+				dataToCluster = pca.rotate(originalDataAsMatrix);
+
+				/*
+				 * TODO: From this point on there is no need to use the Matrix
+				 * class. Really, there is no need to use the Matrix class after
+				 * PCA is complete. I bet I could hide all references to Jama
+				 * matrices inside the MatUtils class and use Java native arrays
+				 * for everything else.
+				 */
 
 			}// end if
+
 			else {
-				dataToCluster = data;
+				dataToCluster = originalDataAsMatrix.copy();
 			}
 
-			Instances discrimSet = stats.subSampleAmount(dataToCluster,
-					discrimSetSize);
-			
-			
-//			%--Create max and min values in each dimension from the discriminating set.
-//			maxs = max(discrim_points);
-//			mins = min(discrim_points);
-//
-//			%--Create the extents of the discriminating points in all dimensions.
-//			discrim_set_span = maxs - mins;
-//
-//			%--Create subspace vector--
-//			subspace = discrim_set_span <= width;
-//
-//			%--If the entire subspace is zero, it means the discriminating set does
-//			%not congregate in any dimension. If the algorithm is allowed to continue
-//			%then the "allowance" varaible calculated below becomes worse than
-//			%meaningless. The allowance takes on negative values which leads to
-//			%a bounding box with negative volume. The real bummer occurs when the
-//			%logical NOT of the subscapce vector is logically OR-ed with the set of
-//			%congreating points. The results is that every point in the data sets is
-//			%included in the cluster.
-//			%Problem solves with an early return.
-//			if isnull(subspace)
-//			    subspace = [];
-//			    clstr = [];
-//			    return
-//			end
-//
-//			%--Find congregating points--
-//			%Create matrices of max/min values
-//			num_points = rows(data);
-//			allowance = width - discrim_set_span;
-//			upper_bounds = maxs + allowance;
-//			lower_bounds = mins - allowance;
-//
-//			%The fullspace cluster is a logical matrix.
-//			%If a point is inside the hypercude in a particular dimension,
-//			%then value of the matrix for that point and dimesion is 1.
-//			upper = repmat(upper_bounds, num_points, 1);
-//			lower = repmat(lower_bounds, num_points, 1);
-//			% size(lower)
-//			% size(upper)
-//			% size(data)
-//			% num_points
-//			fullspace_cluster = (data <= upper) & (data >= lower);
-//
-//			%The subspace cluster is is less restrictive than the fullspace
-//			%cluster. It is the logical OR of the fullspace cluster with the
-//			%logical NOT of the subspace vector.
-//			subspace_cluster = fullspace_cluster | repmat(~subspace, num_points, 1);
-//
-//			%Find the indexes of the rows where all the values are true
-//			congregating_points = all(subspace_cluster, 2);
-//			clstr = find(congregating_points)';
+			// Randomly select discriminating set
+			// TODO: This is really inefficient. We only need a handful of
+			// points but we are reshuffling the entire list of points.
+			int discrimSetIndexes[] = stats.sampleNoReplacment(indexes, discrimSetSize);
+			Matrix discrimObjs = MatrixUtils.getRowsByIndex(dataToCluster, discrimSetIndexes);
 
-			
-			
-			
-			
-			
-			
-			
+			// Create max and min values in each dimension from the
+			// discriminating set.
+			Matrix mins = StatUtils.min(discrimObjs);
+			Matrix maxs = StatUtils.max(discrimObjs);
 
-		}// end for
+			// Find the subspace and number of congregating dimensions
+			Matrix bounds = maxs.minus(mins);
+			double boundsAsArray[] = bounds.getArray()[0];
+			boolean subspace[] = MatrixUtils.lessThanOrEqualTo(boundsAsArray, width);
+			int numCongregatingDims = MatrixUtils.countTrueValues(subspace);
 
+			/*
+			 * If the entire subspace is zero, it means the discriminating set
+			 * does not congregate in any dimension. The trial has failed to
+			 * find a cluster
+			 */
+			if (numCongregatingDims == 0) {
+				// Return to top of loop to try again.
+				break;
+			}
+
+			/*
+			 * We know we have a cluster. At the very least, the discriminating
+			 * set is inside the bounds of the hyper volume. Find congregating
+			 * points
+			 */
+			// TODO: Why does OpenSubspace use a List to hold point indices? A
+			// Set would make more sense.
+			ArrayList<Integer> objectIndexes = new ArrayList<Integer>(1000);
+			double[][] objects = dataToCluster.getArray();
+			for (int i = 0; i < numInstances; ++i) {
+				double[] object = objects[i];
+				if (stats.inside(object, mins.getArray()[0], maxs.getArray()[0])) {
+					objectIndexes.add(Integer.valueOf(i));
+				}// end if
+			}// end for
+
+			clusters.add(new Cluster(subspace, objectIndexes));
+
+		}// end k trials loop
 	}// end method
 
 	private boolean gammaIsValid() {
@@ -182,8 +177,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		 * from the rotation set. If the algorithm is not using PCA, then the
 		 * value of gamma is relevant, and therefore always valid.
 		 */
-		int rotationSetSize = Utils.round(gamma * numInstances);
-		return !usePca() || rotationSetSize >= discrimSetSize;
+		return !usePca() || (rotationSetSize >= discrimSetSize && gamma <= 1);
 	}
 
 	public double getAlpha() {
@@ -239,10 +233,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	@Override
 	public String getParameterString() {
-		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon
-				+ "; subspace overlap threshold=" + subspaceOverlapThreshold
-				+ "; instance overlap threshold=" + instanceOverlapThreshold
-				+ "; width=" + width + "; gamma=" + gamma;
+		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
+				+ subspaceOverlapThreshold + "; instance overlap threshold=" + instanceOverlapThreshold + "; width="
+				+ width + "; gamma=" + gamma;
 	}
 
 	public double getSubspaceOverlapThreshold() {
@@ -271,22 +264,15 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		Vector vector = new Vector();
 
 		// Option(description, name, numArguments, synopsis)
-		vector.addElement(new Option("\talpha (default = 0.08)", "alpha", 1,
-				"-a <double>"));
-		vector.addElement(new Option("\tbeta (default = 0.35)", "beta", 1,
-				"-b <double>"));
-		vector.addElement(new Option("\tepsilon (default = 0.05)", "epsilon",
-				1, "-e <double>"));
-		vector.addElement(new Option(
-				"\tsubspace overlap threshold (default = 0.90)",
-				"subsapceOverlapThreshold", 1, "-s <double>"));
-		vector.addElement(new Option(
-				"\tinstance overlap threshold (default = 0.2)",
-				"instanceOverlapThreshold", 1, "-i <double>"));
-		vector.addElement(new Option("\twidth (default = 1.0)", "width", 1,
-				"-w <double>"));
-		vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1,
-				"-g <double>"));
+		vector.addElement(new Option("\talpha (default = 0.08)", "alpha", 1, "-a <double>"));
+		vector.addElement(new Option("\tbeta (default = 0.35)", "beta", 1, "-b <double>"));
+		vector.addElement(new Option("\tepsilon (default = 0.05)", "epsilon", 1, "-e <double>"));
+		vector.addElement(new Option("\tsubspace overlap threshold (default = 0.90)", "subsapceOverlapThreshold", 1,
+				"-s <double>"));
+		vector.addElement(new Option("\tinstance overlap threshold (default = 0.2)", "instanceOverlapThreshold", 1,
+				"-i <double>"));
+		vector.addElement(new Option("\twidth (default = 1.0)", "width", 1, "-w <double>"));
+		vector.addElement(new Option("\tgamma )(default = 0.00)", "gamma", 1, "-g <double>"));
 		return vector.elements();
 	}
 
