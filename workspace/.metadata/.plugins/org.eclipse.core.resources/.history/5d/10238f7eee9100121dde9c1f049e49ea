@@ -1,0 +1,7 @@
+package weka.subspaceClusterer;
+
+import i9.subspace.base.Cluster;
+
+public class MoccaCluster extends Cluster {
+
+}

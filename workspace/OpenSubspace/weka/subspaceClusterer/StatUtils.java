@@ -3,6 +3,8 @@ package weka.subspaceClusterer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -97,15 +99,86 @@ public class StatUtils {
 		return select(shuffled, sampleSize);
 	}// end method
 
-	// TODO: In what class does this method belong?
-	// Return true if the object is inside the min/max bounds
-	public boolean inside(double object[], double minimum[], double maximum[]) {
-		for (int i = 0; i < object.length; ++i) {
-			if (object[i] > maximum[i] || object[i] < minimum[i]) {
-				return false;
+	public int[] intersection(int[] list1, int[] list2) {
+		// PRECONDITION: Both lists are sorted lowest to highest.
+		ArrayList<Integer> results;
+		int[] toSearch, toIterate;
+		int size1, size2;
+		size1 = list1.length;
+		size2 = list2.length;
+
+		// Iterate over the shortest O(n)
+		// Search over the longest O(log n)
+		if (size1 > size2) {
+			toSearch = list1;
+			toIterate = list2;
+			results = new ArrayList<Integer>(size1);
+		} else {
+			toSearch = list2;
+			toIterate = list1;
+			results = new ArrayList<Integer>(size2);
+		}
+
+		for (int each : toIterate) {
+			if (binarySearch(toSearch, each)) {
+				results.add(Integer.valueOf(each));
+			}
+		}
+		return toArray(results);
+	}// method
+
+	public boolean binarySearch(int[] sortedList, int target) {
+
+		int high = sortedList.length - 1;
+		int low = 0;
+		int currentVal, mid;
+
+		while (high >= low) {
+			mid = (low + high) / 2;
+			currentVal = sortedList[mid];
+			if (target == currentVal) {
+				return true;
+			}
+
+			if (currentVal > target) {
+				// Too big. Look smaller.
+				high = mid - 1;
+			} else {
+				// Too small. Look bigger.
+				low = mid + 1;
+			}
+		}// end while
+
+		return false;
+
+	}// end method
+
+	public int intersection(List<Integer> list1, List<Integer> list2) {
+		// Iterate over the shortest O(n)
+		// Create hash map of the longest
+		int size1, size2, count;
+		List<Integer> toIterate;
+		HashSet<Integer> hash;
+
+		size1 = list1.size();
+		size2 = list2.size();
+		count = 0;
+
+		if (size1 > size2) {
+			hash = new HashSet<Integer>(list1);
+			toIterate = list2;
+
+		} else {
+			hash = new HashSet<Integer>(list2);
+			toIterate = list1;
+		}
+
+		for (Integer each : toIterate) {
+			if (hash.contains(each)) {
+				count++;
 			}// end if
 		}// end for
-		return true;
+		return count;
 	}// end method
 
 }// end class

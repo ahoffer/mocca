@@ -4,3 +4,5 @@
 1363631602598	Move member 'min'
 1363744106991	Rename field 'data'
 1363748109506	Rename local variable 'originalData'
+1363845770441	Rename method 'tooMuchOverlap'
+1363845974070	Delete element
