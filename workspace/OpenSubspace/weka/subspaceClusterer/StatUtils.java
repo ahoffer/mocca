@@ -165,12 +165,12 @@ public class StatUtils {
 		count = 0;
 
 		if (size1 > size2) {
+			hash = new HashSet<Integer>(list2);
+			toIterate = list1;
+		} else {
 			hash = new HashSet<Integer>(list1);
 			toIterate = list2;
 
-		} else {
-			hash = new HashSet<Integer>(list2);
-			toIterate = list1;
 		}
 
 		for (Integer each : toIterate) {
