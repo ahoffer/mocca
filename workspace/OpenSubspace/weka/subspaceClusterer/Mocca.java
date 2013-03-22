@@ -20,24 +20,20 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		runSubspaceClusterer(new Mocca(), argv);
 	}
 
-	/********* ALGORITHM PARAMETERS ************/
 	private double alpha = 0.08;
 	private double beta = 0.35;
-	/********** LOOP VARIANT STATE **************/
 	ArrayList<Cluster> clusters = new ArrayList<Cluster>();
-	/********* LOOP INVARIANTS *************/
 	Instances dataAsInstances;
 	int discrimSetSize;
 	private double epsilon = 0.05;
 	private double gamma = 0.00; // Zero means "do not use PCA"
-
+	private double instanceOverlapThreshold = 0.50;
+	private int maxiter = 1000;
 	int minNumInstances;
 	int numDims;
 	int numInstances;
 	int numTrials;
 	int rotationSetSize;
-	private StatUtils stats;
-	private double instanceOverlapThreshold = 0.50;
 	private double subspaceOverlapThreshold = 0.20;
 	private double width = 100.0;
 
@@ -47,7 +43,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		// Set instance variables
 		this.dataAsInstances = data;
-		stats = new StatUtils(1);
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
 		numTrials = calcNumTrials();
@@ -91,13 +86,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		Matrix dataToCluster;
 		double[] upper = new double[numDims];
 		double[] lower = new double[numDims];
-		int indexes[] = MatrixUtils.getSequence(numInstances);
+		Shuffler shuffler = new Shuffler(numInstances, 1);
 
 		trial: for (int k = 0; k < numTrials; k++) {
 
 			if (usePca()) {
 				// Randomly select rotation set based on gamma
-				int rotationIndexes[] = stats.sampleNoReplacment(indexes, rotationSetSize);
+				int rotationIndexes[] = shuffler.next(rotationSetSize);
 
 				// Get rotation objects
 				Matrix roationObjs = MatrixUtils.getRowsByIndex(originalDataAsMatrix, rotationIndexes);
@@ -124,13 +119,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			// Randomly select discriminating set
 			// TODO: This is really inefficient. We only need a handful of
 			// points but we are reshuffling the entire list of points.
-			int discrimSetIndexes[] = stats.sampleNoReplacment(indexes, discrimSetSize);
+			int discrimSetIndexes[] = shuffler.next(discrimSetSize);
 			Matrix discrimObjs = MatrixUtils.getRowsByIndex(dataToCluster, discrimSetIndexes);
 
 			// Create max and min values in each dimension from the
 			// discriminating set.
-			Matrix mins = StatUtils.min(discrimObjs);
-			Matrix maxs = StatUtils.max(discrimObjs);
+			Matrix mins = MatrixUtils.min(discrimObjs);
+			Matrix maxs = MatrixUtils.max(discrimObjs);
 
 			// Find the subspace and number of congregating dimensions
 			Matrix bounds = maxs.minus(mins);
@@ -210,10 +205,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			 */
 			if (!tooManyObjectsInCommon(objectIndexes)) {
 
-				MoccaCluster cluster = new MoccaCluster(subspace, objectIndexes, 0);
+				int cardinality = objectIndexes.size();
+				double quality = quality(cardinality, numCongregatingDims);
+				MoccaCluster cluster = new MoccaCluster(subspace, objectIndexes, quality);
 				clusters.add(cluster);
-				System.out.println(cluster.toString3());
-
 			}
 
 		}// end k trials loop
@@ -249,6 +244,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return instanceOverlapThreshold;
 	}
 
+	public double getMaxiter() {
+		return maxiter;
+	}
+
 	@Override
 	public String getName() {
 		return "MOCCA";
@@ -261,30 +260,32 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	 *         strings
 	 */
 	public String[] getOptions() {
-		String[] options = new String[14]; // = 2 * the number of arguments
-		int current = 0;
-		options[current++] = "-a";
-		options[current++] = "" + alpha;
-		options[current++] = "-b";
-		options[current++] = "" + beta;
-		options[current++] = "-e";
-		options[current++] = "" + epsilon;
-		options[current++] = "-s";
-		options[current++] = "" + subspaceOverlapThreshold;
-		options[current++] = "-i";
-		options[current++] = "" + instanceOverlapThreshold;
-		options[current++] = "-w";
-		options[current++] = "" + width;
-		options[current++] = "-g";
-		options[current++] = "" + gamma;
-		return options;
+		ArrayList<String> options = new ArrayList<String>();
+		options.add("-a");
+		options.add("" + alpha);
+		options.add("-b");
+		options.add("" + beta);
+		options.add("-e");
+		options.add("" + epsilon);
+		options.add("-s");
+		options.add("" + subspaceOverlapThreshold);
+		options.add("-i");
+		options.add("" + instanceOverlapThreshold);
+		options.add("-w");
+		options.add("" + width);
+		options.add("-g");
+		options.add("" + gamma);
+		options.add("-m");
+		options.add("" + maxiter);
+
+		return MoccaUtils.toArray(options);
 	}
 
 	@Override
 	public String getParameterString() {
 		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
 				+ subspaceOverlapThreshold + "; instance overlap threshold=" + instanceOverlapThreshold + "; width="
-				+ width + "; gamma=" + gamma;
+				+ width + "; gamma=" + gamma + "maxiter=" + maxiter + ";";
 	}
 
 	public double getSubspaceOverlapThreshold() {
@@ -296,11 +297,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	}
 
 	public String globalInfo() {
-		return "Monte Carlo Cluster Analysis (MOCCA): A Monte "
-				+ "Carlo algorithm that performs sames a few points and determines the dimensions in which the congregate. "
-				+ "The congregating dimeions are defined at the dimensions in which the points are not more farther apart "
-				+ "than some arbitrary width. If the points cluster in any dimensions, the rest of the datat set is searched"
-				+ "to find other instances which also congregate in the found suspace.";
+		return "Monte Carlo Cluster Analysis (MOCCA)";
 	}
 
 	/**
@@ -321,8 +318,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		vector.addElement(new Option("\tinstance overlap threshold (default = 0.2)", "instanceOverlapThreshold", 1,
 				"-i <double>"));
 		vector.addElement(new Option("\twidth (default = 1.0)", "width", 1, "-w <double>"));
-		vector.addElement(new Option("\tgamma )(default = 0.00)", "gamma", 1, "-g <double>"));
+		vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1, "-g <double>"));
+		vector.addElement(new Option("\tmaximum iteration (default = 10000)", "maxiter", 1, "-m <integer>"));
 		return vector.elements();
+	}
+
+	double quality(int cardinality, int numCongregatingDims) {
+
+		return cardinality * Math.pow(1.0 / beta, numCongregatingDims);
 	}
 
 	public void setAlpha(double alpha) {
@@ -349,6 +352,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	public void setInstanceOverlapThreshold(double maxOverlap) {
 		if (maxOverlap > 0.0)
 			subspaceOverlapThreshold = maxOverlap;
+	}
+
+	public void setMaxiter(int maxiter) {
+		if (maxiter > 0)
+			this.maxiter = maxiter;
 	}
 
 	public void setOptions(String[] options) throws Exception {
@@ -398,17 +406,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			this.width = w;
 	}
 
-	private boolean usePca() {
-		// If gamma is greater than zero, use PCA.
-		return gamma > 0;
-	}
-
 	private boolean tooManyObjectsInCommon(List<Integer> clusterIndexes) {
 		int overlap, smallerCardinality;
 		double normalizedOverlap;
 
 		for (Cluster aCluster : clusters) {
-			overlap = stats.intersection(clusterIndexes, aCluster.m_objects);
+			overlap = MoccaUtils.intersection(clusterIndexes, aCluster.m_objects);
 			smallerCardinality = Math.min(clusterIndexes.size(), aCluster.m_objects.size());
 			normalizedOverlap = overlap / smallerCardinality;
 			if (normalizedOverlap > instanceOverlapThreshold) {
@@ -417,5 +420,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		}// end for
 		return false;
 	}// end method
+
+	private boolean usePca() {
+		// If gamma is greater than zero, use PCA.
+		return gamma > 0;
+	}
 
 } // end class

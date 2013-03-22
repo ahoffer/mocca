@@ -6,3 +6,6 @@
 1363748109506	Rename local variable 'originalData'
 1363845770441	Rename method 'tooMuchOverlap'
 1363845974070	Delete element
+1363977849666	Rename type 'StatUtils'
+1363977909312	Move member 'max'
+1363977935168	Move member 'min'

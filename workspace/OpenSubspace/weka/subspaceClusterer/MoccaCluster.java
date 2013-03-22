@@ -17,7 +17,7 @@ public class MoccaCluster extends Cluster {
 	@Override
 	public String toStringWeka() {
 		// TODO Auto-generated method stub
-		return String.valueOf(quality) + " " + (super.toStringWeka());
+		return String.format("%,4.2f", quality) + " " + (super.toStringWeka());
 	}// end method
 
 }// end class

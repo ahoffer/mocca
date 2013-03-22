@@ -133,18 +133,7 @@ public class MatrixUtils {
 		return count;
 	}// end method
 
-	public static int[] getSequence(int numberOfElements) {
 
-		// Return a sequence that ranges from 0 to numberofElements-1
-		int sequence[] = new int[numberOfElements];
-
-		for (int i = 0; i < numberOfElements; ++i) {
-			sequence[i] = i;
-		}// end for
-
-		return sequence;
-
-	}// end method
 
 	/*
 	 * Return a sub-matrix given the rows indexes as input
@@ -153,6 +142,42 @@ public class MatrixUtils {
 		int cols = input.getColumnDimension();
 		return input.getMatrix(indexes, 0, cols - 1);
 
+	}// end method
+
+	// Return the largest value from each column
+	public static Matrix max(Matrix input) {
+		int cols = input.getColumnDimension();
+		Matrix maxs = new Matrix(1, cols);
+		double largest, val;
+		for (int j = 0; j < cols; ++j) {
+			largest = Double.NEGATIVE_INFINITY;
+			for (int i = 0; i < input.getRowDimension(); ++i) {
+				val = input.get(i, j);
+				if (val > largest) {
+					largest = val;
+				}// end if
+				maxs.set(0, j, largest);
+			}// end for
+		}// end for
+		return maxs;
+	}// end method
+
+	// Return the largest value from each column
+	public static Matrix min(Matrix input) {
+		int cols = input.getColumnDimension();
+		Matrix mins = new Matrix(1, cols);
+		double smallest, val;
+		for (int j = 0; j < cols; ++j) {
+			smallest = Double.POSITIVE_INFINITY;
+			for (int i = 0; i < input.getRowDimension(); ++i) {
+				val = input.get(i, j);
+				if (val < smallest) {
+					smallest = val;
+				}// end if
+				mins.set(0, j, smallest);
+			}// end for
+		}// end for
+		return mins;
 	}// end method
 
 }// end class
