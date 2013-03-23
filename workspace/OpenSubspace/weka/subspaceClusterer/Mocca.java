@@ -83,7 +83,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	private void doMocca() throws Exception {
 
 		Matrix originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
-		Matrix dataToCluster;
+		Matrix pointsToCluster;
 		double[] upper = new double[numDims];
 		double[] lower = new double[numDims];
 		Shuffler shuffler = new Shuffler(numInstances, 1);
@@ -99,7 +99,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 				// Find the principal components and rotate the data
 				Pca pca = new Pca(roationObjs);
-				dataToCluster = pca.rotate(originalDataAsMatrix);
+				pointsToCluster = pca.rotate(originalDataAsMatrix);
 
 				/*
 				 * TODO: From this point on there is no need to use the Matrix
@@ -113,14 +113,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			else {
 				// The original data is only modified if PCA-assist is used.
 				// There is no need to create a copy.
-				dataToCluster = originalDataAsMatrix;
+				pointsToCluster = originalDataAsMatrix;
 			}
 
 			// Randomly select discriminating set
 			// TODO: This is really inefficient. We only need a handful of
 			// points but we are reshuffling the entire list of points.
 			int discrimSetIndexes[] = shuffler.next(discrimSetSize);
-			Matrix discrimObjs = MatrixUtils.getRowsByIndex(dataToCluster, discrimSetIndexes);
+			Matrix discrimObjs = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
 			// Create max and min values in each dimension from the
 			// discriminating set.
@@ -128,9 +128,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			Matrix maxs = MatrixUtils.max(discrimObjs);
 
 			// Find the subspace and number of congregating dimensions
-			Matrix bounds = maxs.minus(mins);
-			double boundsAsArray[] = bounds.getArray()[0];
-			boolean subspace[] = MatrixUtils.lessThanOrEqualTo(boundsAsArray, width);
+			Matrix lengthsOfDiscrimSetVolume = maxs.minus(mins);
+			double lengthsAsArray[] = lengthsOfDiscrimSetVolume.getArray()[0];
+			boolean subspace[] = MatrixUtils.lessThanOrEqualTo(lengthsAsArray, width);
 			int numCongregatingDims = MatrixUtils.countTrueValues(subspace);
 
 			/*
@@ -151,51 +151,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			double[] maximums = maxs.getArray()[0];
 			double sheath;
 			for (int i = 0; i < numDims; ++i) {
-				sheath = width - boundsAsArray[i];
+				sheath = width - lengthsAsArray[i];
 				lower[i] = minimums[i] - sheath;
 				upper[i] = maximums[i] + sheath;
 			}
 
-			/*
-			 * Find congregating points
-			 */
-			ArrayList<Integer> objectIndexes = new ArrayList<Integer>();
-			double[][] objects = dataToCluster.getArray();
+			ArrayList<Integer> pointIndexes = findCongregatingPoints(pointsToCluster, subspace, lower, upper);
 
-			congregate: for (int i = 0; i < numInstances; ++i) {
-
-				// Get the actual point
-				double[] object = objects[i];
-
-				// Check to see if the point is in the cluster
-				for (int j = 0; j < numDims; ++j) {
-
-					/*
-					 * Only check bounds if the cluster congregates in this
-					 * dimension. We don't care about dimensions that are not
-					 * part of the subspace
-					 */
-					if (subspace[j]) {
-						if (object[j] > maximums[j] || object[j] < minimums[j]) {
-							/*
-							 * Object is not inside the hyper volume for
-							 * congregating dimension j. Therefore the object is
-							 * not part of the cluster.
-							 * 
-							 * Return to top of loop to examine next object in
-							 * the data set.
-							 */
-							continue congregate;
-						}// end if for bounds check
-					}// end if for subspace check
-				}// end for
-
-				// The object is part of the cluster
-				objectIndexes.add(Integer.valueOf(i));
-
-			}// end for
-
-			if (objectIndexes.isEmpty()) {
+			if (pointIndexes.isEmpty()) {
 				// BAD!
 				System.err.println("EMPTY CLUSTER!");
 			}
@@ -203,11 +166,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			/*
 			 * Record the cluster
 			 */
-			if (!tooManyObjectsInCommon(objectIndexes)) {
+			if (!tooManyPointsInCommon(pointIndexes)) {
 
-				int cardinality = objectIndexes.size();
+				int cardinality = pointIndexes.size();
 				double quality = quality(cardinality, numCongregatingDims);
-				MoccaCluster cluster = new MoccaCluster(subspace, objectIndexes, quality);
+				MoccaCluster cluster = new MoccaCluster(subspace, pointIndexes, quality);
 				clusters.add(cluster);
 			}
 
@@ -406,7 +369,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			this.width = w;
 	}
 
-	private boolean tooManyObjectsInCommon(List<Integer> clusterIndexes) {
+	private boolean tooManyPointsInCommon(List<Integer> clusterIndexes) {
 		int overlap, smallerCardinality;
 		double normalizedOverlap;
 
@@ -425,5 +388,46 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		// If gamma is greater than zero, use PCA.
 		return gamma > 0;
 	}
+
+	private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, boolean[] subspace, double[] lowerBounds,
+			double[] upperBounds) {
+
+		ArrayList<Integer> pointsIndexes = new ArrayList<Integer>();
+		double[][] points = pointsToCluster.getArray();
+
+		congregate: for (int i = 0; i < numInstances; ++i) {
+
+			// Get the actual point
+			double[] point = points[i];
+
+			// Check to see if the point is in the cluster
+			for (int j = 0; j < numDims; ++j) {
+
+				/*
+				 * Only check bounds if the cluster congregates in this
+				 * dimension. We don't care about dimensions that are not part
+				 * of the subspace
+				 */
+				if (subspace[j]) {
+					if (point[j] > upperBounds[j] || point[j] < lowerBounds[j]) {
+						/*
+						 * Point is not inside the hyper volume for
+						 * congregating dimension j. Therefore the point is not
+						 * part of the cluster.
+						 * 
+						 * Return to top of loop to examine next object in the
+						 * data set.
+						 */
+						continue congregate;
+					}// end if for bounds check
+				}// end if for subspace check
+			}// end for
+
+			// The point is part of the cluster
+			pointsIndexes.add(Integer.valueOf(i));
+
+		}// end for
+		return pointsIndexes;
+	}// method
 
 } // end class
