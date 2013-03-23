@@ -12,8 +12,6 @@ public class Shuffler {
 	private int fetchIdx;
 	private int numberOfElements;
 
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
 	public static void main(String[] argv) {
 		// int[] a1 = { 1, 2, 3 };
 		// int[] a2 = { 4, 5, 6 };
@@ -37,8 +35,6 @@ public class Shuffler {
 		// int l = test.length;
 	}
 
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
 	public Shuffler(int numberOfElements, long seed) {
 		this.seed = seed;
 		random = new Random(seed);
@@ -46,8 +42,6 @@ public class Shuffler {
 		originalValues = getSequence(numberOfElements);
 		reshuffle();
 	}// method
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	int[] getSequence(int numberOfElements) {
 
@@ -66,14 +60,10 @@ public class Shuffler {
 		return seed;
 	}
 
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
 	public void setSeed(long s) {
 		seed = s;
 		random = new Random(seed);
 	}
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private void shuffle(int[] array) {
 
