@@ -9,6 +9,8 @@ public class MatrixUtils {
 	// Pick a small values that means zero.
 	public static double epsilon = 1E-8;
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public static Matrix center(Matrix input, Matrix columnMeans) {
 		int rows = input.getRowDimension();
 		int cols = input.getColumnDimension();
@@ -23,6 +25,8 @@ public class MatrixUtils {
 		}// end for
 		return mat;
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static Matrix columnMeans(Matrix input) {
 
@@ -39,6 +43,8 @@ public class MatrixUtils {
 		}// end for
 		return rowVector;
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static Matrix covariance(Matrix input) {
 		// PRECONDITION: MATRIX MUST BE MEAN-CENTERED
@@ -64,6 +70,8 @@ public class MatrixUtils {
 		return covMatrix;
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public static double dotProduct(Matrix colVec1, Matrix colVec2) {
 		double sum = 0;
 		int rows1 = colVec1.getRowDimension();
@@ -79,6 +87,8 @@ public class MatrixUtils {
 		return sum;
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public static Instances toInstances(Instances template, Matrix values) {
 		double array[][] = values.getArray();
 		weka.core.Instances output = new Instances(template, template.numInstances());
@@ -91,6 +101,8 @@ public class MatrixUtils {
 
 		return output;
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static Matrix toMatrix(Instances input) {
 		int cols = input.numAttributes();
@@ -105,6 +117,8 @@ public class MatrixUtils {
 		return mat;
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public static boolean[] lessThanOrEqualTo(double[] input, double value) {
 		int length = input.length;
 		boolean result[] = new boolean[length];
@@ -114,6 +128,8 @@ public class MatrixUtils {
 		return result;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
 		int length = input.length;
 		boolean result[] = new boolean[length];
@@ -122,6 +138,8 @@ public class MatrixUtils {
 		}
 		return result;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static int countTrueValues(boolean[] input) {
 		int count = 0;
@@ -133,7 +151,7 @@ public class MatrixUtils {
 		return count;
 	}// end method
 
-
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	/*
 	 * Return a sub-matrix given the rows indexes as input
@@ -143,6 +161,8 @@ public class MatrixUtils {
 		return input.getMatrix(indexes, 0, cols - 1);
 
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	// Return the largest value from each column
 	public static Matrix max(Matrix input) {
@@ -162,7 +182,9 @@ public class MatrixUtils {
 		return maxs;
 	}// end method
 
-	// Return the largest value from each column
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	// Return the smallest value from each column
 	public static Matrix min(Matrix input) {
 		int cols = input.getColumnDimension();
 		Matrix mins = new Matrix(1, cols);
@@ -179,5 +201,7 @@ public class MatrixUtils {
 		}// end for
 		return mins;
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 }// end class

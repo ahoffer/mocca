@@ -1,0 +1,6 @@
+1364171687619	Encapsulate field 'cardinality'
+1364171908340	Rename method 'normalizedOverlapWith'
+1364180410316	Rename method 'filter'
+1364180451896	Rename method 'addCluster'
+1364182783883	Rename local variable 'discrimObjs'
+1364183681538	Rename local variable 'smallest'

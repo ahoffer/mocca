@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import Jama.Matrix;
+
 public class MoccaUtils {
 
-	public static double one = 0.99999;
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	/*
-	 * Use Arrays.binarySearch() instead.
+	 * Binary search on a sorted array of integers to determine if the element
+	 * exists Use Arrays.binarySearch() instead.
 	 */
 	// public static boolean binarySearch(int[] sortedList, int target) {
 	//
@@ -37,10 +40,14 @@ public class MoccaUtils {
 	//
 	// }// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	/*
-	 * This routine probably isn't as fast as the interection routine that uses
-	 * a hash table. This routine should runin O(n*log(n)) and the other routine
-	 * should be O(n)
+	 * Compare two SORTED lists of integers and return the elements in common.
+	 * 
+	 * This routine probably isn't as fast as the intersection routine that uses
+	 * a hash table. This routine should run O(n*log(n)) and the other
+	 * intersection routine in this class should run in O(n).
 	 */
 	// public static int[] intersection(int[] list1, int[] list2) {
 	// // PRECONDITION: Both lists are sorted lowest to highest.
@@ -72,6 +79,12 @@ public class MoccaUtils {
 	// return toArray(results);
 	// }// method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	/*
+	 * Compare two lists of integers and return the number of elements in
+	 * common.
+	 */
 	public static int intersection(List<Integer> list1, List<Integer> list2) {
 		// Iterate over the shortest O(n)
 		// Create hash map of the longest
@@ -100,6 +113,10 @@ public class MoccaUtils {
 		return count;
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+	/*
+	 * Convert a list of integers to an array of primitive integers.
+	 */
 	public static int[] toArray(List<Integer> input) {
 
 		int size = input.size();
@@ -109,9 +126,12 @@ public class MoccaUtils {
 		}// end for
 
 		return array;
-
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+	/*
+	 * Convert a list of Strings to an array of Strings.
+	 */
 	public static String[] toArray(List<String> input) {
 
 		int size = input.size();
@@ -121,8 +141,9 @@ public class MoccaUtils {
 		}// end for
 
 		return array;
+	}
 
-	}// end method
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static ArrayList<Integer> toList(int input[]) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -132,4 +153,58 @@ public class MoccaUtils {
 		return list;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	// Return the SMALLEST value from each column in the input matrix
+	public static double[] min(double[][] input) {
+		int rows = input.length;
+		int cols = input[0].length;
+		double[] minimums = new double[cols];
+
+		// Not memory alignment friendly. :-(
+		double smallest, value;
+		for (int j = 0; j < cols; ++j) {
+			smallest = Double.POSITIVE_INFINITY;
+			for (int i = 0; i < rows; ++i) {
+				value = input[i][j];
+				smallest = Math.min(smallest, value);
+			}// end for
+			minimums[j] = smallest;
+
+		}// end for
+		return minimums;
+	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	// Return the LARGEST value from each column in the input matrix
+	public static double[] max(double[][] input) {
+		int rows = input.length;
+		int cols = input[0].length;
+		double[] maximums = new double[cols];
+
+		// Not memory alignment friendly. :-(
+		double largest, value;
+		for (int j = 0; j < cols; ++j) {
+			largest = Double.NEGATIVE_INFINITY;
+			for (int i = 0; i < rows; ++i) {
+				value = input[i][j];
+				largest = Math.max(largest, value);
+			}// end for
+			maximums[j] = largest;
+
+		}// end for
+		return maximums;
+	}// end method
+
+	public static double[] subtract(double[] minuend, double[] subtrahend) {
+		/*
+		 * c - b = a
+		 * 
+		 * minuend (c) - subtrahend (b) = difference (a).
+		 */
+
+		double[] difference;
+		// TODO
+	}
 }// end class

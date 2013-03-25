@@ -5,9 +5,13 @@ import Jama.Matrix;
 
 public class Pca {
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	// Instance variables
 	Matrix input;
 	Matrix principleComponents;
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	// Constructor
 	public Pca(Matrix input) {
@@ -15,9 +19,10 @@ public class Pca {
 		eval();
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public Pca eval() {
-		Matrix covar = MatrixUtils.covariance(MatrixUtils.center(input,
-				MatrixUtils.columnMeans(input)));
+		Matrix covar = MatrixUtils.covariance(MatrixUtils.center(input, MatrixUtils.columnMeans(input)));
 		// Rank tell us the maximum number of non-zero eigenvalues to expect.
 		int covRank = covar.rank();
 
@@ -66,9 +71,12 @@ public class Pca {
 		return this;
 	}// end method
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 	public Matrix rotate(Matrix input) {
-		//Does not modify input
+		// Does not modify input
 		return input.times(principleComponents);
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 }// end class

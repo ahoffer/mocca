@@ -14,15 +14,22 @@ import weka.core.Utils;
 import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	private static final long serialVersionUID = 5624336775621682596L;
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static void main(String[] argv) {
 		runSubspaceClusterer(new Mocca(), argv);
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	private double alpha = 0.08;
 	private double beta = 0.35;
-	ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+	List<Cluster> clusters = new ArrayList<Cluster>();
 	Instances dataAsInstances;
 	int discrimSetSize;
 	private double epsilon = 0.05;
@@ -36,6 +43,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	int rotationSetSize;
 	private double subspaceOverlapThreshold = 0.20;
 	private double width = 100.0;
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	@Override
 	public void buildSubspaceClusterer(Instances data) throws Exception {
@@ -63,12 +72,16 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		toString();
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public int calcDiscrimSetSize() {
 		double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
 		int temp = Utils.round(s_est);
 		// Need at least two discriminating points to find a cluster
 		return Math.max(2, temp);
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public int calcNumTrials() {
 		double d = numDims;
@@ -80,14 +93,29 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return Utils.round(est);
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	private void doMocca() throws Exception {
 
-		Matrix originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
-		Matrix pointsToCluster;
-		double[] upper = new double[numDims];
-		double[] lower = new double[numDims];
-		Shuffler shuffler = new Shuffler(numInstances, 1);
+		// DECLARE
+		double[] upper, lower;
+		boolean[] subspace;
+		Shuffler shuffler;
+		Matrix pointsToCluster, originalDataAsMatrix;
+		int numCongregatingDims;
+		ArrayList<Integer> pointIndexes;
 
+		// ALLOCATE
+		upper = new double[numDims];
+		lower = new double[numDims];
+		subspace = new boolean[numDims];
+		shuffler = new Shuffler(numInstances, 1);
+
+		// INITIALIZE
+		originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
+		numCongregatingDims = 0;
+
+		// LOOP
 		trial: for (int k = 0; k < numTrials; k++) {
 
 			if (usePca()) {
@@ -120,43 +148,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			// TODO: This is really inefficient. We only need a handful of
 			// points but we are reshuffling the entire list of points.
 			int discrimSetIndexes[] = shuffler.next(discrimSetSize);
-			Matrix discrimObjs = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
+			Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
-			// Create max and min values in each dimension from the
-			// discriminating set.
-			Matrix mins = MatrixUtils.min(discrimObjs);
-			Matrix maxs = MatrixUtils.max(discrimObjs);
+			findSubspace(discrimPoints, subspace, numCongregatingDims, lower, upper);
 
-			// Find the subspace and number of congregating dimensions
-			Matrix lengthsOfDiscrimSetVolume = maxs.minus(mins);
-			double lengthsAsArray[] = lengthsOfDiscrimSetVolume.getArray()[0];
-			boolean subspace[] = MatrixUtils.lessThanOrEqualTo(lengthsAsArray, width);
-			int numCongregatingDims = MatrixUtils.countTrueValues(subspace);
-
-			/*
-			 * If the entire subspace is zero, it means the discriminating set
-			 * does not congregate in any dimension. The trial has failed to
-			 * find a cluster
-			 */
-			if (numCongregatingDims == 0) {
-				// Return to top of loop to try again.
-				continue trial;
-			}
-
-			/*
-			 * Calculate upper and lower bounds of the hyper volume that
-			 * surrounds the cluster.
-			 */
-			double[] minimums = mins.getArray()[0];
-			double[] maximums = maxs.getArray()[0];
-			double sheath;
-			for (int i = 0; i < numDims; ++i) {
-				sheath = width - lengthsAsArray[i];
-				lower[i] = minimums[i] - sheath;
-				upper[i] = maximums[i] + sheath;
-			}
-
-			ArrayList<Integer> pointIndexes = findCongregatingPoints(pointsToCluster, subspace, lower, upper);
+			pointIndexes = findCongregatingPoints(pointsToCluster, subspace, lower, upper);
 
 			if (pointIndexes.isEmpty()) {
 				// BAD!
@@ -164,18 +160,16 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			}
 
 			/*
-			 * Record the cluster
+			 * Create cluster object.
 			 */
-			if (!tooManyPointsInCommon(pointIndexes)) {
 
-				int cardinality = pointIndexes.size();
-				double quality = quality(cardinality, numCongregatingDims);
-				MoccaCluster cluster = new MoccaCluster(subspace, pointIndexes, quality);
-				clusters.add(cluster);
-			}
+			MoccaCluster newCluster = new MoccaCluster(subspace, pointIndexes, numCongregatingDims, beta);
+			add(newCluster);
 
 		}// end k trials loop
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private boolean gammaIsValid() {
 		/*
@@ -187,34 +181,50 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return !usePca() || (rotationSetSize >= discrimSetSize && gamma <= 1);
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public double getAlpha() {
 		return alpha;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public double getBeta() {
 		return beta;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public double getEpsilon() {
 		return epsilon;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public double getGamma() {
 		return gamma;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public double getInstanceOverlapThreshold() {
 		return instanceOverlapThreshold;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public double getMaxiter() {
 		return maxiter;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	@Override
 	public String getName() {
 		return "MOCCA";
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	/**
 	 * Gets the current option settings for the OptionHandler.
@@ -244,6 +254,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return MoccaUtils.toArray(options);
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	@Override
 	public String getParameterString() {
 		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
@@ -251,17 +263,25 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				+ width + "; gamma=" + gamma + "maxiter=" + maxiter + ";";
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public double getSubspaceOverlapThreshold() {
 		return subspaceOverlapThreshold;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public double getWidth() {
 		return width;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public String globalInfo() {
 		return "Monte Carlo Cluster Analysis (MOCCA)";
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	/**
 	 * Returns an enumeration of all the available options.
@@ -286,25 +306,28 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return vector.elements();
 	}
 
-	double quality(int cardinality, int numCongregatingDims) {
-
-		return cardinality * Math.pow(1.0 / beta, numCongregatingDims);
-	}
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public void setAlpha(double alpha) {
 		if (alpha > 0.0 && alpha < 1.0)
 			this.alpha = alpha;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public void setBeta(double beta) {
 		if (beta > 0.0 && beta < 1.0)
 			this.beta = beta;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public void setEpsilon(double epsilon) {
 		if (epsilon > 0.0 && epsilon < 1.0)
 			this.epsilon = epsilon;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public void setGamma(double g) {
 		if (g >= 0.0 && g <= 1.0) {
@@ -312,15 +335,21 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		}
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public void setInstanceOverlapThreshold(double maxOverlap) {
 		if (maxOverlap > 0.0)
 			subspaceOverlapThreshold = maxOverlap;
 	}
 
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public void setMaxiter(int maxiter) {
 		if (maxiter > 0)
 			this.maxiter = maxiter;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public void setOptions(String[] options) throws Exception {
 
@@ -360,34 +389,29 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		}
 	}
 
+	/*
+	 * Setter
+	 */
 	public void setSubspaceOverlapThreshold(double maxOverlap) {
 		subspaceOverlapThreshold = maxOverlap;
 	}
 
+	/*
+	 * Setter
+	 */
 	public void setWidth(double w) {
 		if (w > 0.0)
 			this.width = w;
 	}
 
-	private boolean tooManyPointsInCommon(List<Integer> clusterIndexes) {
-		int overlap, smallerCardinality;
-		double normalizedOverlap;
-
-		for (Cluster aCluster : clusters) {
-			overlap = MoccaUtils.intersection(clusterIndexes, aCluster.m_objects);
-			smallerCardinality = Math.min(clusterIndexes.size(), aCluster.m_objects.size());
-			normalizedOverlap = overlap / smallerCardinality;
-			if (normalizedOverlap > instanceOverlapThreshold) {
-				return true;
-			}// end if
-		}// end for
-		return false;
-	}// end method
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private boolean usePca() {
 		// If gamma is greater than zero, use PCA.
 		return gamma > 0;
 	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, boolean[] subspace, double[] lowerBounds,
 			double[] upperBounds) {
@@ -411,9 +435,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				if (subspace[j]) {
 					if (point[j] > upperBounds[j] || point[j] < lowerBounds[j]) {
 						/*
-						 * Point is not inside the hyper volume for
-						 * congregating dimension j. Therefore the point is not
-						 * part of the cluster.
+						 * Point is not inside the hyper volume for congregating
+						 * dimension j. Therefore the point is not part of the
+						 * cluster.
 						 * 
 						 * Return to top of loop to examine next object in the
 						 * data set.
@@ -428,6 +452,81 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		}// end for
 		return pointsIndexes;
+	}// method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	private void add(MoccaCluster newCluster) {
+
+		double subspaceOverlap, clusterOverlap;
+
+		for (Cluster otherCluster : clusters) {
+			MoccaCluster other = (MoccaCluster) otherCluster;
+			subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
+			clusterOverlap = newCluster.getClusterOverlapScore(other);
+			if (subspaceOverlap > subspaceOverlapThreshold && clusterOverlap > instanceOverlapThreshold) {
+				// Keep the cluster with the highest quality
+				if (newCluster.quality > other.quality) {
+					// Keep new cluster, remove other cluster
+					clusters.remove(otherCluster);
+				} else {
+					// Do not keep the new cluster. Return immediately.
+					return;
+				}
+			}// if
+		}// for
+
+		// There is no sufficiently similar cluster with higher quality.
+		// Add this cluster.
+		clusters.add(newCluster);
+	}// method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	/*
+	 * Return true if the discriminating points congregate in at least one
+	 * dimension (i.. a cluster is found). Otherwise return false. Populate the
+	 * parameters subspace, lower and upper if a cluster is found. If a cluster
+	 * is not found, the values of those parameters is undefined.
+	 */
+	private boolean findSubspace(Matrix discrimObjs, boolean[] subspace, int numCongregatingDims, double[] lower,
+			double[] upper) {
+
+		// Create max and min values in each dimension from the
+		// discriminating set.
+		Matrix mins = MatrixUtils.min(discrimObjs);
+		Matrix maxs = MatrixUtils.max(discrimObjs);
+
+		// Find the subspace and number of congregating dimensions
+		Matrix lengthsOfDiscrimSetVolume = maxs.minus(mins);
+		double lengthsAsArray[] = lengthsOfDiscrimSetVolume.getArray()[0];
+		subspace = MatrixUtils.lessThanOrEqualTo(lengthsAsArray, width);
+		numCongregatingDims = MatrixUtils.countTrueValues(subspace);
+
+		/*
+		 * If the entire subspace is zero, it means the discriminating set does
+		 * not congregate in any dimension. The trial has failed to find a
+		 * cluster
+		 */
+		if (numCongregatingDims == 0) {
+			// Return to top of loop to try again.
+			return false;
+		}
+
+		/*
+		 * Calculate upper and lower bounds of the hyper volume that surrounds
+		 * the cluster.
+		 */
+		double[] minimums = mins.getArray()[0];
+		double[] maximums = maxs.getArray()[0];
+		double sheath;
+		for (int i = 0; i < numDims; ++i) {
+			sheath = width - lengthsAsArray[i];
+			lower[i] = minimums[i] - sheath;
+			upper[i] = maximums[i] + sheath;
+		}
+
+		return true;
 	}// method
 
 } // end class

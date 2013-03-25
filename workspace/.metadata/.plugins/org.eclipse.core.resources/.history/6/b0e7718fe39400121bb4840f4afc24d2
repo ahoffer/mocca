@@ -1,0 +1,41 @@
+package weka.subspaceClusterer;
+
+import java.util.List;
+
+import i9.subspace.base.Cluster;
+
+public class MoccaCluster extends Cluster {
+
+	private static final long serialVersionUID = 1L;
+	double quality;
+	int cardinality;
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	public MoccaCluster(boolean[] subspace, List<Integer> objects, double quality) {
+		super(subspace, objects);
+		this.quality = quality;
+		cardinality = objects.size();
+	}
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	@Override
+	public String toStringWeka() {
+		// TODO Auto-generated method stub
+		return String.format("%,4.2f", quality) + " " + (super.toStringWeka());
+	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+	public double normalizedOverlapWith(MoccaCluster otherCluster) {
+		
+		overlap = MoccaUtils.intersection(clusterIndexes, aCluster.m_objects);
+		smallerCardinality = Math.min(clusterIndexes.size(), aCluster.m_objects.size());
+		normalizedOverlap = overlap / smallerCardinality;
+		
+	}
+	
+	
+	
+}// end class
