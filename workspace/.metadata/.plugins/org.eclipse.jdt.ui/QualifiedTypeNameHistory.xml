@@ -19,4 +19,5 @@
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Shuffler"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 </qualifiedTypeNameHistroy>

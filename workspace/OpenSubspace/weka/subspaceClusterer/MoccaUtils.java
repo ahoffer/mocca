@@ -194,17 +194,27 @@ public class MoccaUtils {
 			maximums[j] = largest;
 
 		}// end for
+
 		return maximums;
+
 	}// end method
+
+	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	public static double[] subtract(double[] minuend, double[] subtrahend) {
 		/*
-		 * c - b = a
+		 * PRECONDITIONS: minuend and subtrahend are same length.
 		 * 
-		 * minuend (c) - subtrahend (b) = difference (a).
+		 * c - b = a minuend (c) - subtrahend (b) = difference (a).
 		 */
+		int size = minuend.length;
+		double[] difference = new double[size];
+		for (int i = 0; i < size; ++i) {
+			difference[i] = minuend[i] - subtrahend[i];
+		}// for
 
-		double[] difference;
-		// TODO
-	}
+		return difference;
+
+	}// method
+
 }// end class
