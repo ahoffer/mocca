@@ -72,9 +72,19 @@ public class Pca {
 	}// end method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
 	public Matrix rotate(Matrix input) {
-		// Does not modify input
-		return input.times(principleComponents);
+
+		// return input.times(principleComponents);
+		int cols = input.getColumnDimension();
+		int rows = input.getRowDimension();
+		Matrix flipColumns = new Matrix(principleComponents);
+
+		for (int i = 0; i < cols; ++i) {
+			flipColumns.setMatrix(0, rows - 1, i, i, input.getMatrix(0, rows - 1, cols - 1 -i, cols - i -1));
+		}
+
+		return flipColumns;
 	}// end method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

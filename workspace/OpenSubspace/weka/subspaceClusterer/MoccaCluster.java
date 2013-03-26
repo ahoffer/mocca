@@ -7,7 +7,7 @@ import i9.subspace.base.Cluster;
 public class MoccaCluster extends Cluster {
 
 	private static final long serialVersionUID = 1L;
-	double quality;
+	public double quality;
 	int numCongregatingDims;
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

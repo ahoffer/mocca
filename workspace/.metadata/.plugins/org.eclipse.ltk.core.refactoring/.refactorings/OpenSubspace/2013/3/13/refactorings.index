@@ -10,3 +10,5 @@
 1364259287241	Move member 'countTrueValues'
 1364259316588	Move member 'lessThanOrEqualTo'
 1364263214702	Move member 'greaterThanOrEqualTo'
+1364266862854	Rename method 'calcDiscrimSetSize'
+1364266871719	Rename method 'calcNumTrials'

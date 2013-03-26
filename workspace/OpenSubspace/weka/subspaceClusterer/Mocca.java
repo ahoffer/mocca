@@ -3,6 +3,8 @@ package weka.subspaceClusterer;
 import i9.subspace.base.Cluster;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -27,39 +29,46 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		this.dataAsInstances = data;
 		numDims = data.numAttributes();
 		numInstances = data.numInstances();
-		numTrials = calcNumTrials();
 		minNumInstances = Utils.round(alpha * numInstances);
-		discrimSetSize = calcDiscrimSetSize();
+		discrimSetSize = getDiscrimSetSize();
 		rotationSetSize = (int) Math.round(gamma * numInstances);
 
-		// gammaIsValid SHOULD ONLY BE CALLED AFTER xxxSetSize variables are
-		// initialized
+		// gammaIsValid SHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
 		if (!gammaIsValid()) {
 			throw new Exception("Gamma is invalid.");
 		}
 
 		doMocca();
+		Collections.sort(clusters, new Comparator<Cluster>() {
+
+			public int compare(Cluster a, Cluster b) {
+				return Double.valueOf(((MoccaCluster) a).quality).compareTo(((MoccaCluster) b).quality);
+			}
+		});
 		setSubspaceClustering(clusters);
 
 		// Print results
 		toString();
 	}
 
-	public int calcDiscrimSetSize() {
+	public int getDiscrimSetSize() {
 		double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
 		int temp = Utils.round(s_est);
 		// Need at least two discriminating points to find a cluster
 		return Math.max(2, temp);
 	}
 
-	public int calcNumTrials() {
+	public int getNumTrials() {
 		double d = numDims;
 		double ln4 = Math.log(4);
 		double log10alpha = Math.log10(alpha);
 		double log10beta = Math.log10(beta);
 
 		double est = 1 + 4 / alpha * Math.pow(d / ln4, log10alpha / log10beta) * Math.log(1 / epsilon);
-		return Utils.round(est);
+		int numTrials = Utils.round(est);
+
+		return Math.min(numTrials, getMaxiter());
+
 	}
 
 	public double getAlpha() {
@@ -82,7 +91,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return instanceOverlapThreshold;
 	}
 
-	public double getMaxiter() {
+	public int getMaxiter() {
 		return maxiter;
 	}
 
@@ -111,10 +120,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		options.add("" + instanceOverlapThreshold);
 		options.add("-w");
 		options.add("" + width);
-		options.add("-g");
-		options.add("" + gamma);
 		options.add("-m");
 		options.add("" + maxiter);
+		options.add("-g");
+		options.add("" + gamma);
 
 		return MoccaUtils.toArray(options);
 	}
@@ -123,7 +132,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	public String getParameterString() {
 		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
 				+ subspaceOverlapThreshold + "; instance overlap threshold=" + instanceOverlapThreshold + "; width="
-				+ width + "; gamma=" + gamma + "maxiter=" + maxiter + ";";
+				+ width + "; gamma=" + gamma + "; maxiter=" + maxiter;
 	}
 
 	public double getSubspaceOverlapThreshold() {
@@ -157,7 +166,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				"-i <double>"));
 		vector.addElement(new Option("\twidth (default = 1.0)", "width", 1, "-w <double>"));
 		vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1, "-g <double>"));
-		vector.addElement(new Option("\tmaximum iteration (default = 10000)", "maxiter", 1, "-m <integer>"));
+		vector.addElement(new Option("\tmaximum iteration (default = 10000)", "maxiter", 1, "-m <int>"));
 		return vector.elements();
 	}
 
@@ -191,9 +200,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			subspaceOverlapThreshold = maxOverlap;
 	}
 
-	public void setMaxiter(int maxiter) {
-		if (maxiter > 0)
-			this.maxiter = maxiter;
+	public void setMaxiter(double d) {
+		if (d > 0)
+			this.maxiter = (int) d;
 	}
 
 	public void setOptions(String[] options) throws Exception {
@@ -231,6 +240,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		optionString = Utils.getOption("g", options);
 		if (optionString.length() != 0) {
 			setGamma(Double.parseDouble(optionString));
+		}
+
+		optionString = Utils.getOption("m", options);
+		if (optionString.length() != 0) {
+			setMaxiter(Double.parseDouble(optionString));
 		}
 	}
 
@@ -316,7 +330,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		pointsToCluster = originalDataAsMatrix;
 
 		// LOOP
-		for (int k = 0; k < numTrials; k++) {
+		for (int k = 0; k < getNumTrials(); k++) {
 
 			if (usePca()) {
 				// Randomly select rotation set based on gamma
@@ -482,7 +496,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	int minNumInstances;
 	int numDims;
 	int numInstances;
-	int numTrials;
 	int rotationSetSize;
 
 } // end class
