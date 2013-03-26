@@ -85,7 +85,8 @@ public class Pca {
 		// return input.times(principleComponents);
 
 		// 2) D * fliplr(T)
-		// Re-order the pcs so most significant pc is the first column.
+		// Re-order the pcs so the most significant pc is the
+		// first column.
 		return input.times(MatrixUtils.fliplr(principleComponents));
 
 		// 3) T * D
@@ -95,7 +96,6 @@ public class Pca {
 		// return MatrixUtils.fliplr(principleComponents).times(input);
 
 	}// end method
-	
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 }// end class

@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/i9-weka.jar"/>
 	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
-	<classpathentry kind="lib" path="lib/Jama.jar"/>
+	<classpathentry kind="lib" path="lib/Jama.jar" sourcepath="C:/Users/ahoffer/Downloads/Jama-1.0.3.zip"/>
 	<classpathentry kind="lib" path="lib/jsc.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="lib" path="lib/weka.jar"/>

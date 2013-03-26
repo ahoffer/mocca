@@ -13,16 +13,16 @@
 		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="maxiter" key="selection"/>
+		<item value="Print" key="selection"/>
 		<list key="findhistory">
+			<item value="print"/>
+			<item value="setMatrix"/>
 			<item value="maxiter"/>
 			<item value="maxit"/>
 			<item value="pointInd"/>
 			<item value="stats"/>
 			<item value="overlap"/>
 			<item value="card"/>
-			<item value="clusters"/>
-			<item value="indexes"/>
 		</list>
 		<list key="replacehistory">
 			<item value="MoccaUtils"/>

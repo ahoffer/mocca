@@ -95,7 +95,6 @@ public class Pca {
 		// return MatrixUtils.fliplr(principleComponents).times(input);
 
 	}// end method
-	
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 }// end class

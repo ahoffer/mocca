@@ -75,27 +75,18 @@ public class Pca {
 
 	public Matrix rotate(Matrix input) {
 
-		/*
-		 * Let D be the data matrix and T (transform) be the principle
-		 * components.
-		 */
-
-		// 1) D * T
-		// By default, pcs are ordered from least to mostsignificant.
 		// return input.times(principleComponents);
+		int cols = input.getColumnDimension();
+		int rows = input.getRowDimension();
+		Matrix flipColumns = new Matrix(principleComponents);
 
-		// 2) D * fliplr(T)
-		// Re-order the pcs so most significant pc is the first column.
-		return input.times(MatrixUtils.fliplr(principleComponents));
+		for (int i = 0; i < cols; ++i) {
+			flipColumns.setMatrix(0, rows - 1, i, i, input.getMatrix(0, rows - 1, cols - 1 -i, cols - i -1));
+		}
 
-		// 3) T * D
-		// return principleComponents.times(input);
-
-		// 4) fliplr(T) * D
-		// return MatrixUtils.fliplr(principleComponents).times(input);
-
+		return flipColumns;
 	}// end method
-	
+
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 }// end class

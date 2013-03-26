@@ -193,7 +193,7 @@ public class MatrixUtils {
 
 		cols = input.getColumnDimension();
 		rows = input.getRowDimension();
-		Matrix flipColumns = new Matrix(rows, cols);
+		Matrix flipColumns = new Matrix(input);
 
 		for (int j = 0; j < cols; ++j) {
 			colIdx = cols - 1 - j;
