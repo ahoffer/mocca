@@ -1,21 +1,25 @@
 package weka.subspaceClusterer;
 
+import java.util.Arrays;
 import java.util.List;
-
 import i9.subspace.base.Cluster;
 
 public class MoccaCluster extends Cluster {
 
 	private static final long serialVersionUID = 1L;
 	double quality;
-	int numDims;
+	int numCongregatingDims;
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-	public MoccaCluster(boolean[] subspace, List<Integer> objects, int numDims, double beta) {
-		super(subspace, objects);
-		this.numDims = numDims;
-		this.quality = quality(getCardinality(), numDims, beta);
+	public MoccaCluster(boolean[] subspace, List<Integer> objects, int numCongregatingDims, double beta) {
+		// Forgot to copy subspace vector and it caused strange results.
+		// Currently I do not need to copy the objects parameter because the
+		// list object is recreated on every iteration.
+
+		super(Arrays.copyOf(subspace, subspace.length), objects);
+		this.numCongregatingDims = numCongregatingDims;
+		this.quality = quality(getCardinality(), numCongregatingDims, beta);
 	}
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -43,6 +47,7 @@ public class MoccaCluster extends Cluster {
 	}
 
 	public double getSubspaceOverlapScore(MoccaCluster otherCluster) {
+
 		// PRECONDITION: Length of subspace arrays must be identical
 		int overlap, smallerNumDims;
 		double normalizedOverlap;
@@ -54,9 +59,11 @@ public class MoccaCluster extends Cluster {
 			}
 		}// for
 
-		smallerNumDims = Math.min(numDims, otherCluster.numDims);
+		smallerNumDims = Math.min(numCongregatingDims, otherCluster.numCongregatingDims);
 		normalizedOverlap = overlap / smallerNumDims;
+
 		return normalizedOverlap;
+
 	}// method
 
 	int getCardinality() {

@@ -11,6 +11,9 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
+	/*
+	 * Mean center the columns of a matrix.
+	 */
 	public static Matrix center(Matrix input, Matrix columnMeans) {
 		int rows = input.getRowDimension();
 		int cols = input.getColumnDimension();
@@ -46,6 +49,9 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
+	/*
+	 * Given an (m x n) matrix, return the (n x n) covariance matrix
+	 */
 	public static Matrix covariance(Matrix input) {
 		// PRECONDITION: MATRIX MUST BE MEAN-CENTERED
 		// Allocate the covariance matrix
@@ -72,12 +78,15 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
+	/*
+	 * Return the dot product of two column vectors.
+	 */
 	public static double dotProduct(Matrix colVec1, Matrix colVec2) {
 		double sum = 0;
 		int rows1 = colVec1.getRowDimension();
 		int rows2 = colVec2.getRowDimension();
 		if (rows1 != rows2) {
-			System.err.println("Dimension error in Pca.dotProduct.");
+			System.err.println("Dimension error in dotProduct.");
 		}// end if
 
 		for (int i = 0; i < rows1; ++i) {
@@ -104,6 +113,9 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
+	/*
+	 * Convert the data in an Instances object to a Matrix object.
+	 */
 	public static Matrix toMatrix(Instances input) {
 		int cols = input.numAttributes();
 		int rows = input.numInstances();
@@ -119,42 +131,8 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-	public static boolean[] lessThanOrEqualTo(double[] input, double value) {
-		int length = input.length;
-		boolean result[] = new boolean[length];
-		for (int i = 0; i < length; ++i) {
-			result[i] = (input[i] <= value) ? true : false;
-		}
-		return result;
-	}
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-	public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
-		int length = input.length;
-		boolean result[] = new boolean[length];
-		for (int i = 0; i < length; ++i) {
-			result[i] = (input[i] >= value) ? true : false;
-		}
-		return result;
-	}
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-	public static int countTrueValues(boolean[] input) {
-		int count = 0;
-		for (boolean b : input) {
-			if (b) {
-				count++;
-			}// end if
-		}// end for
-		return count;
-	}// end method
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
 	/*
-	 * Return a sub-matrix given the rows indexes as input
+	 * Return a sub-matrix with the given rows
 	 */
 	public static Matrix getRowsByIndex(Matrix input, int[] indexes) {
 		int cols = input.getColumnDimension();
@@ -184,7 +162,10 @@ public class MatrixUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-	// Return the smallest value from each column
+	/*
+	 * Find the smallest value from each column of a (m x n) matrix. -----------
+	 * Return a (1 x n) vector.
+	 */
 	public static Matrix min(Matrix input) {
 		int cols = input.getColumnDimension();
 		Matrix mins = new Matrix(1, cols);

@@ -259,6 +259,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		double subspaceOverlap, clusterOverlap;
 
+		/*
+		 * Modifying a list invalidates any iterator objects created from it. Do
+		 * not remove objects while iterating over the list. Add them to a
+		 * "remove items list" and remove them before exiting.
+		 */
+		List<Cluster> removeList = new ArrayList<Cluster>();
+
 		for (Cluster otherCluster : clusters) {
 			MoccaCluster other = (MoccaCluster) otherCluster;
 			subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
@@ -267,17 +274,19 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				// Keep the cluster with the highest quality
 				if (newCluster.quality > other.quality) {
 					// Keep new cluster, remove other cluster
-					clusters.remove(otherCluster);
+					removeList.add(otherCluster);
 				} else {
-					// Do not keep the new cluster. Return immediately.
+					// Do not keep the new cluster.
 					return;
 				}
 			}// if
 		}// for
 
+		clusters.removeAll(removeList);
 		// There is no sufficiently similar cluster with higher quality.
 		// Add this cluster.
 		clusters.add(newCluster);
+
 	}// method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -291,7 +300,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		Matrix pointsToCluster, originalDataAsMatrix;
 		int numCongregatingDims;
 		ArrayList<Integer> pointIndexes;
-		boolean foundCluster;
 
 		// ALLOCATE
 		upper = new double[numDims];
@@ -302,6 +310,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		// INITIALIZE
 		originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
 		numCongregatingDims = 0;
+
+		// The original data is only modified if PCA-assist is used. There is no
+		// need to create a copy.
+		pointsToCluster = originalDataAsMatrix;
 
 		// LOOP
 		for (int k = 0; k < numTrials; k++) {
@@ -317,12 +329,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				Pca pca = new Pca(roationObjs);
 				pointsToCluster = pca.rotate(originalDataAsMatrix);
 			}// end if
-
-			else {
-				// The original data is only modified if PCA-assist is used.
-				// There is no need to create a copy.
-				pointsToCluster = originalDataAsMatrix;
-			}
 
 			// Randomly select discriminating set
 			int discrimSetIndexes[] = shuffler.next(discrimSetSize);
@@ -340,6 +346,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 				// Add cluster if it meets certain criteria
 				add(newCluster);
+
 			}// if
 		}// end k trials loop
 	}// end method
@@ -404,13 +411,19 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		 * Create max and min values in each dimension from the discriminating
 		 * set. Find the subspace and number of congregating dimensions
 		 */
-
 		double[] minimums = MoccaUtils.min(discrimObjs);
 		double[] maximums = MoccaUtils.max(discrimObjs);
-		double lengthsAsArray[] = MoccaUtils.subtract(maximums, minimums);
+		double lengths[] = MoccaUtils.subtract(maximums, minimums);
 
-		subspace = MatrixUtils.lessThanOrEqualTo(lengthsAsArray, width);
-		numCongregatingDims = MatrixUtils.countTrueValues(subspace);
+		// subspace = MatrixUtils.lessThanOrEqualTo(lengths, width);
+
+		// DEBUG CODE
+		temp = MoccaUtils.lessThanOrEqualTo(lengths, width);
+		for (int i = 0; i < temp.length; ++i) {
+			subspace[i] = temp[i];
+		}
+
+		numCongregatingDims = MoccaUtils.countTrueValues(subspace);
 
 		/*
 		 * If the entire subspace is zero, it means the discriminating set does
@@ -425,7 +438,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			 */
 
 			for (int i = 0; i < numDims; ++i) {
-				sheath = width - lengthsAsArray[i];
+				sheath = width - lengths[i];
 				lower[i] = minimums[i] - sheath;
 				upper[i] = maximums[i] + sheath;
 			}
@@ -450,6 +463,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		// If gamma is greater than zero, use PCA.
 		return gamma > 0;
 	}
+
+	// DEBUG
+	boolean[] temp;
 
 	private static final long serialVersionUID = 5624336775621682596L;
 	private double alpha = 0.08;

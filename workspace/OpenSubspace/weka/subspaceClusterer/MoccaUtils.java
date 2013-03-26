@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import Jama.Matrix;
-
 public class MoccaUtils {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -216,5 +214,33 @@ public class MoccaUtils {
 		return difference;
 
 	}// method
+
+	public static int countTrueValues(boolean[] input) {
+		int count = 0;
+		for (boolean b : input) {
+			if (b) {
+				count++;
+			}// end if
+		}// end for
+		return count;
+	}// end method
+
+	public static boolean[] lessThanOrEqualTo(double[] input, double value) {
+		int length = input.length;
+		boolean result[] = new boolean[length];
+		for (int i = 0; i < length; ++i) {
+			result[i] = (input[i] <= value) ? true : false;
+		}
+		return result;
+	}
+
+	public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
+		int length = input.length;
+		boolean result[] = new boolean[length];
+		for (int i = 0; i < length; ++i) {
+			result[i] = (input[i] >= value) ? true : false;
+		}
+		return result;
+	}
 
 }// end class
