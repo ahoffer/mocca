@@ -429,13 +429,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		double[] maximums = MoccaUtils.max(discrimObjs);
 		double lengths[] = MoccaUtils.subtract(maximums, minimums);
 
-		// subspace = MatrixUtils.lessThanOrEqualTo(lengths, width);
-
-		// DEBUG CODE
-		temp = MoccaUtils.lessThanOrEqualTo(lengths, width);
-		for (int i = 0; i < temp.length; ++i) {
-			subspace[i] = temp[i];
-		}
+		/*
+		 * Copy the boolean primitives into the subspace array. (The subspace
+		 * array is a reference, not a pointer. If a new array is created and
+		 * assigned to the local variable subspace, then the subspace variable
+		 * that exists in the outer scope will not be modified.)
+		 */
+		System.arraycopy(MoccaUtils.lessThanOrEqualTo(lengths, width), 0, subspace, 0, numDims);
 
 		numCongregatingDims = MoccaUtils.countTrueValues(subspace);
 
@@ -477,9 +477,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		// If gamma is greater than zero, use PCA.
 		return gamma > 0;
 	}
-
-	// DEBUG
-	boolean[] temp;
 
 	private static final long serialVersionUID = 5624336775621682596L;
 	private double alpha = 0.08;

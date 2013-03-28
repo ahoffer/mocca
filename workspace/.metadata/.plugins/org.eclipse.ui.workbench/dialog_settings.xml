@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="FileSystemImportWizard">
+		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
+		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID"/>
+		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\Users\ahoffer\Downloads\Opensubspace_v4"/>
+		</list>
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
 		<item value="1080" key="dialogWidth"/>
@@ -27,6 +32,9 @@
 	<section name="ZipFileImportWizard">
 		<item value="false" key="WizardZipFileResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
 		<list key="WizardZipFileResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\Users\ahoffer\Downloads\Opensubspace_v4\weka.jar"/>
+			<item value="C:\Users\ahoffer\Downloads\Opensubspace_v4\i9-subspace.jar"/>
+			<item value="C:\Users\ahoffer\Downloads\Opensubspace_v4\i9-weka.jar"/>
 			<item value="C:\Users\ahoffer\Desktop\weka-src.jar"/>
 			<item value="C:\Users\ahoffer\Documents\GitHub\sepc\workspace\weka 3.7.3\weka-3.7.3-sources.jar"/>
 		</list>

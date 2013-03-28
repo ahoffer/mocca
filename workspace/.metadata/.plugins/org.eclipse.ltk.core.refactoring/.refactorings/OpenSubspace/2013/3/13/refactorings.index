@@ -12,3 +12,6 @@
 1364263214702	Move member 'greaterThanOrEqualTo'
 1364266862854	Rename method 'calcDiscrimSetSize'
 1364266871719	Rename method 'calcNumTrials'
+1364337753579	Encapsulate field 'subspace'
+1364337892536	Encapsulate field 'lower'
+1364337903408	Encapsulate field 'upper'

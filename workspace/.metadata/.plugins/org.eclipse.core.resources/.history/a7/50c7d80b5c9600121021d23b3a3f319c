@@ -1,0 +1,10 @@
+package weka.subspaceClusterer;
+
+public class MoccaSubspace {
+	
+	boolean [] subspace;
+	boolean numCongregatingDims;
+	
+	
+
+}
