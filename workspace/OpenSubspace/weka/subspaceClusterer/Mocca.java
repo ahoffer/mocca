@@ -2,6 +2,7 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +18,10 @@ import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 
-	public static void main(String[] argv) {
+	public static void main(String[] argv) throws IOException {
+		
+		System.in.read();
+		
 		runSubspaceClusterer(new Mocca(), argv);
 	}
 
@@ -132,7 +136,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	public String getParameterString() {
 		return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
 				+ subspaceOverlapThreshold + "; instance overlap threshold=" + instanceOverlapThreshold + "; width="
-				+ width + "; gamma=" + gamma + "; maxiter=" + maxiter;
+				+ width + "; gamma=" + gamma + "; maxiter=" + maxiter + "; actual iterations=" + getNumTrials();
 	}
 
 	public double getSubspaceOverlapThreshold() {
@@ -147,7 +151,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		return "Monte Carlo Cluster Analysis (MOCCA)";
 	}
 
-	/**
+	/*
 	 * Returns an enumeration of all the available options.
 	 * 
 	 * @return Enumeration An enumeration of all available options.
@@ -308,17 +312,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	private void doMocca() throws Exception {
 
 		// DECLARE
-		double[] upper, lower;
-		boolean[] subspace;
+		MoccaSubspace subspace;
 		Shuffler shuffler;
 		Matrix pointsToCluster, originalDataAsMatrix;
 		int numCongregatingDims;
 		ArrayList<Integer> pointIndexes;
 
 		// ALLOCATE
-		upper = new double[numDims];
-		lower = new double[numDims];
-		subspace = new boolean[numDims];
 		shuffler = new Shuffler(numInstances, 1);
 
 		// INITIALIZE
@@ -331,6 +331,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		// LOOP
 		for (int k = 0; k < getNumTrials(); k++) {
+
+			if (k % 1000 == 0 && k > 0) {
+				System.out.println(String.format("%,d", k));
+			}
 
 			if (usePca()) {
 				// Randomly select rotation set based on gamma
@@ -349,14 +353,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 			Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
 			// Determine the subspace where the points congregate, if any
-			numCongregatingDims = findSubspace(discrimPoints.getArray(), subspace, lower, upper);
+			subspace = new MoccaSubspace(discrimPoints.getArray(), width, numDims);
+			subspace.eval();
+			numCongregatingDims = subspace.getNumCongregatingDims();
 			if (numCongregatingDims > 0) {
 
 				// Determine which points are in the cluster
-				pointIndexes = findCongregatingPoints(pointsToCluster, subspace, lower, upper);
+				pointIndexes = findCongregatingPoints(pointsToCluster, subspace);
 
 				// Create cluster object.
-				MoccaCluster newCluster = new MoccaCluster(subspace, pointIndexes, numCongregatingDims, beta);
+				MoccaCluster newCluster = new MoccaCluster(subspace.getSubspace(), pointIndexes, numCongregatingDims,
+						beta);
 
 				// Add cluster if it meets certain criteria
 				add(newCluster);
@@ -367,11 +374,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-	private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, boolean[] subspace, double[] lowerBounds,
-			double[] upperBounds) {
+	private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, MoccaSubspace subspaceObj) {
 
 		ArrayList<Integer> pointsIndexes = new ArrayList<Integer>();
 		double[][] points = pointsToCluster.getArray();
+		boolean[] subspace = subspaceObj.getSubspace();
+		double[] lowerBounds = subspaceObj.getLower();
+		double[] upperBounds = subspaceObj.getUpper();
 
 		congregate: for (int i = 0; i < numInstances; ++i) {
 
@@ -406,59 +415,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 		}// end for
 		return pointsIndexes;
-	}// method
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-	/*
-	 * Return true if the discriminating points congregate in at least one
-	 * dimension (i.. a cluster is found). Otherwise return false. Populate the
-	 * parameters subspace, lower and upper if a cluster is found. If a cluster
-	 * is not found, the values of those parameters is undefined.
-	 */
-	private int findSubspace(double[][] discrimObjs, boolean[] subspace, double[] lower, double[] upper) {
-
-		int numCongregatingDims;
-		double sheath;
-
-		/*
-		 * Create max and min values in each dimension from the discriminating
-		 * set. Find the subspace and number of congregating dimensions
-		 */
-		double[] minimums = MoccaUtils.min(discrimObjs);
-		double[] maximums = MoccaUtils.max(discrimObjs);
-		double lengths[] = MoccaUtils.subtract(maximums, minimums);
-
-		/*
-		 * Copy the boolean primitives into the subspace array. (The subspace
-		 * array is a reference, not a pointer. If a new array is created and
-		 * assigned to the local variable subspace, then the subspace variable
-		 * that exists in the outer scope will not be modified.)
-		 */
-		System.arraycopy(MoccaUtils.lessThanOrEqualTo(lengths, width), 0, subspace, 0, numDims);
-
-		numCongregatingDims = MoccaUtils.countTrueValues(subspace);
-
-		/*
-		 * If the entire subspace is zero, it means the discriminating set does
-		 * not congregate in any dimension. The trial has failed to find a
-		 * cluster
-		 */
-		if (numCongregatingDims > 0) {
-
-			/*
-			 * Calculate upper and lower bounds of the hyper volume that
-			 * surrounds the cluster.
-			 */
-
-			for (int i = 0; i < numDims; ++i) {
-				sheath = width - lengths[i];
-				lower[i] = minimums[i] - sheath;
-				upper[i] = maximums[i] + sheath;
-			}
-
-		}// if
-		return numCongregatingDims;
 	}// method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

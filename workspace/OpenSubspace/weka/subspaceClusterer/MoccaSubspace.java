@@ -3,9 +3,9 @@ package weka.subspaceClusterer;
 public class MoccaSubspace {
 
 	private boolean[] subspace;
-	int numDims, numCongregatingDims;
-	double[][] discrimObjs;
-	double width;
+	private int numDims, numCongregatingDims;
+	private double[][] discrimObjs;
+	private double width;
 	private double[] lower;
 	private double[] upper;
 
@@ -73,6 +73,10 @@ public class MoccaSubspace {
 	 */
 	double[] getUpper() {
 		return upper.clone();
+	}
+
+	public int getNumCongregatingDims() {
+		return numCongregatingDims;
 	}
 
 }

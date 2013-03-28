@@ -9,9 +9,9 @@
 	</section>
 	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.InstallWizard.WizardSettings">
 		<item value="737" key="DIALOG_WIDTH"/>
-		<item value="14" key="DIALOG_Y_ORIGIN"/>
-		<item value="392" key="DIALOG_X_ORIGIN"/>
-		<item value="691" key="DIALOG_HEIGHT"/>
+		<item value="127" key="DIALOG_Y_ORIGIN"/>
+		<item value="687" key="DIALOG_X_ORIGIN"/>
+		<item value="813" key="DIALOG_HEIGHT"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.InstallWizard.ResolutionResultsPage">
@@ -27,6 +27,13 @@
 		<item value="200" key="DetailsSashWeight"/>
 		<item value="240" key="IDColumnWidth"/>
 		<item value="120" key="VersionColumnWidth"/>
+	</section>
+	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.UninstallWizard.WizardSettings">
+		<item value="535" key="DIALOG_WIDTH"/>
+		<item value="182" key="DIALOG_Y_ORIGIN"/>
+		<item value="519" key="DIALOG_HEIGHT"/>
+		<item value="701" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.InstallWizard.SelectableIUsPage">
 		<item value="800" key="ListSashWeight"/>
@@ -47,9 +54,9 @@
 	</section>
 	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.UpdateWizard.WizardSettings">
 		<item value="721" key="DIALOG_WIDTH"/>
-		<item value="55" key="DIALOG_Y_ORIGIN"/>
+		<item value="126" key="DIALOG_Y_ORIGIN"/>
 		<item value="519" key="DIALOG_HEIGHT"/>
-		<item value="862" key="DIALOG_X_ORIGIN"/>
+		<item value="613" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 </section>
