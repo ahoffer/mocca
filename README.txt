@@ -14,8 +14,12 @@ SNIPPETS
 ========
 Example of making it run on windows:
 
-  java.exe -classpath "C:\Users\ahoffer\Documents\GitHub\sepc\workspace\OpenSubspace;C:\Users\ahoffer\Documents\GitHub\sepc\workspace\OpenSubspace\lib\*" weka.subspaceClusterer.Mocca -m 10000 -w 01 -i 0.3 -s 0.95 -b 0475 -g 0 -M F1Measure:Accuracy -t breast.arff -c last
+  java.exe -classpath "C:\Users\ahoffer\Documents\GitHub\sepc\workspace\OpenSubspace;C:\Users\ahoffer\Documents\GitHub\sepc\workspace\OpenSubspace\lib\*" weka.subspaceClusterer.Mocca -m 10000 -w 01 -i 0.3 -s 0.95 -b 0.35 -g 0 -M F1Measure:Accuracy -t breast.arff -c last
 
-Notice that the directory which contains the jars ("OpenSubspace\lib\*") ends in an asterisk to indicate all the jar files should be included.
+--Notice that the directory which contains the jars ("OpenSubspace\lib\*") ends in an asterisk to indicate all the jar files should be included.
+--The .class files are in the directory "OpenSubspace".
+--Presumes the file breast.arff resides in the curerent directory.
 
-The .class files are in the directory "OpenSubspace".
+Here is a version run out of the eclipse project directory with relative paths:
+
+java -cp ".;.\lib\*" weka.subspaceClusterer.Mocca -m 5000 -w 1 -i 0.3 -b 0.35 -g 0.2 -t breast.arff -c last

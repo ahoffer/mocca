@@ -19,9 +19,9 @@ import Jama.Matrix;
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	public static void main(String[] argv) throws IOException {
-		
-		System.in.read();
-		
+
+		// System.in.read();
+
 		runSubspaceClusterer(new Mocca(), argv);
 	}
 
