@@ -20,7 +20,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
 	public static void main(String[] argv) throws IOException {
 
-		// System.in.read();
+		System.in.read();
 
 		runSubspaceClusterer(new Mocca(), argv);
 	}
@@ -129,7 +129,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		options.add("-g");
 		options.add("" + gamma);
 
-		return MoccaUtils.toArray(options);
+		return MoccaUtils.toStringArray(options);
 	}
 
 	@Override
@@ -274,16 +274,16 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private void add(MoccaCluster newCluster) {
-
+	
 		double subspaceOverlap, clusterOverlap;
-
+	
 		/*
 		 * Modifying a list invalidates any iterator objects created from it. Do
 		 * not remove objects while iterating over the list. Add them to a
 		 * "remove items list" and remove them before exiting.
 		 */
 		List<Cluster> removeList = new ArrayList<Cluster>();
-
+	
 		for (Cluster otherCluster : clusters) {
 			MoccaCluster other = (MoccaCluster) otherCluster;
 			subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
@@ -299,13 +299,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				}
 			}// if
 		}// for
-
+	
 		clusters.removeAll(removeList);
 		// There is no sufficiently similar cluster with higher quality.
 		// Add this cluster.
 		clusters.add(newCluster);
-
-	}// method
+	
+	}
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 

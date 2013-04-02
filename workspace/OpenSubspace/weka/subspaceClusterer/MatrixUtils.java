@@ -57,21 +57,24 @@ public class MatrixUtils {
 		// Allocate the covariance matrix
 		int rows = input.getRowDimension();
 		int cols = input.getColumnDimension();
-		Matrix covMatrix = new Matrix(cols, cols);
+		double inputArray[][] = input.getArrayCopy();
+		double outputArray[][] = new double[cols][cols];
 
 		// Compute the covariance matrix
 		double covar_ij;
-		Matrix colVec1, colVec2;
+		double[] colVec1, colVec2;
 		for (int i = 0; i < cols; ++i) {
 			for (int j = i; j < cols; ++j) {
 
-				colVec1 = input.getMatrix(0, rows - 1, i, i);
-				colVec2 = input.getMatrix(0, rows - 1, j, j);
+				colVec1 = copyColumn(inputArray, i);
+				colVec2 = copyColumn(inputArray, j);
 				covar_ij = dotProduct(colVec1, colVec2) / (rows - 1);
-				covMatrix.set(i, j, covar_ij);
-				covMatrix.set(j, i, covar_ij);
+				outputArray[i][j] = covar_ij;
+				outputArray[j][i] = covar_ij;
 			}// end for
 		}// end for
+
+		Matrix covMatrix = new Matrix(outputArray);
 
 		return covMatrix;
 	}// end method
@@ -81,16 +84,16 @@ public class MatrixUtils {
 	/*
 	 * Return the dot product of two column vectors.
 	 */
-	public static double dotProduct(Matrix colVec1, Matrix colVec2) {
+	public static double dotProduct(double[] colVec1, double[] colVec2) {
 		double sum = 0;
-		int rows1 = colVec1.getRowDimension();
-		int rows2 = colVec2.getRowDimension();
+		int rows1 = colVec1.length;
+		int rows2 = colVec2.length;
 		if (rows1 != rows2) {
 			System.err.println("Dimension error in dotProduct.");
 		}// end if
 
 		for (int i = 0; i < rows1; ++i) {
-			sum += colVec1.get(i, 0) * colVec2.get(i, 0);
+			sum += colVec1[i] * colVec2[i];
 		}// end for
 
 		return sum;
@@ -204,4 +207,15 @@ public class MatrixUtils {
 		}// for
 		return flipColumns;
 	}// method
+
+	public static double[] copyColumn(double[][] input, int j) {
+		int rows = input.length;
+		double[] output = new double[rows];
+		for (int i = 0; i < rows; ++i) {
+			output[i] = input[i][j];
+		}
+		return output;
+	}// method
+
 }// end class
+

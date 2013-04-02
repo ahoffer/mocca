@@ -130,7 +130,7 @@ public class MoccaUtils {
 	/*
 	 * Convert a list of Strings to an array of Strings.
 	 */
-	public static String[] toArray(List<String> input) {
+	public static String[] toStringArray(List<String> input) {
 
 		int size = input.size();
 		String array[] = new String[size];
