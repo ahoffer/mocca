@@ -12,8 +12,7 @@ public class MatrixUtils {
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	/*
-	 * Mean-center the columns of a matrix. This data must be mean-centered for
-	 * proper PCA
+	 * Mean center the columns of a matrix.
 	 */
 	public static Matrix center(Matrix input, Matrix columnMeans) {
 		int rows = input.getRowDimension();
@@ -28,18 +27,6 @@ public class MatrixUtils {
 			}// end for
 		}// end for
 		return mat;
-	}// end method
-
-	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-	/*
-	 * Mean-center the columns of a matrix if the mean of each attribute/dim is
-	 * not known.
-	 */
-	public static Matrix center(Matrix input) {
-		
-		return center(input, columnMeans(input));
-
 	}// end method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

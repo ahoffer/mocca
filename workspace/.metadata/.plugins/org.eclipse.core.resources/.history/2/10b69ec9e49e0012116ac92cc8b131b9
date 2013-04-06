@@ -88,6 +88,12 @@ public class Pca {
 		// Re-order the pcs so most significant pc is the first column.
 		// return input.times(MatrixUtils.fliplr(principleComponents));
 
+		// 3) T * D
+		// return principleComponents.times(input);
+
+		// 4) fliplr(T) * D
+		// return MatrixUtils.fliplr(principleComponents).times(input);
+
 	}// end method
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

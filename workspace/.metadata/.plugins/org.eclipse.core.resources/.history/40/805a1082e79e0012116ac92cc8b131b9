@@ -274,16 +274,16 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
 	private void add(MoccaCluster newCluster) {
-
+	
 		double subspaceOverlap, clusterOverlap;
-
+	
 		/*
 		 * Modifying a list invalidates any iterator objects created from it. Do
 		 * not remove objects while iterating over the list. Add them to a
 		 * "remove items list" and remove them before exiting.
 		 */
 		List<Cluster> removeList = new ArrayList<Cluster>();
-
+	
 		for (Cluster otherCluster : clusters) {
 			MoccaCluster other = (MoccaCluster) otherCluster;
 			subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
@@ -299,12 +299,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 				}
 			}// if
 		}// for
-
+	
 		clusters.removeAll(removeList);
 		// There is no sufficiently similar cluster with higher quality.
 		// Add this cluster.
 		clusters.add(newCluster);
-
+	
 	}
 
 	/*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -322,10 +322,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 		shuffler = new Shuffler(numInstances, 1);
 
 		// INITIALIZE
-		// Centering (translating) the original data does not change the
-		// outcomes.
-		// originalDataAsMatrix =
-		// MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
 		originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
 		numCongregatingDims = 0;
 

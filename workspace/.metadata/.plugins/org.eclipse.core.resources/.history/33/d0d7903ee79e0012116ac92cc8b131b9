@@ -37,7 +37,6 @@ public class MatrixUtils {
 	 * not known.
 	 */
 	public static Matrix center(Matrix input) {
-		
 		return center(input, columnMeans(input));
 
 	}// end method
