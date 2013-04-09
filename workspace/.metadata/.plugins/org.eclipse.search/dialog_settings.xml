@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="">
-		<item value="1000" key="org.eclipse.search.resultpage.limit"/>
 		<item value="TRUE" key="org.eclipse.jdt.search.resultpage.limit_enabled"/>
 		<item value="1000" key="org.eclipse.jdt.search.resultpage.limit"/>
 	</section>
@@ -17,8 +16,8 @@
 	<section name="DialogBounds_SearchDialog">
 		<item value="530" key="DIALOG_WIDTH"/>
 		<item value="154" key="DIALOG_Y_ORIGIN"/>
-		<item value="450" key="DIALOG_HEIGHT"/>
 		<item value="463" key="DIALOG_X_ORIGIN"/>
+		<item value="450" key="DIALOG_HEIGHT"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="Search">
@@ -45,11 +44,6 @@
 		<item value="false" key="REG_EX_SEARCH"/>
 		<item value="false" key="SEARCH_DERIVED"/>
 		<item value="4" key="HISTORY_SIZE"/>
-		<section name="EXTENSIONS">
-			<item value="*" key="2"/>
-			<item value="*.java" key="1"/>
-			<item value="Evalutor.java" key="0"/>
-		</section>
 		<section name="HISTORY2">
 			<item value="false" key="isRegExSearch"/>
 			<item value="debug" key="textPattern"/>
@@ -60,6 +54,11 @@
 			</list>
 			<list key="workingSets">
 			</list>
+		</section>
+		<section name="EXTENSIONS">
+			<item value="*" key="2"/>
+			<item value="*.java" key="1"/>
+			<item value="Evalutor.java" key="0"/>
 		</section>
 		<section name="HISTORY3">
 			<item value="false" key="isRegExSearch"/>

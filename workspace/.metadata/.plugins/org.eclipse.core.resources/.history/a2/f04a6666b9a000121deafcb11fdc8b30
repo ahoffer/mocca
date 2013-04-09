@@ -107,10 +107,7 @@ public class MySubspaceClusterEvaluation {
 		@Override
 		public Void call() throws Exception {
 
-			Thread.sleep(4000);
-			System.out.println("Slow!");
-			
-			//System.out.println("FAST!");
+			System.out.println("FAST!");
 			// DEBUG
 			// clusterer.buildSubspaceClusterer(dataSet);
 			return null;
@@ -337,7 +334,7 @@ public class MySubspaceClusterEvaluation {
 
 		try {
 			System.out.println("Started..");
-			future.get(3, TimeUnit.SECONDS);
+			(future.get(3, TimeUnit.SECONDS);
 			System.out.println("Finished!");
 		} catch (TimeoutException e) {
 			// This is not an error. This is our timeout.

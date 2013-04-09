@@ -8,13 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.Future;
 
 import weka.clusterquality.ClusterQualityMeasure;
 import weka.core.Instances;
@@ -93,30 +86,65 @@ import weka.filters.unsupervised.attribute.Remove;
  */
 public class MySubspaceClusterEvaluation {
 
-	private class Task implements Callable<Void> {
-		// State vars
+	/**
+	 * A Thread to execute a clustering.
+	 * 
+	 * Preconditions: If the subspace clusterer is to run with other than
+	 * default settings, they must be set outside of this class.
+	 * 
+	 * @author dave
+	 * 
+	 */
+	private class ClustererThread extends Thread {
 		SubspaceClusterer clusterer;
 		Instances dataSet;
+		private Exception e = null;
 
-		// Constructor
-		Task(SubspaceClusterer clusterer, Instances dataSet) {
-			this.clusterer = clusterer;
-			this.dataSet = dataSet;
-		}// constructor
+		public ClustererThread(SubspaceClusterer sc, Instances i) {
+			this.clusterer = sc;
+			this.dataSet = i;
+		}
 
-		@Override
-		public Void call() throws Exception {
+		@SuppressWarnings("unused")
+		public Exception getException() {
+			return e;
+		}
 
-			Thread.sleep(4000);
-			System.out.println("Slow!");
-			
-			//System.out.println("FAST!");
-			// DEBUG
-			// clusterer.buildSubspaceClusterer(dataSet);
-			return null;
-		}// method
+		public void run() {
+			try {
+				clusterer.buildSubspaceClusterer(dataSet);
+			} catch (Exception e) {
+				this.setException(e);
+			}
+		}
 
-	}// Task class
+		private void setException(Exception e) {
+			this.e = e;
+		}
+	}
+
+	private static String formatTimeString(long time) {
+		StringBuffer outBuff = new StringBuffer();
+		DecimalFormat format = new DecimalFormat();
+
+		format.setMaximumFractionDigits(0);
+		format.setMinimumIntegerDigits(2);
+
+		int ms = (int) time;
+		time /= 1000;
+		int h = (int) (time / 3600);
+		time -= (h * 3600);
+		int m = (int) (time / 60);
+		time -= (m * 60);
+		int s = (int) (time);
+
+		outBuff.append(format.format(h) + "h ");
+		outBuff.append(format.format(m) + "m ");
+		outBuff.append(format.format(s) + "s (");
+		outBuff.append((ms) + "ms)");
+
+		return outBuff.toString();
+	}
 
 	public static void main(String[] args) {
 		MySubspaceClusterEvaluation eval = new MySubspaceClusterEvaluation();
@@ -128,108 +156,6 @@ public class MySubspaceClusterEvaluation {
 		}
 	}// main
 
-	/** the clusterer */
-	private SubspaceClusterer m_clusterer = null;
-
-	/** The data set to perform the clustering on. */
-	private Instances m_dataSet;
-
-	// name of experiment. Used to name output files. Should be unique for every
-	// run.
-	private String m_experiment = null;
-
-	/** The metrics to perform on the clustering result. */
-	private ArrayList<ClusterQualityMeasure> m_metrics;
-
-	// Used to measure the run time.
-	private long m_startTime;
-
-	private long m_stoptTime;
-
-	/**
-	 * A time limit in minutes. If the clustering is not finished after
-	 * m_timeLimit minutes, then it will be interrupted.
-	 */
-	private long m_timeLimit;
-	/**
-	 * The true clusters hidden in the data set. This is required for some
-	 * metrics (RNIA, and CE).
-	 */
-	private ArrayList<Cluster> m_trueClusters;
-
-	/**
-	 * Evaluates a clusterer with the options given.
-	 * 
-	 * @param options
-	 *            An array of strings containing options for clustering.
-	 */
-	public void evaluate(String[] options) {
-
-		runClusterer();
-
-		// // Set options for the Evaluator
-		// setOptions(options);
-		// // Set options for the clusterer
-		// if (m_clusterer instanceof OptionHandler) {
-		// ((OptionHandler) m_clusterer).setOptions(options);
-		// }
-		//
-		// runClusterer();
-
-	}
-
-	/**
-	 * Calculates all quality metrics specified in m_metrics on the clustering
-	 * result. Returns the results as a StringBuffer.
-	 * 
-	 * @return The results of applying quality metrics to the clustering result.
-	 */
-	private StringBuffer getClusteringQuality() {
-		StringBuffer results = new StringBuffer();
-		ArrayList<Cluster> clusterList = null;
-
-		if (m_metrics == null || m_metrics.size() == 0) {
-			results.append("No metrics set.");
-		}
-		if (m_clusterer.getSubspaceClustering() == null) {
-			clusterList = new ArrayList<Cluster>();
-		} else {
-			clusterList = (ArrayList<Cluster>) m_clusterer.getSubspaceClustering();
-		}
-
-		// calculate each quality metric
-		for (ClusterQualityMeasure m : m_metrics) {
-			m.calculateQuality(clusterList, m_dataSet, m_trueClusters);
-		}
-
-		// print values
-		for (ClusterQualityMeasure m : m_metrics) {
-			String val = "";
-
-			val = m.getName() + "=\t";
-			if (m.getOverallValue() != null) {
-				if (m.getOverallValue().equals(Double.NaN)) {
-					val += "undef";
-				} else {
-					val += String.valueOf(m.getOverallValue());
-				}
-			} else {
-				val = "";
-				if (m.getCustomOutput() != null) {
-					val += m.getCustomOutput();
-					val = val.replace('\n', '\t');
-				} else {
-					val += "null";
-				}
-			}
-			if (val != "") {
-				results.append(val + "\t");
-			}
-		}
-
-		return results;
-	}
-
 	/**
 	 * TODO: update the option string to include the options I have added. Make
 	 * up the help string giving all the command line options
@@ -238,7 +164,7 @@ public class MySubspaceClusterEvaluation {
 	 *            the clusterer to include options for
 	 * @return a string detailing the valid command line options
 	 */
-	private String makeOptionString(SubspaceClusterer clusterer) {
+	private static String makeOptionString(SubspaceClusterer clusterer) {
 		StringBuffer optionsText = new StringBuffer("");
 
 		// General options
@@ -295,18 +221,13 @@ public class MySubspaceClusterEvaluation {
 		return optionsText.toString();
 	}
 
-	private long milliseconds() {
-
-		return (m_stoptTime - m_startTime) / 1000;
-	}
-
 	/**
 	 * 
 	 * @param inst
 	 *            The set of instances to remove the class label from.
 	 * @return A set of instances sans class label.
 	 */
-	private Instances removeClass(Instances inst) {
+	private static Instances removeClass(Instances inst) {
 		Remove af = new Remove();
 		Instances retI = null;
 
@@ -325,33 +246,155 @@ public class MySubspaceClusterEvaluation {
 		return retI;
 	}
 
+	/** the clusterer */
+	private SubspaceClusterer m_clusterer = null;
+
+
+	/** The data set to perform the clustering on. */
+	private Instances m_dataSet;
+
+	// name of experiment. Used to name output files. Should be unique for every
+	// run.
+	private String m_experiment = null;
+
+	/** The metrics to perform on the clustering result. */
+	private ArrayList<ClusterQualityMeasure> m_metrics;
+
+	// Used to measure the run time.
+	private long m_startTime;
+	private long m_stoptTime;
+
+	/**
+	 * A time limit in minutes. If the clustering is not finished after
+	 * m_timeLimit minutes, then it will be interrupted.
+	 */
+	private long m_timeLimit;
+
+	/**
+	 * The true clusters hidden in the data set. This is required for some
+	 * metrics (RNIA, and CE).
+	 */
+	private ArrayList<Cluster> m_trueClusters;
+
+	
+
+
+	/**
+	 * Evaluates a clusterer with the options given.
+	 * 
+	 * @param options
+	 *            An array of strings containing options for clustering.
+	 */
+	public String evaluate(String[] options) throws Exception {
+		// clear any previous results
+		clear();
+		// Set options for the Evaluator
+		setOptions(options);
+		// Set options for the clusterer
+		if (m_clusterer instanceof OptionHandler) {
+			((OptionHandler) m_clusterer).setOptions(options);
+		}
+		m_clusteringResults.append(currentTime() + "\t");
+		m_clusteringResults.append(m_clusterer.getName() + "\t");
+		m_clusteringResults.append(m_clusterer.getParameterString() + "\t");
+		m_clusteringResults.append(m_dataSet.relationName() + "\t");
+		// run the clusterer
+		if (runClusterer()) { // check to make sure there is something to eval
+			StringBuffer qualResults = getClusteringQuality();
+
+			if (qualResults != null) {
+				m_clusteringResults.append(qualResults);
+			}
+		}
+
+		return m_clusteringResults.toString();
+	}
+
+	/**
+	 * Calculates all quality metrics specified in m_metrics on the clustering
+	 * result. Returns the results as a StringBuffer.
+	 * 
+	 * @return The results of applying quality metrics to the clustering result.
+	 */
+	private StringBuffer getClusteringQuality() {
+		StringBuffer results = new StringBuffer();
+		ArrayList<Cluster> clusterList = null;
+
+		if (m_metrics == null || m_metrics.size() == 0) {
+			results.append("No metrics set.");
+		}
+		if (m_clusterer.getSubspaceClustering() == null) {
+			clusterList = new ArrayList<Cluster>();
+		} else {
+			clusterList = (ArrayList<Cluster>) m_clusterer.getSubspaceClustering();
+		}
+
+		// calculate each quality metric
+		for (ClusterQualityMeasure m : m_metrics) {
+			m.calculateQuality(clusterList, m_dataSet, m_trueClusters);
+		}
+
+		// print values
+		for (ClusterQualityMeasure m : m_metrics) {
+			String val = "";
+
+			val = m.getName() + "=\t";
+			if (m.getOverallValue() != null) {
+				if (m.getOverallValue().equals(Double.NaN)) {
+					val += "undef";
+				} else {
+					val += String.valueOf(m.getOverallValue());
+				}
+			} else {
+				val = "";
+				if (m.getCustomOutput() != null) {
+					val += m.getCustomOutput();
+					val = val.replace('\n', '\t');
+				} else {
+					val += "null";
+				}
+			}
+			if (val != "") {
+				results.append(val + "\t");
+			}
+		}
+
+		return results;
+	}
+
 	/**
 	 * 
 	 * @return Returns true if the clusterer finishes within m_timeLimit.
 	 */
+	@SuppressWarnings("deprecation")
+	private boolean runClusterer() {
+		long start = 0;
+		long end = 0;
+		boolean completed = true;
+		ClustererThread clusterthread = null;
 
-	private void runClusterer() {
-
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Void> future = executor.submit(new Task(m_clusterer, removeClass(m_dataSet)));
-
+		clusterthread = new ClustererThread(m_clusterer, removeClass(m_dataSet));
+		start = System.currentTimeMillis();
+		clusterthread.start();
 		try {
-			System.out.println("Started..");
-			future.get(3, TimeUnit.SECONDS);
-			System.out.println("Finished!");
-		} catch (TimeoutException e) {
-			// This is not an error. This is our timeout.
-			System.out.println("Timeout!");
+			clusterthread.join(m_timeLimit * 60 * 1000);
 		} catch (InterruptedException e) {
-
-			System.err.println("InterruptedException!");
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			System.err.println("InterruptedException!");
 			e.printStackTrace();
 		}
-		executor.shutdownNow();
+		end = System.currentTimeMillis();
 
+		if (clusterthread.isAlive()) {
+			clusterthread.interrupt();
+			clusterthread.stop(); // without killing the thread, the object will
+									// persist until the thread finishes.
+			m_clusteringResults.append("timed out after " + m_timeLimit + " minutes" + "\t");
+			completed = false;
+		} else {
+			m_clusteringResults.append(formatTimeString(end - start));
+			m_clusteringResults.append("\t");
+		}
+
+		return completed;
 	}
 
 	/**
@@ -547,14 +590,6 @@ public class MySubspaceClusterEvaluation {
 		int numDims = m_dataSet.numAttributes() - 1; // class is one of the
 														// attributes
 		m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, numDims);
-	}
-
-	private void start() {
-		m_startTime = System.nanoTime();
-	}
-
-	private void stop() {
-		m_stoptTime = System.nanoTime();
 	}
 
 }// class
