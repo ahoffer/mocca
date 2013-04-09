@@ -26,6 +26,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>lib</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/OpenSubspace/lib</locationURI>
+		</link>
+		<link>
 			<name>weka</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -51,59 +56,9 @@
 			<locationURI>WORKSPACE_LOC/OpenSubspace/.metadata/version.ini</locationURI>
 		</link>
 		<link>
-			<name>.settings/org.eclipse.jdt.core.prefs</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/.settings/org.eclipse.jdt.core.prefs</locationURI>
-		</link>
-		<link>
 			<name>i9/subspace</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>lib/Jama.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/Jama.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/commons-math-1.1.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/commons-math-1.1.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/i9-subspace.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/i9-subspace.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/i9-weka.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/i9-weka.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/j3dcore.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/j3dcore.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/j3dutils.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/j3dutils.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/jsc.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/jsc.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/vecmath.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/vecmath.jar</locationURI>
-		</link>
-		<link>
-			<name>lib/weka.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/lib/weka.jar</locationURI>
 		</link>
 		<link>
 			<name>weka/subspaceClusterer</name>
@@ -399,41 +354,6 @@
 			<name>i9/subspace/sepc/SepcWrapper.java</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcWrapper.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/MatrixUtils.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/MatrixUtils.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/Mocca.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Mocca.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/MoccaCluster.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/MoccaCluster.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/MoccaSubspace.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/MoccaSubspace.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/MoccaUtils.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/MoccaUtils.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/Pca.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Pca.java</locationURI>
-		</link>
-		<link>
-			<name>src/weka/subspaceClusterer/Shuffler.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Shuffler.java</locationURI>
 		</link>
 		<link>
 			<name>.metadata/.plugins/org.eclipse.core.resources/.root/.indexes</name>
