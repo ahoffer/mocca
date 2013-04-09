@@ -10,21 +10,23 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
 		<item value="false" key="isRegEx"/>
-		<item value="false" key="casesensitive"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="clusterth" key="selection"/>
+		<item value="m_timeLimit" key="selection"/>
 		<list key="findhistory">
-			<item value="clusterth"/>
-			<item value="removeClass"/>
-			<item value="makeop"/>
-			<item value="output"/>
-			<item value="print"/>
-			<item value="setMatrix"/>
-			<item value="maxiter"/>
-			<item value="maxit"/>
+			<item value="m_timeLimit"/>
+			<item value="options"/>
+			<item value="stack"/>
+			<item value="timelimit"/>
+			<item value="&lt;p/&gt;"/>
+			<item value="&lt;/ul&gt;"/>
+			<item value="&lt;ul&gt;"/>
+			<item value="&lt;br/&gt;"/>
 		</list>
 		<list key="replacehistory">
+			<item value="m_options"/>
+			<item value=""/>
 			<item value="MoccaUtils"/>
 		</list>
 	</section>
