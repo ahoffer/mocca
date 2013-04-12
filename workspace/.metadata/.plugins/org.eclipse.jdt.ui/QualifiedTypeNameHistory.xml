@@ -39,4 +39,5 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.SubspaceClusterer"/>
 </qualifiedTypeNameHistroy>

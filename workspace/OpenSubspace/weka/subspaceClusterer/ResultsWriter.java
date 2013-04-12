@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -64,22 +63,29 @@ public class ResultsWriter {
         writer.close();
     }
 
+    public void setClustererParameters(SubspaceClusterer clusterer) {
+        clusterer.getParameterString();
+    }
+
     File getFile(String name) {
         return new File(getPath() + getKey() + "_" + name + extension);
     }
 
     CsvListWriter getListWriter(String name) {
 
+        FileWriter fw = null;
         File file = getFile(name);
-        CsvListWriter temp = null;
+
         try {
-            FileWriter fw = new FileWriter(file.getCanonicalFile());
-            temp = new CsvListWriter(fw, new CsvPreference.Builder('"', separator, "\n").build());
+            fw = new FileWriter(file.getCanonicalFile());
+
         } catch (IOException e) {
             System.err.println(e.getMessage());
 
         }
-        return temp;
+
+        return new CsvListWriter(fw, new CsvPreference.Builder('"', separator, "\n").build());
+
     }
 
     public String getKey() {

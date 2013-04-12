@@ -167,9 +167,9 @@ public class SepcWrapper {
 		}
 	}
 
-	private int getMaxUnmatchedSubspaces() {
-		return maxUnmatchedSubspaces;
-	}
+    // private int getMaxUnmatchedSubspaces() {
+    // return maxUnmatchedSubspaces;
+    // }
 
 	private void setMaxUnmatchedSubspaces(int maxUnmatchedSubspaces) {
 		this.maxUnmatchedSubspaces = maxUnmatchedSubspaces;

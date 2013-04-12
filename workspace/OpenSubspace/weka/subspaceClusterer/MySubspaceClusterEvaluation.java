@@ -5,8 +5,6 @@ import i9.subspace.base.Cluster;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -14,8 +12,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.supercsv.io.CsvListWriter;
 
 import weka.clusterquality.ClusterQualityMeasure;
 import weka.core.Instances;
@@ -82,7 +78,7 @@ public class MySubspaceClusterEvaluation {
         try {
             eval.run();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }// main
 
@@ -93,12 +89,13 @@ public class MySubspaceClusterEvaluation {
     ResultsWriter m_writer = new ResultsWriter();
 
     // Set to true if the experiment does not timeout.
+    // TODO: Pull this out if there is no use for it.
     private boolean m_successfulRun = false;
 
     /*
      * the command line args
      */
-    private String[] m_options;
+    String[] m_options;
 
     public MySubspaceClusterEvaluation(String[] options) {
 
@@ -106,25 +103,25 @@ public class MySubspaceClusterEvaluation {
     }
 
     /** The data set to perform the clustering on. */
-    private Instances m_dataSet;
+    Instances m_dataSet;
 
     /* The metrics to perform on the clustering result. */
-    private ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
+    ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
 
     /* Used to measure the run time. */
-    private long m_startTime;
+    long m_startTime;
 
-    private long m_stoptTime;
+    long m_stoptTime;
 
     /**
      * A time limit in minutes. If the clustering process is interrupted if it does not complete before the time limit.
      */
-    private long m_timeLimit = 30;
+    long m_timeLimit = 30;
 
     /**
      * The true clusters hidden in the data set. This is required for some metrics (RNIA, and CE).
      */
-    private ArrayList<Cluster> m_trueClusters;
+    ArrayList<Cluster> m_trueClusters;
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
@@ -141,13 +138,19 @@ public class MySubspaceClusterEvaluation {
         // Do it
         setOptions();
 
-        // Timed section
+        // Generate clusters and time how long it takes
         startTimer();
         runClusterer();
         stopTimer();
+        m_writer.put("CLSTRTIME", getRunTime());
 
-        // Report
+        // Run the metrics and time how long they take
+        startTimer();
         runMetrics();
+        stopTimer();
+        m_writer.put("METRICSTIME", getRunTime());
+
+        // Write report files
         m_writer.writeResults();
         m_writer.writeClusters(getClusters());
 
@@ -185,6 +188,8 @@ public class MySubspaceClusterEvaluation {
         }
         return m_clusters;
     }
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     /**
      * PRECONDITION: The field m_clusterer must be set before this method is called.
@@ -250,10 +255,10 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private long getRunTime() {
+    private Double getRunTime() {
         // Return number of milliseconds.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
-        return (m_stoptTime - m_startTime) / 1000;
+        return Double.valueOf((double) (m_stoptTime - m_startTime) / 1000);
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
