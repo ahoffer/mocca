@@ -10,7 +10,6 @@
 <fullyQualifiedTypeName name="weka.subspaceClusterer.PcaInterface"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="Jama.EigenvalueDecomposition"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Shuffler"/>
@@ -21,7 +20,6 @@
 <fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MatrixUtils"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaSubspace"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Callable"/>
 <fullyQualifiedTypeName name="java.util.concurrent.ExecutorService"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
@@ -30,4 +28,15 @@
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
 <fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="org.supercsv.prefs.CsvPreference"/>
+<fullyQualifiedTypeName name="org.supercsv.prefs.CsvPreference.Builder"/>
+<fullyQualifiedTypeName name="org.supercsv.io.CsvListWriter"/>
+<fullyQualifiedTypeName name="java.util.TreeMap"/>
+<fullyQualifiedTypeName name="java.util.NavigableSet"/>
+<fullyQualifiedTypeName name="org.supercsv.cellprocessor.ift.CellProcessor"/>
+<fullyQualifiedTypeName name="org.supercsv.cellprocessor.FmtNumber"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>

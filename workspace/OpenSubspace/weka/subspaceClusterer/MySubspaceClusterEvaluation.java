@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -67,12 +68,6 @@ public class MySubspaceClusterEvaluation {
         @Override
         public Void call() throws Exception {
 
-            // DEBUG
-            // Thread.sleep(4000);
-            // System.out.println("Slow!");
-
-            // System.out.println("FAST!");
-
             clusterer.buildSubspaceClusterer(dataSet);
             return null;
 
@@ -85,9 +80,8 @@ public class MySubspaceClusterEvaluation {
     public static void main(String[] args) {
         MySubspaceClusterEvaluation eval = new MySubspaceClusterEvaluation(args);
         try {
-            eval.runExperiement();
+            eval.run();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }// main
@@ -95,6 +89,11 @@ public class MySubspaceClusterEvaluation {
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /** the clusterer */
     private SubspaceClusterer m_clusterer;
+    private ArrayList<Cluster> m_clusters = null;
+    ResultsWriter m_writer = new ResultsWriter();
+
+    // Set to true if the experiment does not timeout.
+    private boolean m_successfulRun = false;
 
     /*
      * the command line args
@@ -108,16 +107,6 @@ public class MySubspaceClusterEvaluation {
 
     /** The data set to perform the clustering on. */
     private Instances m_dataSet;
-
-    /*
-     * Name/ID of experiment. Used to name output files. Should be unique for every run.
-     */
-    private String m_experiment;
-
-    /*
-     * Place to write the output files
-     */
-    private String outPath;
 
     /* The metrics to perform on the clustering result. */
     private ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
@@ -137,9 +126,6 @@ public class MySubspaceClusterEvaluation {
      */
     private ArrayList<Cluster> m_trueClusters;
 
-    /* The name of a measure (key) and the result (value) */
-    private HashMap<String, Double> m_evaluationResults = new HashMap<String, Double>();
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     /**
@@ -150,30 +136,24 @@ public class MySubspaceClusterEvaluation {
      * @throws Exception
      */
 
-    public void runExperiement() throws Exception {
+    public void run() throws Exception {
 
         // Do it
         setOptions();
+
+        // Timed section
         startTimer();
         runClusterer();
         stopTimer();
-        evaluateResults();
-        reportResults();
-        reportClusters();
+
+        // Report
+        runMetrics();
+        m_writer.writeResults();
+        m_writer.writeClusters(getClusters());
+
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-    void reportResults() {
-
-        // TODO NOEXT
-        CsvListWriter x;
-
-    }
-
-    void reportClusters() {
-
-    }
 
     /**
      * Calculates all quality metrics specified in m_metrics on the clustering result. Returns the results as a
@@ -181,23 +161,30 @@ public class MySubspaceClusterEvaluation {
      * 
      * @return The results of applying quality metrics to the clustering result.
      */
-    void evaluateResults() {
-        ArrayList<Cluster> clusterList = new ArrayList<Cluster>();
-
-        if (m_clusterer.getSubspaceClustering() != null) {
-            clusterList = (ArrayList<Cluster>) m_clusterer.getSubspaceClustering();
-        }
+    void runMetrics() {
 
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
-            metricObj.calculateQuality(clusterList, m_dataSet, m_trueClusters);
-            m_evaluationResults.put(metricObj.getName(), metricObj.getOverallValue());
+            metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
+            m_writer.put(metricObj.getName(), metricObj.getOverallValue());
 
         }
 
     }// method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    private ArrayList<Cluster> getClusters() {
+
+        // Lazy init the cluster list field
+        if (m_clusters == null) {
+            m_clusters = new ArrayList<Cluster>();
+            // if (m_clusterer.getSubspaceClustering() != null) {
+            m_clusters = (ArrayList<Cluster>) m_clusterer.getSubspaceClustering();
+            // }
+        }
+        return m_clusters;
+    }
 
     /**
      * PRECONDITION: The field m_clusterer must be set before this method is called.
@@ -299,6 +286,8 @@ public class MySubspaceClusterEvaluation {
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     void runClusterer() {
+        // Assume the clusterer compeletes without interruption.
+        boolean timeout = false;
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Void> future = executor.submit(new Task(m_clusterer, removeClassAttribute(m_dataSet)));
@@ -307,6 +296,7 @@ public class MySubspaceClusterEvaluation {
             future.get(m_timeLimit, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
             // This is not an error. This is our timeout.
+            timeout = true;
             System.out.println("Timeout!");
         } catch (InterruptedException e) {
             System.err.println("InterruptedException!");
@@ -316,6 +306,9 @@ public class MySubspaceClusterEvaluation {
             e.printStackTrace();
         }
         executor.shutdownNow();
+
+        // Assume that no timeout means the clusterer ran successfully
+        m_successfulRun = !timeout;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -384,10 +377,6 @@ public class MySubspaceClusterEvaluation {
         m_dataSet = source.getDataSet();
     }
 
-    void setExperimentId(String m_experiment) {
-        this.m_experiment = m_experiment;
-    }
-
     /**
      * Parses metricClassesString. Uses reflection to create metric classes and adds them to m_metrics.
      * 
@@ -429,6 +418,7 @@ public class MySubspaceClusterEvaluation {
                 System.err.println("No subspace clutsterin algorithm specified. Specify an algorithm with -sc.");
             } else {
                 this.setClustererObject(scName);
+                m_writer.setClustererName(scName);
             }
 
             String dataSetFileName = Utils.getOption('t', m_options);
@@ -436,6 +426,7 @@ public class MySubspaceClusterEvaluation {
                 throw new Exception("No input file, use -t");
             } else {
                 setDataSet(dataSetFileName);
+                m_writer.setDataName(dataSetFileName);
             }
 
             String measureOptionString = Utils.getOption('M', m_options);
@@ -466,10 +457,10 @@ public class MySubspaceClusterEvaluation {
             if (experimentName.length() == 0) {
                 throw new Exception("No experiment name, use -exp");
             }
-            setExperimentId(experimentName);
+            m_writer.setKey(experimentName);
 
             // If it is not specified, leave it as an empty string.
-            outPath = Utils.getOption("outpath", m_options);
+            m_writer.setPath(Utils.getOption("outpath", m_options));
 
         } catch (Exception e) {
             throw new Exception('\n' + e.getMessage() + getOptionString());

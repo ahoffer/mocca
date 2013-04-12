@@ -1,0 +1,89 @@
+package weka.subspaceClusterer;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeMap;
+
+import org.supercsv.io.CsvListWriter;
+import org.supercsv.prefs.CsvPreference;
+
+public class ResultsWriter {
+
+    /* The name of a measure (key) and the result (value) */
+    TreeMap<String, Double> results = new TreeMap<String, Double>();
+
+    /* Name of an algorithm parameters (key) and its value (Double) */
+    TreeMap<String, Double> parameters = new TreeMap<String, Double>();
+
+    String primaryKey, path, clustererName, dataName;
+
+    public void put(String name, Double value) {
+        results.put(name, value);
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void write() {
+        try {
+            writeResults();
+            writeClusters();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public void writeResults() throws Exception {
+
+        CsvListWriter writer = getListWriter("RSLT");
+        NavigableSet<String> header = parameters.navigableKeySet();
+        header.addAll(results.navigableKeySet());
+        writer.writeHeader(header.toArray(new String[0]));
+
+        Collection<Double> values = parameters.values();
+        values.addAll(results.values());
+        List<String> stringVals = new ArrayList<>();
+        for (Double each : values) {
+            stringVals.add(String.format("%f", each));
+        }
+        writer.write(stringVals);
+    }
+
+    public void writeClusters() {
+        CsvListWriter writer = getListWriter("CLSTR");
+
+    }
+
+    String getQualifiedName(String name) {
+        return null;
+    }
+
+    CsvListWriter getListWriter(String name) {
+
+        String fqName = getQualifiedName(name);
+        CsvListWriter temp = null;
+        try {
+            temp = new CsvListWriter(new FileWriter(fqName), new CsvPreference.Builder('"', ',', "\n").build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
+
+    public void setKey(String key) {
+        primaryKey = key;
+    }
+
+    public void setClustererName(String name) {
+        clustererName = name;
+    }
+
+}// class
+

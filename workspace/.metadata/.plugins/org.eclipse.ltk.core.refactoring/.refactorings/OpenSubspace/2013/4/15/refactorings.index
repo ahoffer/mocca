@@ -25,3 +25,9 @@
 1365543374583	Rename field 'outputPath'
 1365544302715	Delete element
 1365544496254	Rename method 'createMetricObjects'
+1365720627956	Rename method 'evaluateResults'
+1365725223698	Delete element
+1365725229738	Delete element
+1365725500368	Rename field 'algoName'
+1365725748695	Rename field 'm_experimentSuccessful'
+1365727818082	Rename method 'runExperiement'
