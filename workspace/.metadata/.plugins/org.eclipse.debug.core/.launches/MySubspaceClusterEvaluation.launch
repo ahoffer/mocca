@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="weka.subspaceClusterer.MySubspaceClusterEvaluation"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-sc Mocca -m 100000 -w 0.1 -s 0.8 -i .8 -b 0.35 -g 1.0 -M F1Measure:Accuracy:Entropy -t iris.arff -c last -exp 1"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-sc Mocca -m 100000 -w 0.1 -s 0.8 -i .8 -b 0.35 -g 0.0 -M F1Measure:Accuracy:Entropy -t iris.arff -c last -exp &quot;GG&quot; -path &quot;C:\users\ahoffer&quot; -a 0.0001"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="OpenSubspace"/>
 </launchConfiguration>

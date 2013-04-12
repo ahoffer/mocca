@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.supercsv.io.CsvListWriter;
@@ -17,58 +17,35 @@ public class ResultsWriter {
     static String clustererNameKey = "ALGO";
     static String dataNameKey = "DATA";
     static String extension = ".csv";
-    static char nonseparator = ',';
+    static char spacer = ',';
     static char separator = ',';
-
-    String path;
+    static int keyFieldWidth = 5;
 
     /* The name of a measure or parameter (key) and either the measurement or the value of the parameter */
     TreeMap<String, String> output = new TreeMap<String, String>();
 
-    public void put(String name, Double value) {
-        output.put(name, ntoa(value));
-    }
+    String path;
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+    String padZeroesLeft(String str, int fieldWidth) {
 
-    public void writeResults() throws Exception {
+        StringBuilder sb = new StringBuilder();
 
-        CsvListWriter writer = getListWriter("RSLT");
-        String[] header = output.navigableKeySet().toArray(new String[0]);
-        writer.writeHeader(header);
-        writer.write(output.values().toArray(new String[0]));
-        writer.close();
-    }
-
-    public void writeClusters(ArrayList<Cluster> clusters) throws Exception {
-
-        /*
-         * Screw you Java. You're dispatch model is a griefer.
-         * 
-         * TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
-         * abort illegal attempt to cast a Cluster to a MoccaCluster
-         */
-        MoccaCluster first = (MoccaCluster) clusters.get(0);
-
-        CsvListWriter writer = getListWriter("CLSTR");
-        String[] header = getClusterHeader(first).toArray(new String[0]);
-        writer.writeHeader(header);
-
-        for (Cluster each : clusters) {
-            writer.write(getRecord((MoccaCluster) each));
+        for (int toPrepend = fieldWidth - str.length(); toPrepend > 0; toPrepend--) {
+            sb.append('0');
         }
 
-        writer.close();
-    }
-
-    public void setClustererParameters(SubspaceClusterer clusterer) {
-        clusterer.getParameterString();
+        sb.append(str);
+        return sb.toString();
     }
 
     File getFile(String name) {
-        return new File(getPath() + getKey() + "_" + name + extension);
+
+        return new File(getPath() + name + "_" + padZeroesLeft(getKey(), keyFieldWidth) + extension);
+    }
+
+    String getKey() {
+
+        return output.get(clustererExpKey);
     }
 
     CsvListWriter getListWriter(String name) {
@@ -77,6 +54,7 @@ public class ResultsWriter {
         File file = getFile(name);
 
         try {
+
             fw = new FileWriter(file.getCanonicalFile());
 
         } catch (IOException e) {
@@ -88,37 +66,15 @@ public class ResultsWriter {
 
     }
 
-    public String getKey() {
-        return output.get(clustererExpKey);
-    }
-
-    public String getPath() {
+    String getPath() {
+        if (path.charAt(path.length() - 1) != File.separatorChar) {
+            path += File.separator;
+        }
         return path;
     }
 
-    public void setKey(String key) {
-        output.put(clustererExpKey, key);
-    }
-
-    public void setClustererName(String name) {
-        output.put(clustererNameKey, name);
-    }
-
-    public void setDataName(String name) {
-        output.put(dataNameKey, name);
-    }
-
-    List<String> getRecord(MoccaCluster cluster) {
-        ArrayList<String> list = new ArrayList<String>();
-
-        // If MOCCA cluster, add in quality metric for the cluster
-        list.add(ntoa(cluster.quality));
-        list.addAll(getRecord((Cluster) cluster));
-        return list;
-    }
-
-    private List<String> getRecord(Cluster cluster) {
-        ArrayList<String> list = new ArrayList<String>();
+    TreeMap<String, String> getRecord(Cluster cluster) {
+        TreeMap<String, String> map = new TreeMap<String, String>();
         StringBuffer subspace = new StringBuffer();
         StringBuffer objs = new StringBuffer();
 
@@ -126,28 +82,42 @@ public class ResultsWriter {
         // subspace.append('[');
         for (boolean each : cluster.m_subspace) {
             subspace.append(each ? '1' : '0');
-            subspace.append(nonseparator);
+            subspace.append(spacer);
         }
         // Remove last punctuation mark
         subspace.deleteCharAt(subspace.length() - 1);
         // subspace.append(']');
-        list.add(subspace.toString());
+        map.put("SUBSPACE", subspace.toString());
 
         // Cardinality of object set
-        list.add(ntoa(cluster.m_objects.size()));
+        map.put("CARDINALITY", ntoa(cluster.m_objects.size()));
 
         // Indexes of the object set
         objs.append('[');
         for (Integer each : cluster.m_objects) {
             objs.append(each);
-            objs.append(nonseparator);
+            objs.append(spacer);
         }
         // Remove last punctuation mark
         objs.deleteCharAt(objs.length() - 1);
         objs.append(']');
-        list.add(objs.toString());
+        map.put("OBJECTS", (objs.toString()));
 
-        return list;
+        return map;
+    }
+
+    TreeMap<String, String> getRecord(MoccaCluster cluster) {
+        TreeMap<String, String> map = new TreeMap<String, String>();
+
+        // If MOCCA cluster, add in quality metric for the cluster
+        map.put("QUALITY", (ntoa(cluster.quality)));
+
+        // If MOCCA cluster, add in number of congregating dimensions
+        map.put("NUM_CONGR_DIMS", ntoa(cluster.getNumCongregatingDims()));
+
+        // Add generic cluster information
+        map.putAll(getRecord((Cluster) cluster));
+        return map;
     }
 
     String ntoa(Double val) {
@@ -158,20 +128,69 @@ public class ResultsWriter {
         return String.format("%d", val);
     }
 
-    List<String> getClusterHeader(Cluster cluster) {
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("SUBSPACE");
-        list.add("CARDINALITY");
-        list.add("OBJECTS");
-        return list;
+    public void put(String name, Double value) {
+        output.put(name, ntoa(value));
     }
 
-    List<String> getClusterHeader(MoccaCluster cluster) {
-        ArrayList<String> list = new ArrayList<String>();
+    public void setClusterer(SubspaceClusterer clusterer) {
 
-        list.add("QUALITY");
-        list.addAll(getClusterHeader((Cluster) cluster));
-        return list;
+        // Set name of algorithm/subspace clusterer
+        output.put(clustererNameKey, clusterer.getName());
+
+        StringTokenizer st = new StringTokenizer(clusterer.getParameterString(), ";");
+        while (st.hasMoreTokens()) {
+            // paraters in form "param_name=param_value"
+            String[] strings = st.nextToken().split("=");
+            output.put(strings[0], strings[1]);
+        }
+
+    }
+
+    public void setDataName(String name) {
+        output.put(dataNameKey, name);
+    }
+
+    public void setKey(String key) {
+        output.put(clustererExpKey, key);
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void writeClusters(ArrayList<Cluster> clusters) throws Exception {
+
+        /*
+         * Screw you Java. You're dispatch model is a griefer.
+         * 
+         * TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
+         * abort illegal attempt to cast a Cluster to a MoccaCluster
+         */
+
+        MoccaCluster first = (MoccaCluster) clusters.get(0);
+        CsvListWriter writer = getListWriter("CLSTR");
+
+        // Go through some silly hoops to get the heaser
+        TreeMap<String, String> map = getRecord(first);
+        String[] header = map.navigableKeySet().toArray(new String[0]);
+        writer.writeHeader(header);
+
+        // Write the data
+        for (Cluster each : clusters) {
+            map = getRecord((MoccaCluster) each);
+            writer.write(map.values().toArray(new String[0]));
+        }
+
+        writer.close();
+    }
+
+    public void writeResults() throws Exception {
+
+        CsvListWriter writer = getListWriter("RSLT");
+        String[] header = output.navigableKeySet().toArray(new String[0]);
+        writer.writeHeader(header);
+        writer.write(output.values().toArray(new String[0]));
+        writer.close();
     }
 
 }// class

@@ -32,3 +32,6 @@
 1365725748695	Rename field 'm_experimentSuccessful'
 1365727818082	Rename method 'runExperiement'
 1365734856536	Delete element
+1365739900899	Rename method 'setClustererParameters'
+1365740002110	Rename method 'getRunTime'
+1365748905961	Rename field 'nonseparator'

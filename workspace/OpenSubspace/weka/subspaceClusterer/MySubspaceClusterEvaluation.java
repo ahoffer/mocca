@@ -79,6 +79,7 @@ public class MySubspaceClusterEvaluation {
             eval.run();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }// main
 
@@ -137,18 +138,24 @@ public class MySubspaceClusterEvaluation {
 
         // Do it
         setOptions();
+        m_writer.setClusterer(m_clusterer);
 
         // Generate clusters and time how long it takes
         startTimer();
         runClusterer();
         stopTimer();
-        m_writer.put("CLSTRTIME", getRunTime());
+        m_writer.put("CLSTR_TIME", getElapsedTime());
+
+        //Record number of trials
+        if (m_clusterer instanceof Mocca) {
+            m_writer.put("TRIALS", (double) ((Mocca) m_clusterer).getNumTrials());
+        }
 
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
         stopTimer();
-        m_writer.put("METRICSTIME", getRunTime());
+        m_writer.put("METRIC_TIME", getElapsedTime());
 
         // Write report files
         m_writer.writeResults();
@@ -177,7 +184,7 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private ArrayList<Cluster> getClusters() {
+    ArrayList<Cluster> getClusters() {
 
         // Lazy init the cluster list field
         if (m_clusters == null) {
@@ -234,7 +241,7 @@ public class MySubspaceClusterEvaluation {
         optionsText.append("\tclustering. The value should be a whole number\n");
         optionsText.append("\tgreater than zero.\n");
 
-        optionsText.append("\t-outpath. The directory where the output files are written\n");
+        optionsText.append("\t-path. The directory where the output files are written\n");
 
         optionsText.append("-exp <experiment ID>\n");
         optionsText.append("\tUnique ID of this experimental run\n");
@@ -255,10 +262,10 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private Double getRunTime() {
+    Double getElapsedTime() {
         // Return number of milliseconds.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
-        return Double.valueOf((double) (m_stoptTime - m_startTime) / 1000);
+        return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e6));
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -423,7 +430,6 @@ public class MySubspaceClusterEvaluation {
                 System.err.println("No subspace clutsterin algorithm specified. Specify an algorithm with -sc.");
             } else {
                 this.setClustererObject(scName);
-                m_writer.setClustererName(scName);
             }
 
             String dataSetFileName = Utils.getOption('t', m_options);
@@ -465,7 +471,7 @@ public class MySubspaceClusterEvaluation {
             m_writer.setKey(experimentName);
 
             // If it is not specified, leave it as an empty string.
-            m_writer.setPath(Utils.getOption("outpath", m_options));
+            m_writer.setPath(Utils.getOption("path", m_options));
 
         } catch (Exception e) {
             throw new Exception('\n' + e.getMessage() + getOptionString());

@@ -40,4 +40,7 @@
 <fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.SubspaceClusterer"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="org.supercsv.io.CsvMapWriter"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
 </qualifiedTypeNameHistroy>
