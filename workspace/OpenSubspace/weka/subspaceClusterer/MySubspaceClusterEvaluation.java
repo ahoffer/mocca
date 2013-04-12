@@ -438,9 +438,9 @@ public class MySubspaceClusterEvaluation {
 
             String trueFileName = Utils.getOption('T', m_options);
             if (trueFileName.length() == 0) {
-                System.err.println("No true cluster file set. Some metrics "
-                        + "will not function without a true cluster file "
-                        + "(CE and RNIA). Use -T to specify a true cluster file.");
+                // System.err.println("No true cluster file set. Some metrics "
+                // + "will not function without a true cluster file "
+                // + "(CE and RNIA). Use -T to specify a true cluster file.");
             } else {
                 setTrueClusters(trueFileName);
             }

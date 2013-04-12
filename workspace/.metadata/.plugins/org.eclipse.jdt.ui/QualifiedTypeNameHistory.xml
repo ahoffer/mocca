@@ -13,7 +13,6 @@
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Shuffler"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
@@ -28,7 +27,6 @@
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
 <fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
-<fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="org.supercsv.prefs.CsvPreference"/>
 <fullyQualifiedTypeName name="org.supercsv.prefs.CsvPreference.Builder"/>
 <fullyQualifiedTypeName name="org.supercsv.io.CsvListWriter"/>
@@ -36,7 +34,9 @@
 <fullyQualifiedTypeName name="java.util.NavigableSet"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.ift.CellProcessor"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.FmtNumber"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
 </qualifiedTypeNameHistroy>
