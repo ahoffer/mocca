@@ -1,0 +1,27 @@
+package weka.subspaceClusterer;
+
+import java.util.ArrayList;
+
+public class TestRunner {
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+      double gamma, alpha, beta, epsilon, maxiter, width, subspaceOverlapThreshold, objectOverlapThreshold;
+        String measures, experimentLabel, subspaceClutererName, String outputPath;
+ArrayList<String> dataSetFilenames;
+
+
+for (int gammaStep=0; gammaStep < 5; gammaStep++) {
+    gamma += 1/gammaStep;
+    System.out.println(gamma);
+    
+}
+
+    //    -sc Mocca -m 100000 -w 0.1 -s 0.8 -i .8 -b 0.35 -g 0.0 -M F1Measure:Accuracy:Entropy 
+        //-t iris.arff -c last -exp "GG" -path "C:\users\ahoffer" -a 0.0001
+        
+    }
+
+}

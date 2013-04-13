@@ -146,7 +146,7 @@ public class MySubspaceClusterEvaluation {
         stopTimer();
         m_writer.put("CLSTR_TIME", getElapsedTime());
 
-        //Record number of trials
+        // Record number of trials
         if (m_clusterer instanceof Mocca) {
             m_writer.put("TRIALS", (double) ((Mocca) m_clusterer).getNumTrials());
         }
@@ -243,7 +243,7 @@ public class MySubspaceClusterEvaluation {
 
         optionsText.append("\t-path. The directory where the output files are written\n");
 
-        optionsText.append("-exp <experiment ID>\n");
+        optionsText.append("-label <experiment label>\n");
         optionsText.append("\tUnique ID of this experimental run\n");
 
         // Get scheme-specific options
@@ -464,9 +464,9 @@ public class MySubspaceClusterEvaluation {
                 setTimeLimit(timeLimit);
             }
 
-            String experimentName = Utils.getOption("exp", m_options);
+            String experimentName = Utils.getOption("label", m_options);
             if (experimentName.length() == 0) {
-                throw new Exception("No experiment name, use -exp");
+                throw new Exception("No experiment label, use -label");
             }
             m_writer.setKey(experimentName);
 

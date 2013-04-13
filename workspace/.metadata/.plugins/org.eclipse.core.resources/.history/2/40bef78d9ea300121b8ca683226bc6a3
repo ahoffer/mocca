@@ -1,0 +1,72 @@
+package weka.subspaceClusterer;
+
+import java.util.ArrayList;
+
+public class TestRunner {
+
+    static String measures, subspaceClutererName, outputPath, dataSetFilename;
+
+    public static void main(String[] args) {
+
+        measures = "F1Measure:Accuracy:Entropy";
+        subspaceClutererName = "Mocca";
+        outputPath = "C:\\results";
+        dataSetFilename = "breast.arff";
+        run();
+
+        // ArrayList<String> dataSetFilenames;
+
+    }
+
+    static void run() {
+        double gamma, alpha, beta, epsilon, maxiter, width, subspaceOverlapThreshold, objectOverlapThreshold;
+        int experimentLabel, gammaSteps, sSteps, oSteps, alphaSteps, betaSteps, widthSteps;
+
+        maxiter = 1e4;
+        gammaSteps = 10;
+        sSteps = 3;
+        oSteps = 3;
+        alphaSteps = 3;
+        betaSteps = 5;
+        widthSteps = 5;
+        experimentLabel = 1;
+
+        for (int sStep = 0; sStep <= sSteps; sStep++) {
+            subspaceOverlapThreshold = sStep / ((double) sSteps);
+
+            for (int oStep = 0; oStep <= oSteps; oStep++) {
+                objectOverlapThreshold = oStep / ((double) oSteps);
+                alpha = 0;
+
+                for (int alphaStep = 0; alphaStep <= alphaSteps; alphaStep++) {
+                    alpha = alpha + 0.1;
+                    beta = 0;
+
+                    for (int betaStep = 0; betaStep <= betaSteps; betaStep++) {
+                        beta = beta + 0.1;
+                        gamma = 0;
+
+                        for (int gammaStep = 0; gammaStep <= gammaSteps; gammaStep++) {
+                            gamma = gammaStep / ((double) gammaSteps);
+                            width = .05;
+                            for (int widthStep = 0; widthStep <= widthSteps; widthStep++) {
+                                width = width + 0.5 * widthStep;
+                                /*
+                                 * System.out
+                                 * .printf("experiementLabel=%d, width=%f; gamma=%f; slap=%f; olap=%f; alpha=%f; beta=%f\n"
+                                 * , experimentLabel, width, gamma, subspaceOverlapThreshold, objectOverlapThreshold,
+                                 * alpha, beta);
+                                 */
+                                
+                                String args= String.format("-a %d -b %f  -c last -i %f -label %s -maxiter %d -path %s -s %f -sc %s -t %s -w %f", alpha, beta, objectOverlapThreshold, outputPath, maxiter, subspaceOverlapThreshold, subspaceClutererName, dataSetFilename, width );
+//MySubspaceClusterEvaluation.main()
+                                experimentLabel++;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}

@@ -1,0 +1,197 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 78352 bytes for Chunk::new
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (allocation.cpp:328), pid=11084, tid=11032
+#
+# JRE version: 7.0_17-b02
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (23.7-b01 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000009258800):  JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=11032, stack(0x000000000a4d0000,0x000000000a5d0000)]
+
+Stack: [0x000000000a4d0000,0x000000000a5d0000]
+
+Current CompileTask:
+C2:  60362    8 % !         weka.clusterquality.Accuracy::calculateQuality @ 315 (567 bytes)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x0000000009266800 JavaThread "Service Thread" daemon [_thread_blocked, id=10760, stack(0x000000000abb0000,0x000000000acb0000)]
+  0x0000000009265800 JavaThread "C2 CompilerThread1" daemon [_thread_in_native, id=6620, stack(0x000000000a9b0000,0x000000000aab0000)]
+=>0x0000000009258800 JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=11032, stack(0x000000000a4d0000,0x000000000a5d0000)]
+  0x0000000009256800 JavaThread "Attach Listener" daemon [_thread_blocked, id=7376, stack(0x000000000a880000,0x000000000a980000)]
+  0x000000000924b000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=9708, stack(0x000000000a5f0000,0x000000000a6f0000)]
+  0x00000000025b5000 JavaThread "Finalizer" daemon [_thread_blocked, id=9616, stack(0x000000000a3b0000,0x000000000a4b0000)]
+  0x00000000025ae000 JavaThread "Reference Handler" daemon [_thread_blocked, id=5236, stack(0x000000000a260000,0x000000000a360000)]
+  0x000000000267d000 JavaThread "main" [_thread_in_Java, id=8108, stack(0x0000000002970000,0x0000000002a70000)]
+
+Other Threads:
+  0x00000000091d2800 VMThread [stack: 0x000000000a0e0000,0x000000000a1e0000] [id=2404]
+  0x0000000009271800 WatcherThread [stack: 0x000000000a730000,0x000000000a830000] [id=8700]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 130688K, used 12438K [0x00000000eb000000, 0x00000000f30c0000, 0x0000000100000000)
+  eden space 129536K, 9% used [0x00000000eb000000,0x00000000ebbc68c8,0x00000000f2e80000)
+  from space 1152K, 32% used [0x00000000f2e80000,0x00000000f2edf010,0x00000000f2fa0000)
+  to   space 1088K, 0% used [0x00000000f2fb0000,0x00000000f2fb0000,0x00000000f30c0000)
+ ParOldGen       total 43008K, used 716K [0x00000000c1000000, 0x00000000c3a00000, 0x00000000eb000000)
+  object space 43008K, 1% used [0x00000000c1000000,0x00000000c10b3060,0x00000000c3a00000)
+ PSPermGen       total 21248K, used 4297K [0x00000000bbe00000, 0x00000000bd2c0000, 0x00000000c1000000)
+  object space 21248K, 20% used [0x00000000bbe00000,0x00000000bc2325c0,0x00000000bd2c0000)
+
+Card table byte_map: [0x0000000005a70000,0x0000000005ca0000] byte_map_base: 0x0000000005491000
+
+Polling page: 0x0000000000140000
+
+Code Cache  [0x0000000002a70000, 0x0000000002ce0000, 0x0000000005a70000)
+ total_blobs=350 nmethods=135 adapters=166 free_code_cache=48380Kb largest_free_block=49519296
+
+Compilation events (10 events):
+Event: 48.385 Thread 0x0000000009258800  114             java.util.ArrayList::elementData (7 bytes)
+Event: 48.386 Thread 0x0000000009258800 nmethod 114 0x0000000002b2ed50 code [0x0000000002b2ee80, 0x0000000002b2ef18]
+Event: 48.386 Thread 0x0000000009258800  115             java.lang.String::compareTo (78 bytes)
+Event: 48.387 Thread 0x0000000009258800 nmethod 115 0x0000000002b2e9d0 code [0x0000000002b2eb20, 0x0000000002b2ec18]
+Event: 48.956 Thread 0x0000000009265800 nmethod 110 0x0000000002b2e110 code [0x0000000002b2e260, 0x0000000002b2e758]
+Event: 50.617 Thread 0x0000000009258800  116             weka.core.FastVector::size (5 bytes)
+Event: 50.617 Thread 0x0000000009258800 nmethod 116 0x0000000002b2df10 code [0x0000000002b2e040, 0x0000000002b2e098]
+Event: 50.618 Thread 0x0000000009265800  117             java.util.ArrayList::get (11 bytes)
+Event: 50.618 Thread 0x0000000009265800 nmethod 117 0x0000000002b2dc50 code [0x0000000002b2dd80, 0x0000000002b2de18]
+Event: 50.620 Thread 0x0000000009258800    8 % !         weka.clusterquality.Accuracy::calculateQuality @ 315 (567 bytes)
+
+GC Heap History (10 events):
+Event: 11.427 GC heap before
+{Heap before GC invocations=5 (full 0):
+ PSYoungGen      total 67392K, used 65520K [0x00000000eb000000, 0x00000000ef460000, 0x0000000100000000)
+  eden space 64768K, 100% used [0x00000000eb000000,0x00000000eef40000,0x00000000eef40000)
+  from space 2624K, 28% used [0x00000000ef1d0000,0x00000000ef28c010,0x00000000ef460000)
+  to   space 2624K, 0% used [0x00000000eef40000,0x00000000eef40000,0x00000000ef1d0000)
+ ParOldGen       total 43008K, used 8K [0x00000000c1000000, 0x00000000c3a00000, 0x00000000eb000000)
+  object space 43008K, 0% used [0x00000000c1000000,0x00000000c1002000,0x00000000c3a00000)
+ PSPermGen       total 21248K, used 3791K [0x00000000bbe00000, 0x00000000bd2c0000, 0x00000000c1000000)
+  object space 21248K, 17% used [0x00000000bbe00000,0x00000000bc1b3e28,0x00000000bd2c0000)
+Event: 11.568 GC heap after
+Heap after GC invocations=5 (full 0):
+ PSYoungGen      total 67392K, used 800K [0x00000000eb000000, 0x00000000f30e0000, 0x0000000100000000)
+  eden space 64768K, 0% used [0x00000000eb000000,0x00000000eb000000,0x00000000eef40000)
+  from space 2624K, 30% used [0x00000000eef40000,0x00000000ef008000,0x00000000ef1d0000)
+  to   space 1216K, 0% used [0x00000000f2fb0000,0x00000000f2fb0000,0x00000000f30e0000)
+ ParOldGen       total 43008K, used 16K [0x00000000c1000000, 0x00000000c3a00000, 0x00000000eb000000)
+  object space 43008K, 0% used [0x00000000c1000000,0x00000000c1004000,0x00000000c3a00000)
+ PSPermGen       total 21248K, used 3791K [0x00000000bbe00000, 0x00000000bd2c0000, 0x00000000c1000000)
+  object space 21248K, 17% used [0x00000000bbe00000,0x00000000bc1b3e28,0x00000000bd2c0000)
+}
+Event: 12.598 GC heap before
+{Heap before GC invocations=6 (full 0):
+ PSYoungGen      total 67392K, used 65568K [0x00000000eb000000, 0x00000000f30e0000, 0x0000000100000000)
+  eden space 64768K, 100% used [0x00000000eb000000,0x00000000eef40000,0x00000000eef40000)
+  from space 2624K, 30% used [0x00000000eef40000,0x00000000ef008000,0x00000000ef1d0000)
+  to   space 1216K, 0% used [0x00000000f2fb0000,0x00000000f2fb0000,0x00000000f30e0000)
+ ParOldGen       total 43008K, used 16K [0x00000000c1000000, 0x00000000c3a00000, 0x00000000eb000000)
+  object space 43008K, 0% used [0x00000000c1000000,0x00000000c1004000,0x00000000c3a00000)
+ PSPermGen       total 21248K, used 3792K [0x00000000bbe00000, 0x00000000bd2c0000, 0x00000000c1000000)
+  object space 21248K, 17% used [0x00000000bbe00000,0x00000000bc1b4068,0x00000000bd2c0000)
+Event: 12.671 GC heap after
+Heap after GC invocations=6 (full 0):
+ PSYoungGen      total 130624K, used 752K [0x00000000eb000000, 0x00000000f30c0000, 0x0000000100000000)
+  eden space 129536K, 0% used [0x00000000eb000000,0x00000000eb000000,0x00000000f2e80000)
+  from space 1088K, 69% used [0x00000000f2fb0000,0x00000000f306c010,0x00000000f30c0000)
+  to   space 1152K, 0% used [0x00000000f2e80000,0x00000000f2e80000,0x00000000f2fa0000)
+ ParOldGen       total 43008K, used 16K [0x00000000c1000000, 0x00000000c3a00000, 0x00000000eb000000)
+  object space 43008K, 0% used [0x00000000c1000000,0x00000000c1004000,0x00000000c3a00000)
+ PSPermGen   AAÏo$ Ç|´8qĞp8AAAAÏÆ__b¥U2ù<h‡#AAAAÏÆªEeU——r\aq)AAAAÏsç;Ø_ÈU¦ôÇ©u$AAAAÏsmÁ¸ì	ƒÙi	»ÖÙAAAAÏ¸ K« õEåK¨k­o AAAAÏ¸¡¸ ›|ºHBØ^AAAAÏÖòœº,ØÕ.­&Ç«mAAAAÏÖ=@¹Å`¾YÖ]ÚAAAAÏ>¨À²‡lVáÚ§¼ÄSÛ_AAAAÏ>D‚RßÉŸ\`†#’‹FAAAAÏ>½º ûQÏô¤z \QAAAAÏe8YHnVp”ÃAì(AAAAÏeW*n9Õ æs+èĞ€ÕAAAAÏDXi=›7U’DcÃx0 ì4ZAÏÓßƒåÔ	ÂXâæcŠµAAAAÏİÆ<í«ÑiöC¾—AAAAAÏİ„eÆ	¾SBø|÷eAAAAÏgfœ=‰ '!ú"%çz—AAAAÏg<w>ÄEŞ§é4–¤¸AAAAÏgØ
+¨ŸÉO`Š3 ½ÑFAAAAÏñ:°àè†UzŠşËb×õÆAAAAÏñ„ÀŒ,…Æ¤ã’5{÷AAAAÏñ)ªò	<ÚuÚùæ;HAAAAM‘	Á©´	Ã²?i½ãÚAAAAM‘•qšmŒ}2¡>ul4AAAAM‘'2L;ª“@Ks¤q AAAAM‘‘!½Ï‡ËYc&ì‡AAAAM‘ÊqãeEáğĞmÊÚ5AAAAM‘%ÊÔ62 ]lÿ8ŞÅAAAAMƒ Ê$„|åbS5wi)AAAAMƒd÷–¤Ur»Ìmê³ZmAAAAMƒkAe† râã‡Û,AAAAMv¢bBƒO›¦HÎäÜ!sAAAAMãNŠÕEÊÕIÀoAAAAMãŸË`‡ÓéËÑ–AAAAMãC{€è.ËuN¢-AAAAMæ’}X
+›¤[óÏÉé%AAAAMæãš4tA+yÿ¦-Ö”ÖAAAAMæ{·Ñ 	¦³2ÔüyAAAAMa– Íö ¦–< Ğ)ú ZAMaçg© É?8M»£…0AAAAMaÁéˆ…2ªŠÇä|ÿdÙAAAAMaSrã/	â z¦ÇXAAAAMaMa…Œ ãäs÷Ùò©ÆAAAAMa’×ßTÆQäÏ¶EÖ ÕAAAAMŠ#‘9dî›a¥‰š
+éÀ³AAAAMŠÂÃLV+€ •è¿BHAAAAMyª‡VÉ[UÏ²D§÷ƒ¬AAAAM¤§õü®=E‘à°‘{şÚ¹AAAAMÜ•Õrh®Ù¼øƒAAAAMÜKˆù>j	'ŒÁÄ)AAAAMÜM8rÑğ îe yJ›ebAAAAMÜƒû¹ÖÉåjÍÚõnm@AAAAMÜvd!…vLRŠ³ÄAAAAMÜíLC«.¦gß<¤÷şAAAAMàĞÀ€¾U\Ò7(BŒ’^AAAAMzÈéÁ·¸UÑUÏXy¸;AAAAM\1µ€xEåÊ”Ãa]AAAAM\Y‹Ù9x]ƒpó
+AAAAM\áì2ÿ	äğ•ËAAAAMŒ'w=® ÂZ¾ÊôS–AAAAMŒ÷F>‚ ¹áÅÊŞòAAAAMŒ¸ŸŞ=ÓïG-éÙû? AAAAMŒĞtgCG ƒÙqŒAAAAM']9i<]Ã¦b~êAAAAM¦Üô¹9/EyW	›Œ7¸AAAAM¦;"U|Rú~ò+üAAAAM¦ßGÀ]ÉéŠÈ»_ãAAAAMÊ>îÂMfÉÙ‘]{Xé~AAAAMÊg6¨U RïÙâï4bAAAAMiÎjmÉ4FB,râAAAAMi$> yTÓmà².š'C™AAAAMŞ•ı¹4ªŸ”Òò‰AAAAMŞÏmÛE…z·>Ñí	ÃÏAAAAMŞdÁ…ä˜­Ã¾¿AAAAMŞø£Rïz—(~­+AAAAMP0çÔŞÉ¤?„ÒøNåAAAAMP‡‘L1UÑ@t.™AAAAM}õwj®	ãg|F’ÒAAAAM`œ’iv P¨Ê\Şq¶AAAAM«‚gŠ"wDÕELKAAAAMPŒ•µ›M›<,Šß[´AAAAM“@'Š›MOãÜúZÀ8AAAAM¹g~À­QÊİÉ×å¯¢AAAAMR]rº éÛ‹ÇCÁAAAAMR@K¸³]¤İ½#!BYAAAAM‡¶WtÅ…OvìDR·ÊAAAAM‡öhWö›ÃxŠù	AAAAAMXùıÍâV0
+n÷k£FVAAAAMXI3Û“É€d¸÷NªßAAAAMüĞ =^P	%ÄXob·7AAAAMíÛÃhêİ Œ'åÊŒZAAAAMšúb¡w…ÕŸÀŞ±4sAAAAM²÷nşQYDıÿşAAAAMğ,©¬ÓÜGküM¿‰iAAAAM£¼^§èEÂÕôÌÛ:êAAAAM7|{RªÏ!
+x…O~AAAAM7:œš¹›æ`ºÑÇFJ¿AAAAM7$øNU'zğ‰x.ËÓAAAAMIC?zÖdMh=Ğl7AAAAMIuÁNJÇ+Í¢Öœ^mmAAAAM#¯v«‡›2Ã?WõAAAAMÉßæ]ç|õ}15oå¥wAAAAMjı Ç:S ‘¯Õœ]‚&AAAAMjxPeù‚ ¾<™.³[AAAAMà+ë~±VÊBÆ°¶¶AAAAM)e"l•Q·xÛ ¦zõAAAAM)yµ9©VPËØıq%oAAAAM38Å&ÏmÉêğ
+2ìÂ~AAAAM3C›Ğ‡VÓnáÜºûAAAAM3Ù®}F…ÂP3QJ’‹˜AAAAM½À&&‚Qy0¸Œo@ğ¬AAAAMlGöølÌ0Ïû?h_¸AAAAMl˜ú2=¦V°kóŠù}TAAAAM”!R{|Ei9²¶uAAAAM”æruTMªÑi±SW,şAAAAMó¿”ìæQ¬­|=E0aAAAAMó7±óVæò9J«iAAAAM@Û«Œñ£	°éI	†ı#5AAAAM@9C›¾VÊSa5°¡@AAAAM@îg¿æÉÊìá.WÒ'AAAAMTÎG(WV\P.og¥AAAAMoÚ'Õû ÀÜ*ˆæAAAAMğKİËË‘Q'kMXµtAAAAMsÁ‚OÚªQRÓi;8ø²ƒ,ZAMsÁé7Ç5|R"{e<…6AAAAMsEAÏÛcR§(…¾…êAAAAMs”Ë³ ©UÏÜ†rïœKAAAAMs!¸È	ÑœA@ã³íAAAAMsĞ n(±UõŒÓ~ìšœˆAAAAM¸ŸÄ€‰ôE·qö*ú²ŸAAAAMÖÒJáÔşªÜÚÌ–,›AAAAMÖ½vÏÒ…<`ôã1·'AAAAM>\×±’’£«ÀA„AAAAMe~Âßs^	¾\µ`,²;AAAAM®¤M®h ä7šMB
+şAAAAMhÿÊaU|õÚB—Äuh AAAAMD5pû^é*Ê"e-ÁûAAAAMD .5] ƒÉvåæ¸ŠAAAAM[Zu/Ì|ŸÇ@ÏºVöAAAAMvaôw¹É(6½K®/Ö?AAAAMİÌRãèŠQŸXìŠŸí¢AAAAMİ˜É¾‡ Ş,poÜçƒAAAAMİ&@+| "L
+BêAAAAMgL
+2–ç	y¼	@™øê»AAAAMgf--Æ82wˆšîdÎAAAAMgÌ‚BúQP´§X*ùîÙAAAAMêAıõÓ·: tQ¤’AAAAM¹5ú®	ãQëw7gíAAAAM>Š¸ƒïV§KÒÏ¼AAAAMñŞÒôÑÌ ƒ¨â¯jAAAAMõ‰¶¡YÉ¾&ˆ
+©3«AAAAMìÛrUğ‘U—}˜«Áª¨AAAAMìúù^ÉnW ‚IYAAAAMìº¶1}¦‡ªËZQAAAAM®½Íhh”Óz*Qƒ¿+ãLAAAAMiQ³Q‡ »š÷ÿAAAAM¡BÚçOÉ¹êì¥üê¿AAAAMÄÏ/ñV€é{(Õ0[ñAAAAM`HG÷ÉƒÔI„<cøAAAAM®ÑÑòÖ|ÃÌ °ŞôômAAAAM{°vp“¯…¨
+Êı‡ñÜAAAAM{2FCİVá_È›¥î£AAAAAAAAÊt{e<…6AAAAMsEAÏÛcR§(…¾…êAAAAMs”Ë³ ©UÏÜ†rïœKAAAAMs!¸È	ÑœA@ã³íAAAAMsĞ n(±UõŒÓ~ìšœˆAAAAM¸ŸÄ€‰ôE·qö*ú²ŸAAAAMÖÒJáÔşªÜÚÌ–,›AAAAMÖ½vÏÒ…<`ôã1·'AAAAM>\×±’’£«ÀA„AAAAMe~Âßs^	¾\µ`,²;AAAAM®¤M®h ä7šMB
+şAAAAMhÿÊaU|õÚB—Äuh AAAAMD5pû^é*Ê"e-ÁûAAAAMD .5] ƒÉvåæ¸ŠAAAAM[Zu/Ì|ŸÇ@ÏºVöAAAAMvaôw¹É(6½K®/Ö?AAAAMİÌRãèŠQŸXìŠŸí¢AAAAMİ˜É¾‡ Ş,poÜçƒAAAAMİ&@+| "L
+BêAAAAMgL
+2–ç	y¼	@™øê»AAAAMgf--Æ82wˆšîdÎAAAAMgÌ‚BúQP´§X*ùîÙAAAAMêAıõÓ·: tQ¤’AAAAM¹5ú®	ãQëw7gíAAAAM>Š¸ƒïV§KÒÏ¼AAAAMñŞÒôÑÌ ƒ¨â¯jAAAAMõ‰¶¡YÉ¾&ˆ
+©3«AAAAMìÛrUğ‘U—}˜«Áª¨AAAAMìúù^ÉnW ‚IYAAAAMìº¶1}¦‡ªËZQAAAAM®½Íhh”Óz*Qƒ¿+ãLAAAAMiQ³Q‡ »š÷ÿAAAAM¡BÚçOÉ¹êì¥üê¿AAAAMÄÏ/ñV€é{(Õ0[ñAAAAM`HG÷ÉƒÔI„<cøAAAAM®ÑÑòÖ|ÃÌ °ŞôômAAAAM{°vp“¯…¨
+Êı‡ñÜAAAAM{2FCİVá_È›¥î£AAAAAAAA\·5I	†ı#5AAAAM@9C›¾VÊSa5°¡@AAAAM@îg¿æÉÊìá.WÒ'AAAAMTÎG(WV\P.og¥AAAAMoÚ'Õû ÀÜ*ˆæAAAAMğKİËË‘Q'kMXµtAAAAMsÁé7Ç5|R"{e<…6AAAAMsEAÏÛcR§(…¾…êAAAAMs”Ë³ ©UÏÜ†rïœKAAAAMs!¸È	ÑœA@ã³íAAAAMsĞ n(±UõŒÓ~ìšœˆAAAAM¸ŸÄ€‰ôE·qö*ú²ŸAAAAMÖÒJáÔşªÜÚÌ–,›AAAAMÖ½vÏÒ…<`ôã1·'AAAAM>\×±’’£«ÀA„AAAAMe~Âßs^	¾\µ`,²;AAAAM®¤M®h ä7šMB
+şAAAAMhÿÊaU|õÚB—Äuh AAAAMD5pû^é*Ê"e-ÁûAAAAMD .5] ƒÉvåæ¸ŠAAAAM[Zu/Ì|ŸÇ@ÏºVöAAAAMvaôw¹É(6½K®/Ö?AAAAMİÌRãèŠQŸXìŠŸí¢AAAAMİ˜É¾‡ Ş,poÜçƒAAAAMİ&@+| "L
+BêAAAAMgL
+2–ç	y¼	@™øê»AAAAMgf--Æ82wˆšîdÎAAAAMgÌ‚BúQP´§X*ùîÙAAAAMêAıõÓ·: tQ¤’AAAAM¹5ú®	ãQëw7gíAAAAM>Š¸ƒïV§KÒÏ¼AAAAMñŞÒôÑÌ ƒ¨â¯jAAAAMõ‰¶¡YÉ¾&ˆ
+©3«AAAAMìº¶1}¦‡ªËZQAAAAM®½Íhh”Óz*Qƒ¿+ãLAAAAMiQ³Q‡ »š÷ÿAAAAM¡BÚçOÉ¹êì¥üê¿AAAAMÄÏ/ñV€é{(Õ0[ñAAAAM`HG÷ÉƒÔI„<cøAAAAM®ÑÑòÖ|ÃÌ °ŞôômAAAAM{°vp“¯…¨
+Êı‡ñÜAAAAM{2FCİVá_È›¥î£AAAAAAAAÚdhGÇ@ÏºVöAAAAMvaôw¹É(6½K®/Ö?AAAAMİÌRãèŠQŸXìŠŸí¢AAAAMİ˜É¾‡ Ş,poÜçƒAAAAMİ&@+| "L
+BêAAAAMgL
+2–ç	y¼	@™øê»AAAAMgf--Æ82wˆšîdÎAAAAMgÌ‚BúQP´§X*ùîÙAAAAMêAıõÓ·: tQ¤’AAAAM¹5ú®	ãQëw7gíAAAAAAAAÚdRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAğIlß¯È,¡î         h      ˆ  x;ï¢è6Î     üÁ     @  ©ÿ“LAAAAAAA¦nA&AAAÉAA›A‹AÓA~A~A†ApA:A‚AYAêA:A‚AGAˆAªAAAßAbAAAAA%AˆAAAA&AªAAAAJAªA6AA˜AA6AAA5A6AAA»èbA6AAAôèbAtbAAAˆAAAAAâbAA¨AA»#ªAAAAô#ªAXAAA#6âAAAİûbAì¨AA•wˆAAAAAAâbAAAA6âAAAAA¨âªAL6AA!âªAA6AAfâbAÎ6AA&âAAAAAJâªAªAAêâA6AAA²âˆAAAAA:âbA!AAxâbAAAAAWâbAAAAAÇâA6AAAÍâAAAAAâbAAAAArâA6AAAõâ6ª6AA¾â6&6AA0âAAAAAMâAAAAA4âªAâ6AAÕâˆAAAAAâªA6AA<âªAX6AAŸâbA]AAAÂâªALAAÆğlÃ…ùØI]~· B¹%Ù6~· B¹%Ù6A›ALAVAêASApA:AAâî™\36AX±Œ\36¨AAA'AA‚IiG'ôAAAAAAAAAAAAAAAAAAAAAAAWQJı9«pú6AAAE±Q	wE³Kp	²Ç 	¿«…²8 	8¿WK;QEÎ:k¯‚VV§:ª˜Jıê:úJ‹CJ²††‹˜†YA¨AAA'AA‚IiG'ôAAAAAAAAAAAAAAAAAAAAAAAWQJı9«pú6AAAE±Q	wE³Kp	²Ç 	¿«…²8 	8¿WK;QEÎ:k¯‚VV§:ª˜Jıê:úJ‹CJ²††‹˜†YAAıÇq¹%Ù6Aâî™\36AX±Œ\36Aâî™\36AX±Œ\36AãjùA\36AX±Œ\36ËAAAAtA8A'6’6ù6î6\66í6¥\í3Te©                            ÿŒ{Ç}¡Ğpî     qß@¿è      ˆ  x;ï¢è6Î     šŠ    À  !ÿ“LAAAAAAA¦nA&AAAÉAA›A‹AÓA~A~A†ApA:A‚AYAêA:A‚AGAˆAªAAAßAbAAAAA%AˆAAAA&AªAAAAJAªA6AA˜AA6AAA5A6AAA»èbA6AAAôèbAïAAAˆAAâbAA¨AA»#ªAAAAô#ªAXAAA#6âAAAİûbAì¨AA•wˆA&AAAâbAAAA6âAAAAA¨âªAL6AA!âªAA6AAfâbAÎ6AA&âAAAAAJâªAªAAêâA6AAA²âˆAAAAA:âbAšAAAxâbAAAAAWâbAAAAAÇâAAAAAÍâAAAAAâbAAAAArâA6AAAõâ6ª6AA¾â6&6AA0âAAAAAMâAAAAA4âªAâ6AAÕâˆAAAAAâªA6AA<âªAX6AAŸâbA±¨AAÂâªALAAT;Ş|½r°ùó+f7”¸@­B¹%Ù6@­B¹%Ù6A²A†A:AêALAÉA:A‚AêAAWApAêAÇALAQA†A:AwApAAYAJA‚ApA†A:A9ALAAêAJA‚A‚AıAêALAA˜A²A†A†AıAëA9ALAA¥AA#AA›A9ALA›A†A:AúAJACALA±AçAAAÒŒL¾t36AìóÀ°t36¨AAA'AA‚IiG'ôAAAAAAAAAAAAAAAAAAAAAAAWQJı9«pú6AAAEÓCU¯³Kp	p	‰×Ó ›‰:J8EU××êUÓ‚K;~­,†,›C˜¯ WÈª˜Jıê:úJ‹CJ²††‹˜†YA¨AAA'AA‚IiG'ôAAAAAAAAAAAAAAAAAAAAAAAWQJı9«pú6AAAEÓCU¯³Kp	p	‰×Ó ›‰:J8EU××êUÓ‚K;~­,†,›C˜¯ WÈª˜Jıê:úJ‹CJ²††‹˜†YAAıÇq¹%Ù6AÒŒL¾t36AìóÀ°t36AÒŒL¾t36AìóÀ°t36A6.*36AìóÀ°t36dAÌA9A9A9A9A9A9A9A9A9A9A9A9AdAÌAUAA†AYA¥AqA‚AA†A†AıAêAØALAcApAYALAZAcAA†A†AıAêAªA˜ApAkAêAA‹A˜A†AYAfAdAÌAAêA:A‚A¥AqA‚A›A†A:AúAJACAØALAÓAxASAxAëA‚ALA#AAØALA8A#A#A ALA;A8A¥A;A#ALAA›AdAÌAcA†A¥AqA‚AÓAJAA†A:ALAA†AwAwAêAAdAÌAAxAkAAêA˜A‚A¥AqA‚A\system32\KERNELBASE.dll
+0x00000000745a0000 - 0x0000000074636000 	C:\WINDOWS\System32\SYSFER.DLL
+0x000007fefda00000 - 0x000007fefdadb000 	C:\WINDOWS\system32\ADVAPI32.dll
+0x000007feff000000 - 0x000007feff09f000 	C:\WINDOWS\system32\msvcrt.dll
+0x000007fefd700000 - 0x000007fefd71f000 	C:\WINDOWS\SYSTEM32\sechost.dll
+0x000007fefed10000 - 0x000007fefee3d000 	C:\WINDOWS\system32\RPCRT4.dll
+0x0000000076c90000 - 0x0000000076d8a000 	C:\WINDOWS\system32\USER32.dll
+0x000007fefd720000 - 0x000007fefd787000 	C:\WINDOWS\system32\GDI32.dll
+0x000007fefed00000 - 0x000007fefed0e000 	C:\WINDOWS\system32\LPK.dll
+0x000007fefe9b0000 - 0x000007fefea79000 	C:\WINDOWS\system32\USP10.dll
+0x000007fefc290000 - 0x000007fefc484000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.17514_none_fa396087175ac9ac\COMCTL32.dll
+0x000007fefd790000 - 0x000007fefd801000 	C:\WINDOWS\system32\SHLWAPI.dll
+0x000007fefefd0000 - 0x000007fefeffe000 	C:\WINDOWS\system32\IMM32.DLL
+0x000007fefeec0000 - 0x000007fefefc9000 	C:\WINDOWS\system32\MSCTF.dll
+0x0000000078fe0000 - 0x00000000790b1000 	C:\Program Files\Java\jre7\bin\msvcr100.dll
+0x000000006e8d0000 - 0x000000006efef000 	C:\Program Files\Java\jre7\bin\server\jvm.dll
+0x000007fef8ba0000 - 0x000007fef8ba9000 	C:\WINDOWS\system32\WSOCK32.dll
+0x000007fefecb0000 - 0x000007fefecfd000 	C:\WINDOWS\system32\WS2_32.dll
+0x000007fefd810000 - 0x000007fefd818000 	C:\WINDOWS\system32\NSI.dll
+0x000007fefaa10000 - 0x000007fefaa4b000 	C:\WINDOWS\system32\WINMM.dll
+0x0000000076f50000 - 0x0000000076f57000 	C:\WINDOWS\system32\PSAPI.DLL
+0x0000000072a10000 - 0x0000000072a1f000 	C:\Program Files\Java\jre7\bin\verify.dll
+0x0000000056f50000 - 0x0000000056f78000 	C:\Program Files\Java\jre7\bin\java.dll
+0x00000000729f0000 - 0x0000000072a05000 	C:\Program Files\Java\jre7\bin\zip.dll
+
+VM Arguments:
+java_command: weka.subspaceClusterer.MySubspaceClusterEvaluation -label 14 -M F1Measure:Accuracy:Entropy -sc Mocca -t breast.arff -a 0.100000 -b 0.100000 -g 0.200000 -i 0.000000 -s 0.000000 -w 0.550000 -maxiter 10000 -path C:\results -c last
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:\Program Files (x86)\AMD APP\bin\x86_64;C:\Program Files (x86)\AMD APP\bin\x86;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\WIDCOMM\Bluetooth Software\syswow64;
+USERNAME=AHoffer
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 58 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, ht, tsc, tscinvbit, tscinv
+
+Memory: 4k page, physical 4124176k(172228k free), swap 9527612k(1152268k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (23.7-b01) for windows-amd64 JRE (1.7.0_17-b02), built on Mar  1 2013 03:38:30 by "java_re" with unknown MS VC++:1600
+
+time: Fri Apr 12 15:00:16 2013
+elapsed time: 63 seconds
+

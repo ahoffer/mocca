@@ -35,3 +35,6 @@
 1365739900899	Rename method 'setClustererParameters'
 1365740002110	Rename method 'getRunTime'
 1365748905961	Rename field 'nonseparator'
+1365788003405	Extract method 'run'
+1365793007203	Rename field 'measures'
+1365804424783	Delete elements

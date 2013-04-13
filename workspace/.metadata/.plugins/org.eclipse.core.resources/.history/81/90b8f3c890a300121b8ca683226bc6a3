@@ -1,0 +1,22 @@
+package weka.subspaceClusterer;
+
+import java.util.ArrayList;
+
+public class TestRunner {
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        double gamma = 0, alpha, beta, epsilon, maxiter, width, subspaceOverlapThreshold, objectOverlapThreshold;
+        String measures, experimentLabel, subspaceClutererName, outputPath;
+        ArrayList<String> dataSetFilenames;
+
+        for (int gammaStep = 0; gammaStep < 5; gammaStep++) {
+            gamma = gammaStep/5;
+            System.out.println(gamma);
+
+        }
+
+    }
+}

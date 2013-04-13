@@ -19,7 +19,7 @@ public class ResultsWriter {
     static String extension = ".csv";
     static char spacer = ',';
     static char separator = ',';
-    static int keyFieldWidth = 5;
+    static int keyFieldWidth = 6;
 
     /* The name of a measure or parameter (key) and either the measurement or the value of the parameter */
     TreeMap<String, String> output = new TreeMap<String, String>();
