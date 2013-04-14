@@ -37,18 +37,21 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         discrimSetSize = getDiscrimSetSize();
         rotationSetSize = (int) Math.round(gamma * numInstances);
 
-        // gammaIsValid SHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
-        if (!gammaIsValid()) {
-            throw new Exception("Gamma is invalid.");
-        }
+        // validateGammaSHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
+        validateGamma();
 
-        doMocca();
+        // Do it!
+        run();
+
+        // Sort quality from low to high.
         Collections.sort(clusters, new Comparator<Cluster>() {
 
             public int compare(Cluster a, Cluster b) {
                 return Double.valueOf(((MoccaCluster) a).quality).compareTo(((MoccaCluster) b).quality);
             }
         });
+
+        // Set results
         setSubspaceClustering(clusters);
 
         // Print results
@@ -307,7 +310,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private void doMocca() throws Exception {
+    void run() throws Exception {
 
         // DECLARE
         MoccaSubspace subspace;
@@ -348,11 +351,24 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
                 // Find the principal components and rotate the data
                 Pca pca = new Pca(roationObjs);
+
+                // DEBUG VALIDATION
+                if (pca.getColumnDimension() != numDims) {
+                    System.err
+                            .println("Number of columns in PCA matrix is not equal to the number of dimension in the data. That's bad\n");
+                }
+
+                System.err.printf("Prerotation dims=%d    ", originalDataAsMatrix.getColumnDimension());
                 pointsToCluster = pca.rotate(originalDataAsMatrix);
+                System.err.printf("POSTrotation dims=%d\n", pointsToCluster.getColumnDimension());
             }// end if
 
             // Randomly select discriminating set
             int discrimSetIndexes[] = shuffler.next(discrimSetSize);
+
+            System.err.printf("pointsToCluster rows=%d, pointerToCluster cols=%d\n", pointsToCluster.getRowDimension(),
+                    pointsToCluster.getColumnDimension());
+
             Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
             // Determine the subspace where the points congregate, if any
@@ -419,14 +435,36 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private boolean gammaIsValid() {
+    // TODO: Change this over to throw an exception to be caught all the way up in MySubspaceClusterEvaluation so that a
+    // proper error message can be created in the in the results file for the experiment.
+    void validateGamma() {
         /*
-         * The rotation set size must equal to or greater than the rotation set size because the discriminating set is
-         * sampled (without replacement) from the rotation set. If the algorithm is not using PCA, then the value of
-         * gamma is relevant, and therefore always valid.
+         * The rotation set size must equal to or greater than the discriminating set size because the discriminating
+         * set is sampled (without replacement) from the rotation set.
          */
-        return !usePca() || (rotationSetSize >= discrimSetSize && gamma <= 1);
-    }
+
+        // If the algorithm is not using PCA, gamma is not used.
+        if (usePca()) {
+
+            if (rotationSetSize < discrimSetSize) {
+                System.err
+                        .printf("Unrecoverable error. rotation set size, %d, is not greater than/equal to discriminating set size, %d\n",
+                                rotationSetSize, discrimSetSize);
+                System.exit(-1);
+            }// if
+
+            else {
+
+                if (rotationSetSize < numDims + 1) {
+                    System.err
+                            .printf("Unrecoverable error. rotation set size, %d, is less number of dimension +1 (%d + 1).\nThe covariance matrix will have a ranks less than number of dimensions. Increase gamma.\n",
+                                    rotationSetSize, numDims);
+                    System.exit(-1);
+                }// if
+            }// else
+        }// outer if
+
+    }// method
 
     private boolean usePca() {
         // If gamma is greater than zero, use PCA.

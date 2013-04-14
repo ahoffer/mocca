@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="257" key="DIALOG_WIDTH"/>
-		<item value="164" key="DIALOG_Y_ORIGIN"/>
-		<item value="1140" key="DIALOG_X_ORIGIN"/>
-		<item value="380" key="DIALOG_HEIGHT"/>
+		<item value="289" key="DIALOG_Y_ORIGIN"/>
+		<item value="381" key="DIALOG_HEIGHT"/>
+		<item value="1329" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="casesensitive"/>
 		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
-		<item value="true" key="wholeword"/>
-		<item value="path" key="selection"/>
+		<item value="false" key="wholeword"/>
+		<item value="System" key="selection"/>
 		<list key="findhistory">
+			<item value="System"/>
+			<item value="length"/>
+			<item value="pointsTo"/>
+			<item value="getnum"/>
+			<item value="    static void verifyPath(String path) {"/>
+			<item value="epsilon"/>
 			<item value="outpath"/>
 			<item value="(CE and RNIA)"/>
-			<item value="m_timeLimit"/>
-			<item value="options"/>
-			<item value="stack"/>
-			<item value="timelimit"/>
-			<item value="&lt;p/&gt;"/>
-			<item value="&lt;/ul&gt;"/>
 		</list>
 		<list key="replacehistory">
 			<item value="path"/>

@@ -38,3 +38,6 @@
 1365788003405	Extract method 'run'
 1365793007203	Rename field 'measures'
 1365804424783	Delete elements
+1365890049637	Rename method 'runClusterer'
+1365890251905	Rename method 'doMocca'
+1365893888671	Inline local variable 'file'

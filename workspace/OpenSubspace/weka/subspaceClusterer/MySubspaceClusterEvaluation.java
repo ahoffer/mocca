@@ -89,10 +89,6 @@ public class MySubspaceClusterEvaluation {
     private ArrayList<Cluster> m_clusters = null;
     ResultsWriter m_writer = new ResultsWriter();
 
-    // Set to true if the experiment does not timeout.
-    // TODO: Pull this out if there is no use for it.
-    private boolean m_successfulRun = false;
-
     /*
      * the command line args
      */
@@ -111,7 +107,6 @@ public class MySubspaceClusterEvaluation {
 
     /* Used to measure the run time. */
     long m_startTime;
-
     long m_stoptTime;
 
     /**
@@ -142,7 +137,10 @@ public class MySubspaceClusterEvaluation {
 
         // Generate clusters and time how long it takes
         startTimer();
+
+        // runClustererWithTimeLimit();
         runClusterer();
+
         stopTimer();
         m_writer.put("CLSTR_TIME", getElapsedTime());
 
@@ -175,7 +173,16 @@ public class MySubspaceClusterEvaluation {
 
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
-            metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
+
+            try {
+                metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
+            }
+
+            catch (Exception e) {
+                System.err.println(System.nanoTime());
+                e.printStackTrace();
+            }
+
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
 
         }
@@ -297,7 +304,7 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    void runClusterer() {
+    boolean runClustererWithTimeLimit() {
         // Assume the clusterer compeletes without interruption.
         boolean timeout = false;
 
@@ -309,18 +316,25 @@ public class MySubspaceClusterEvaluation {
         } catch (TimeoutException e) {
             // This is not an error. This is our timeout.
             timeout = true;
-            System.out.println("Timeout!");
         } catch (InterruptedException e) {
-            System.err.println("InterruptedException!");
             e.printStackTrace();
         } catch (ExecutionException e) {
-            System.err.println("InterruptedException!");
             e.printStackTrace();
         }
+
         executor.shutdownNow();
 
         // Assume that no timeout means the clusterer ran successfully
-        m_successfulRun = !timeout;
+        return !timeout;
+    }
+
+    void runClusterer() {
+        try {
+            m_clusterer.buildSubspaceClusterer(m_dataSet);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

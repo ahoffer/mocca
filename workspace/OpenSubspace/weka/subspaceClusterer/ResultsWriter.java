@@ -48,22 +48,10 @@ public class ResultsWriter {
         return output.get(clustererExpKey);
     }
 
-    CsvListWriter getListWriter(String name) {
+    CsvListWriter getListWriter(String name) throws IOException {
 
-        FileWriter fw = null;
-        File file = getFile(name);
-
-        try {
-
-            fw = new FileWriter(file.getCanonicalFile());
-
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-
-        }
-
+        FileWriter fw = new FileWriter(getFile(name));
         return new CsvListWriter(fw, new CsvPreference.Builder('"', separator, "\n").build());
-
     }
 
     String getPath() {
@@ -155,6 +143,7 @@ public class ResultsWriter {
     }
 
     public void setPath(String path) {
+        verifyPath(path);
         this.path = path;
     }
 
@@ -192,6 +181,21 @@ public class ResultsWriter {
         writer.write(output.values().toArray(new String[0]));
         writer.close();
     }
+
+    void verifyPath(String path) {
+
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        if (!dir.exists()) {
+            Exception e = new Exception();
+            System.err.printf("Could not access directory %s\n", path);
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }// method
 
 }// class
 

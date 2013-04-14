@@ -6,7 +6,11 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="weka.subspaceClusterer.MySubspaceClusterEvaluation"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-sc Mocca -m 100000 -w 0.1 -s 0.8 -i .8 -b 0.35 -g 0.0 -M F1Measure:Accuracy:Entropy -t iris.arff -c last -label &quot;1&quot; -path &quot;C:\users\ahoffer&quot; -a 0.01"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-sc Mocca -m 100 -w 0.1 -s 0.8 -i .8 -b 0.35 -g 0.0 -M F1Measure:Accuracy:Entropy -t iris.arff -c last -label &quot;1&quot; -path &quot;C:\Users\ahoffer\Documents\GitHub\sepc\workspace\OpenSubspace\results&quot; -a 0.01"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="OpenSubspace"/>
 </launchConfiguration>

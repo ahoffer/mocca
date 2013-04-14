@@ -2,81 +2,87 @@ package weka.subspaceClusterer;
 
 public class MoccaSubspace {
 
-	private boolean[] subspace;
-	private int numDims, numCongregatingDims;
-	private double[][] discrimObjs;
-	private double width;
-	private double[] lower;
-	private double[] upper;
+    private boolean[] subspace;
+    private int numDims, numCongregatingDims;
+    private double[][] discrimObjs;
+    private double width;
+    private double[] lower;
+    private double[] upper;
 
-	public MoccaSubspace(double[][] discrimObjs, double width, int numDims) {
-		this.discrimObjs = discrimObjs;
-		this.width = width;
-		this.numDims = numDims;
-		lower = new double[numDims];
-		upper = new double[numDims];
-	}
+    public MoccaSubspace(double[][] discrimObjs, double width, int numDims) {
+        this.discrimObjs = discrimObjs;
+        this.width = width;
+        this.numDims = numDims;
+        lower = new double[numDims];
+        upper = new double[numDims];
+        System.err
+                .printf("discrimObjs.legnth=%d discrimObjs[0].length=%d\n", discrimObjs.length, discrimObjs[0].length);
+    }
 
-	public void eval() {
+    public void eval() {
 
-		double sheath;
+        double sheath = 0;
 
-		/*
-		 * Create max and min values in each dimension from the discriminating
-		 * set. Find the subspace and number of congregating dimensions
-		 */
-		double[] minimums = MoccaUtils.min(discrimObjs);
-		double[] maximums = MoccaUtils.max(discrimObjs);
-		double lengths[] = MoccaUtils.subtract(maximums, minimums);
+        /*
+         * Create max and min values in each dimension from the discriminating set. Find the subspace and number of
+         * congregating dimensions
+         */
+        double[] minimums = MoccaUtils.min(discrimObjs);
+        double[] maximums = MoccaUtils.max(discrimObjs);
 
-		subspace = MoccaUtils.lessThanOrEqualTo(lengths, width);
-		numCongregatingDims = MoccaUtils.countTrueValues(getSubspace());
+        // System.err.printf("minimums.length=%d, discrimObjs.legnth=%d, discrimObjs[0].length=%d\n", minimums.length,
+        // discrimObjs.length, discrimObjs[0].length);
 
-		/*
-		 * If the entire subspace is zero, it means the discriminating set does
-		 * not congregate in any dimension. The trial has failed to find a
-		 * cluster
-		 */
-		if (numCongregatingDims > 0) {
+        double lengths[] = MoccaUtils.subtract(maximums, minimums);
 
-			/*
-			 * Calculate upper and lower bounds of the hyper volume that
-			 * surrounds the cluster.
-			 */
+        subspace = MoccaUtils.lessThanOrEqualTo(lengths, width);
+        numCongregatingDims = MoccaUtils.countTrueValues(getSubspace());
 
-			for (int i = 0; i < numDims; ++i) {
-				sheath = width - lengths[i];
-				lower[i] = minimums[i] - sheath;
-				upper[i] = maximums[i] + sheath;
-			}
+        /*
+         * If the entire subspace is zero, it means the discriminating set does not congregate in any dimension. The
+         * trial has failed to find a cluster
+         */
+        if (numCongregatingDims > 0) {
 
-		}// if
-	}// method
+            /*
+             * Calculate upper and lower bounds of the hyper volume that surrounds the cluster.
+             */
 
-	/**
-	 * @return the subspace
-	 */
-	public boolean[] getSubspace() {
+            for (int i = 0; i < numDims; ++i) {
 
-		return subspace.clone();
-	}
+                sheath = width - lengths[i];
+                lower[i] = minimums[i] - sheath;
+                upper[i] = maximums[i] + sheath;
 
-	/**
-	 * @return the lower
-	 */
-	public double[] getLower() {
-		return lower.clone();
-	}
+            }// for
 
-	/**
-	 * @return the upper
-	 */
-	double[] getUpper() {
-		return upper.clone();
-	}
+        }// if
+    }// method
 
-	public int getNumCongregatingDims() {
-		return numCongregatingDims;
-	}
+    /**
+     * @return the subspace
+     */
+    public boolean[] getSubspace() {
+
+        return subspace.clone();
+    }
+
+    /**
+     * @return the lower
+     */
+    public double[] getLower() {
+        return lower.clone();
+    }
+
+    /**
+     * @return the upper
+     */
+    double[] getUpper() {
+        return upper.clone();
+    }
+
+    public int getNumCongregatingDims() {
+        return numCongregatingDims;
+    }
 
 }
