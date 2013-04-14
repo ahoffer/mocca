@@ -6655,3 +6655,13 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.e
 !ENTRY org.eclipse.core.net 4 0 2013-04-14 09:33:34.663
 !MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'The proxy auto-configuration script could not be downloaded
 ' #12167.
+!SESSION 2013-04-14 11:25:41.503 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_17
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2013-04-14 11:26:08.414
+!MESSAGE No repository found at file:/C:/Users/ahoffer/Downloads/visualvm_launcher_u1_eclipse_36/.

@@ -36,6 +36,9 @@ public class Consolidator {
 
         boolean headerIsWritten = false;
 
+        // DEBUG
+        int temp = 1;
+
         // Iterate over result files
         for (Path aPath : stream) {
             File file = aPath.toFile();
@@ -56,6 +59,13 @@ public class Consolidator {
 
             // Shutdown IO
             scanner.close();
+
+            // DEBUG
+            if (temp == 3) {
+                writer.close();
+                break;
+            }
+            temp++;
 
         }// for
 
