@@ -46,16 +46,22 @@ public class TestRunner {
     }// method
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        // Set state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
         subspaceClutererName = "Mocca";
         outputPath = "C:\\results";
+
+        // TODO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
+        // ArrayList<String> dataSetFilenames;
         dataSetFilename = "breast.arff";
 
+        // Run tests
         run();
-        // TO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
-        // ArrayList<String> dataSetFilenames;
 
+        // Pull all the results into one file
+        Consolidator.consolidate(outputPath, "results.csv");
     }
 
     static void run() throws IOException, InterruptedException {

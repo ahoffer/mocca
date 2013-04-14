@@ -55,10 +55,15 @@ public class ResultsWriter {
     }
 
     String getPath() {
-        if (path.charAt(path.length() - 1) != File.separatorChar) {
-            path += File.separator;
+        return separatedPath(path);
+    }
+
+    static public String separatedPath(String string) {
+        if (string.charAt(string.length() - 1) != File.separatorChar) {
+            string += File.separator;
         }
-        return path;
+        return string;
+
     }
 
     TreeMap<String, String> getRecord(Cluster cluster) {
