@@ -17,26 +17,22 @@ public class ResultsWriter {
     static String clustererNameKey = "ALGO";
     static String dataNameKey = "DATA";
     static String extension = ".csv";
-    static char spacer = ',';
-    static char separator = ',';
     static int keyFieldWidth = 6;
+    static char separator = ',';
+    static char spacer = ',';
+
+    static public String separatedPath(String string) {
+        if (string.charAt(string.length() - 1) != File.separatorChar) {
+            string += File.separator;
+        }
+        return string;
+
+    }
 
     /* The name of a measure or parameter (key) and either the measurement or the value of the parameter */
     TreeMap<String, String> output = new TreeMap<String, String>();
 
     String path;
-
-    String padZeroesLeft(String str, int fieldWidth) {
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int toPrepend = fieldWidth - str.length(); toPrepend > 0; toPrepend--) {
-            sb.append('0');
-        }
-
-        sb.append(str);
-        return sb.toString();
-    }
 
     File getFile(String name) {
 
@@ -56,14 +52,6 @@ public class ResultsWriter {
 
     String getPath() {
         return separatedPath(path);
-    }
-
-    static public String separatedPath(String string) {
-        if (string.charAt(string.length() - 1) != File.separatorChar) {
-            string += File.separator;
-        }
-        return string;
-
     }
 
     TreeMap<String, String> getRecord(Cluster cluster) {
@@ -121,6 +109,18 @@ public class ResultsWriter {
         return String.format("%d", val);
     }
 
+    String padZeroesLeft(String str, int fieldWidth) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int toPrepend = fieldWidth - str.length(); toPrepend > 0; toPrepend--) {
+            sb.append('0');
+        }
+
+        sb.append(str);
+        return sb.toString();
+    }
+
     public void put(String name, Double value) {
         output.put(name, ntoa(value));
     }
@@ -152,41 +152,6 @@ public class ResultsWriter {
         this.path = path;
     }
 
-    public void writeClusters(ArrayList<Cluster> clusters) throws Exception {
-
-        /*
-         * Screw you Java. You're dispatch model is a griefer.
-         * 
-         * TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
-         * abort illegal attempt to cast a Cluster to a MoccaCluster
-         */
-
-        MoccaCluster first = (MoccaCluster) clusters.get(0);
-        CsvListWriter writer = getListWriter("CLSTR");
-
-        // Go through some silly hoops to get the heaser
-        TreeMap<String, String> map = getRecord(first);
-        String[] header = map.navigableKeySet().toArray(new String[0]);
-        writer.writeHeader(header);
-
-        // Write the data
-        for (Cluster each : clusters) {
-            map = getRecord((MoccaCluster) each);
-            writer.write(map.values().toArray(new String[0]));
-        }
-
-        writer.close();
-    }
-
-    public void writeResults() throws Exception {
-
-        CsvListWriter writer = getListWriter("RSLT");
-        String[] header = output.navigableKeySet().toArray(new String[0]);
-        writer.writeHeader(header);
-        writer.write(output.values().toArray(new String[0]));
-        writer.close();
-    }
-
     void verifyPath(String path) {
 
         File dir = new File(path);
@@ -200,6 +165,54 @@ public class ResultsWriter {
             e.printStackTrace();
             System.exit(-1);
         }
+    }// method
+
+    public void writeClusters(ArrayList<Cluster> clusters) throws Exception {
+
+        /*
+         * Screw you Java. You're dispatch model is a griefer.
+         * 
+         * TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
+         * abort illegal attempt to cast a Cluster to a MoccaCluster
+         */
+
+        // Protect against empty clusters
+        if (clusters.isEmpty()) {
+            return;
+        }
+
+        MoccaCluster first = (MoccaCluster) clusters.get(0);
+        CsvListWriter writer = getListWriter("CLSTR");
+
+        // Go through some silly hoops to get the header
+        TreeMap<String, String> map = getRecord(first);
+        String[] header = map.navigableKeySet().toArray(new String[0]);
+        writer.writeHeader(header);
+
+        // Write the data
+        for (Cluster each : clusters) {
+            map = getRecord((MoccaCluster) each);
+            writer.write(map.values().toArray(new String[0]));
+        }
+
+        // Shutdown IO
+        writer.close();
+    }
+
+    public void writeResults() throws Exception {
+
+        CsvListWriter writer = getListWriter("RSLT");
+        String[] header = output.navigableKeySet().toArray(new String[0]);
+        writer.writeHeader(header);
+        writer.write(output.values().toArray(new String[0]));
+        writer.close();
+    }
+
+    public void put(String name, int value) {
+
+        // Convenience wrapper
+        put(name, (double) value);
+
     }// method
 
 }// class

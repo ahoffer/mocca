@@ -15,8 +15,6 @@ public class MoccaSubspace {
         this.numDims = numDims;
         lower = new double[numDims];
         upper = new double[numDims];
-        System.err
-                .printf("discrimObjs.legnth=%d discrimObjs[0].length=%d\n", discrimObjs.length, discrimObjs[0].length);
     }
 
     public void eval() {
@@ -29,10 +27,6 @@ public class MoccaSubspace {
          */
         double[] minimums = MoccaUtils.min(discrimObjs);
         double[] maximums = MoccaUtils.max(discrimObjs);
-
-        // System.err.printf("minimums.length=%d, discrimObjs.legnth=%d, discrimObjs[0].length=%d\n", minimums.length,
-        // discrimObjs.length, discrimObjs[0].length);
-
         double lengths[] = MoccaUtils.subtract(maximums, minimums);
 
         subspace = MoccaUtils.lessThanOrEqualTo(lengths, width);

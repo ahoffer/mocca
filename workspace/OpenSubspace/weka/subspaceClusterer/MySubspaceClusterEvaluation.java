@@ -48,6 +48,7 @@ import weka.filters.unsupervised.attribute.Remove;
  * Used to uniquely identify a test run. It used in the filenames of the output files and is included  in the file contentsas to be used a foregin key .
 
  */
+
 public class MySubspaceClusterEvaluation {
 
     private class Task implements Callable<Void> {
@@ -142,18 +143,14 @@ public class MySubspaceClusterEvaluation {
         runClusterer();
 
         stopTimer();
-        m_writer.put("CLSTR_TIME", getElapsedTime());
-
-        // Record number of trials
-        if (m_clusterer instanceof Mocca) {
-            m_writer.put("TRIALS", (double) ((Mocca) m_clusterer).getNumTrials());
-        }
+        m_writer.put("runtime_clustering_sec", getElapsedTime());
 
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
+        runDescriptiveStats();
         stopTimer();
-        m_writer.put("METRIC_TIME", getElapsedTime());
+        m_writer.put("runtime_metrics_sec", getElapsedTime());
 
         // Write report files
         m_writer.writeResults();
@@ -162,6 +159,34 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    void runDescriptiveStats() {
+        int size = getClusters().size();
+        if (size == 0) {
+            return;
+        }
+
+        // Computer and write statistics
+        m_writer.put("num_clusters", size);
+
+        if (getClusters().get(0) instanceof MoccaCluster) {
+
+            double[] quality = new double[size];
+
+            // Collect quality
+            for (int i = 0; i < size; ++i) {
+                // Starting to look like C++. :-(
+                quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
+            }// for
+
+            m_writer.put("quality_max", StdStats.max(quality));
+            m_writer.put("quality_min", StdStats.min(quality));
+            m_writer.put("quality_mean", StdStats.mean(quality));
+            m_writer.put("quality_std_dev", StdStats.stddev(quality));
+            m_writer.put("quality_median", StdStats.median(quality));
+
+        }// if
+    }// method
 
     /**
      * Calculates all quality metrics specified in m_metrics on the clustering result. Returns the results as a
@@ -174,17 +199,8 @@ public class MySubspaceClusterEvaluation {
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
 
-            try {
-                metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
-            }
-
-            catch (Exception e) {
-                System.err.println(System.nanoTime());
-                e.printStackTrace();
-            }
-
+            metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
-
         }
 
     }// method
@@ -270,9 +286,9 @@ public class MySubspaceClusterEvaluation {
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     Double getElapsedTime() {
-        // Return number of milliseconds.
+        // Return number of SECONDS.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
-        return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e6));
+        return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e9));
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

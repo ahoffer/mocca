@@ -20,7 +20,7 @@ public class Consolidator {
 
     }
 
-    static void consolidate(String path, String name) throws IOException {
+    static void consolidate(String path, String consolidatedFilename) throws IOException {
 
         DirectoryStream<Path> stream;
         Scanner scanner;
@@ -28,8 +28,8 @@ public class Consolidator {
         String fname;
 
         // Create output file
-        fname = ResultsWriter.separatedPath(path) + name;
-        writer = new PrintWriter(new BufferedWriter(new FileWriter(fname)));
+        // fname = ResultsWriter.separatedPath(path) + name;
+        writer = new PrintWriter(new BufferedWriter(new FileWriter(consolidatedFilename)));
 
         // Grab all result files
         stream = Files.newDirectoryStream(Paths.get(path), "RSLT*.csv");

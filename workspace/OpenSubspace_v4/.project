@@ -21,11 +21,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>i9</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>lib</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/OpenSubspace/lib</locationURI>
@@ -54,11 +49,6 @@
 			<name>.metadata/version.ini</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/OpenSubspace/.metadata/version.ini</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>weka/subspaceClusterer</name>
@@ -126,11 +116,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>i9/subspace/sepc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>weka/subspaceClusterer/MatrixUtils.class</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/MatrixUtils.class</locationURI>
@@ -194,16 +179,6 @@
 			<name>weka/subspaceClusterer/Pca.java</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Pca.java</locationURI>
-		</link>
-		<link>
-			<name>weka/subspaceClusterer/Sepc.class</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Sepc.class</locationURI>
-		</link>
-		<link>
-			<name>weka/subspaceClusterer/Sepc.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/weka/subspaceClusterer/Sepc.java</locationURI>
 		</link>
 		<link>
 			<name>weka/subspaceClusterer/Shuffler.class</name>
@@ -324,36 +299,6 @@
 			<name>.metadata/.plugins/org.eclipse.wb.discovery.core/toolkits.xml</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/OpenSubspace/.metadata/.plugins/org.eclipse.wb.discovery.core/toolkits.xml</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcCluster$Range.class</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcCluster$Range.class</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcCluster.class</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcCluster.class</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcCluster.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcCluster.java</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcWrapper$DataPoint.class</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcWrapper$DataPoint.class</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcWrapper.class</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcWrapper.class</locationURI>
-		</link>
-		<link>
-			<name>i9/subspace/sepc/SepcWrapper.java</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/OpenSubspace/i9/subspace/sepc/SepcWrapper.java</locationURI>
 		</link>
 		<link>
 			<name>.metadata/.plugins/org.eclipse.core.resources/.root/.indexes</name>

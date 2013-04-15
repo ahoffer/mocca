@@ -126,7 +126,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("" + instanceOverlapThreshold);
         options.add("-w");
         options.add("" + width);
-        options.add("-m");
+        options.add("-maxiter");
         options.add("" + maxiter);
         options.add("-g");
         options.add("" + gamma);
@@ -206,9 +206,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             subspaceOverlapThreshold = maxOverlap;
     }
 
-    public void setMaxiter(double d) {
+    public void setMaxiter(int d) {
         if (d > 0)
-            this.maxiter = (int) d;
+            this.maxiter = d;
     }
 
     public void setOptions(String[] options) throws Exception {
@@ -248,9 +248,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             setGamma(Double.parseDouble(optionString));
         }
 
-        optionString = Utils.getOption("m", options);
+        optionString = Utils.getOption("maxiter", options);
         if (optionString.length() != 0) {
-            setMaxiter(Double.parseDouble(optionString));
+            setMaxiter(Integer.parseInt(optionString));
         }
     }
 
@@ -351,24 +351,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
                 // Find the principal components and rotate the data
                 Pca pca = new Pca(roationObjs);
-
-                // DEBUG VALIDATION
-                if (pca.getColumnDimension() != numDims) {
-                    System.err
-                            .println("Number of columns in PCA matrix is not equal to the number of dimension in the data. That's bad\n");
-                }
-
-                System.err.printf("Prerotation dims=%d    ", originalDataAsMatrix.getColumnDimension());
                 pointsToCluster = pca.rotate(originalDataAsMatrix);
-                System.err.printf("POSTrotation dims=%d\n", pointsToCluster.getColumnDimension());
             }// end if
 
             // Randomly select discriminating set
             int discrimSetIndexes[] = shuffler.next(discrimSetSize);
-
-            System.err.printf("pointsToCluster rows=%d, pointerToCluster cols=%d\n", pointsToCluster.getRowDimension(),
-                    pointsToCluster.getColumnDimension());
-
             Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
             // Determine the subspace where the points congregate, if any
@@ -477,7 +464,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     private double epsilon = 0.05;
     private double gamma = 0.00; // Zero means "do not use PCA"
     private double instanceOverlapThreshold = 0.50;
-    private int maxiter = 1000;
+    private int maxiter = 10001;
     private double subspaceOverlapThreshold = 0.20;
     private double width = 100.0;
     List<Cluster> clusters = new ArrayList<Cluster>();

@@ -61,14 +61,14 @@ public class TestRunner {
         run();
 
         // Pull all the results into one file
-        Consolidator.consolidate(outputPath, "results.csv");
+        Consolidator.consolidate(outputPath, "C:\\Users\\ahoffer\\Google Drive\\results.csv");
     }
 
     static void run() throws IOException, InterruptedException {
         double gamma, alpha, beta, epsilon, width, subspaceOverlapThreshold, objectOverlapThreshold;
         int experimentLabel, gammaSteps, sSteps, oSteps, alphaSteps, betaSteps, widthSteps, maxiter;
 
-        maxiter = (int) 1e4;
+        maxiter = 10000;
         gammaSteps = 10;
         epsilon = 0.05;
         sSteps = 3;
@@ -120,8 +120,8 @@ public class TestRunner {
                                  */
                                 String[] args = argString.split(" ");
                                 commands.addAll(Arrays.asList(args));
-                                System.err.println(experimentLabel);
-                                System.err.println(argString);
+                                // System.err.println(experimentLabel);
+                                // System.err.println(argString);
                                 dispatch(commands);
 
                                 experimentLabel++;
