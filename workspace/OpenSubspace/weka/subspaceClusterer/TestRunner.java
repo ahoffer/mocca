@@ -21,11 +21,11 @@ public class TestRunner {
 
         else {
 
-            // TODO: Use a thread pool to manage each forked process, so that as soon as a process complted, the thread
-            // is
-            // returned to the pool ready to be used. In the meanwhile, assume that the oldest process will be the first
-            // to
-            // complete.
+            /*
+             * TODO: Use a thread pool to manage each forked process, so that as soon as a process complted, the thread
+             * is returned to the pool ready to be used. In the meanwhile, assume that the oldest process will be the
+             * first to complete.
+             */
             Process oldest = runningProcs.get(0);
             oldest.waitFor();
             runningProcs.remove(oldest);

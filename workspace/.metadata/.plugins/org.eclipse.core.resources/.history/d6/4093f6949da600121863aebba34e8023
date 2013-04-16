@@ -1,32 +1,16 @@
 package weka.subspaceClusterer;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import weka.gui.experiment.RunNumberPanel;
 
 public class TestRunner {
 
     static String metrics, subspaceClutererName, outputPath, dataSetFilename, command;
     static int numProcessors;
-    static ArrayList<Process> runningProcs = new ArrayList<Process>();
     static ProcessBuilder procBuilder;
-
-    public static void main(String[] args) {
-        numProcessors = Runtime.getRuntime().availableProcessors();
-        metrics = "F1Measure:Accuracy:Entropy";
-        subspaceClutererName = "Mocca";
-        outputPath = "C:\\results";
-        dataSetFilename = "breast.arff";
-        run();
-        // TO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
-        // ArrayList<String> dataSetFilenames;
-
-    }
+    static ArrayList<Process> runningProcs = new ArrayList<Process>();
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
 
@@ -50,11 +34,41 @@ public class TestRunner {
         }// else
     }// method
 
-    static void run() throws InterruptedException, IOException {
+    static Process forkProcess(List<String> commands) throws IOException {
+        if (procBuilder == null) {
+            procBuilder = new ProcessBuilder(commands);
+            procBuilder.inheritIO();
+        }
+
+        procBuilder.command(commands);
+        Process proc = procBuilder.start();
+        return proc;
+    }// method
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        // Set state
+        numProcessors = Runtime.getRuntime().availableProcessors();
+        metrics = "F1Measure:Accuracy:Entropy";
+        subspaceClutererName = "Mocca";
+        outputPath = "C:\\results";
+
+        // TODO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
+        // ArrayList<String> dataSetFilenames;
+        dataSetFilename = "breast.arff";
+
+        // Run tests
+        run();
+
+        // Pull all the results into one file
+        Consolidator.consolidate(outputPath, "C:\\Users\\ahoffer\\Google Drive\\results.csv");
+    }
+
+    static void run() throws IOException, InterruptedException {
         double gamma, alpha, beta, epsilon, width, subspaceOverlapThreshold, objectOverlapThreshold;
         int experimentLabel, gammaSteps, sSteps, oSteps, alphaSteps, betaSteps, widthSteps, maxiter;
 
-        maxiter = (int) 1e4;
+        maxiter = 10000;
         gammaSteps = 10;
         epsilon = 0.05;
         sSteps = 3;
@@ -106,15 +120,9 @@ public class TestRunner {
                                  */
                                 String[] args = argString.split(" ");
                                 commands.addAll(Arrays.asList(args));
-                                try {
-                                    dispatch(commands);
-                                } catch (InterruptedException | IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-
-                                    // Prevent OS crash
-                                    Runtime.getRuntime().halt(-1);
-                                }
+                                // System.err.println(experimentLabel);
+                                // System.err.println(argString);
+                                dispatch(commands);
 
                                 experimentLabel++;
                             }
@@ -122,19 +130,7 @@ public class TestRunner {
                     }
                 }
             }
-
         }
-    }// method
-
-    static Process forkProcess(List<String> commands) throws IOException {
-        if (procBuilder == null) {
-            procBuilder = new ProcessBuilder(commands);
-            procBuilder.inheritIO();
-        }
-
-        procBuilder.command(commands);
-        Process proc = procBuilder.start();
-        return proc;
     }// method
 
 }// class

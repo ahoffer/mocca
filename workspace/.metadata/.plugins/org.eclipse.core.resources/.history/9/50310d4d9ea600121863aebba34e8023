@@ -25,7 +25,8 @@ public class Consolidator {
         DirectoryStream<Path> stream;
         Scanner scanner;
         PrintWriter writer;
-        
+        String fname;
+
         // Create output file
         // fname = ResultsWriter.separatedPath(path) + name;
         writer = new PrintWriter(new BufferedWriter(new FileWriter(consolidatedFilename)));
