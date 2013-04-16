@@ -62,7 +62,7 @@ public class TestRunner {
         run();
 
         // Pull all the results into one file
-        Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
+        Consolidator.consolidate(outputPath, "C:\\Users\\ahoffer\\Google Drive\\results.csv");
 
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV
@@ -99,6 +99,6 @@ public class TestRunner {
 
             // Set the ID for the next experiment to run
             experimentLabel++;
-        }// for
+        }
     }// method
 }// class
