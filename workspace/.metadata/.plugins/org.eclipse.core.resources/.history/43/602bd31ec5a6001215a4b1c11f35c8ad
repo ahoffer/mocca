@@ -1,0 +1,97 @@
+package weka.subspaceClusterer;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestRunner {
+
+    static String metrics, outputPath, dataSetFilename, command, classPath, javaExecutable;
+    static int numProcessors;
+    static ProcessBuilder procBuilder;
+    static ArrayList<Process> runningProcs = new ArrayList<Process>();
+
+    static void dispatch(String command) throws IOException, InterruptedException {
+
+        // Keep the system busy, but don't overwhelm it.
+        if (runningProcs.size() < numProcessors) {
+            runningProcs.add(forkProcess(command));
+        }
+
+        else {
+
+            /*
+             * TODO: Use a thread pool to manage each forked process, so that as soon as a process complted, the thread
+             * is returned to the pool ready to be used. In the meanwhile, assume that the oldest process will be the
+             * first to complete.
+             */
+            Process oldest = runningProcs.get(0);
+            oldest.waitFor();
+            runningProcs.remove(oldest);
+            runningProcs.add(forkProcess(command));
+
+        }// else
+    }// method
+
+    static Process forkProcess(String command) throws IOException {
+        if (procBuilder == null) {
+            procBuilder = new ProcessBuilder(command);
+            procBuilder.inheritIO();
+        }
+
+        procBuilder.command(command);
+        Process proc = procBuilder.start();
+        return proc;
+    }// method
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        // Set state
+        numProcessors = Runtime.getRuntime().availableProcessors();
+        metrics = "F1Measure:Accuracy:Entropy";
+        outputPath = "C:\\results";
+        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+        javaExecutable = "\\Windows\\System32\\javaw.exe";
+
+        // TODO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
+        // ArrayList<String> dataSetFilenames;
+        dataSetFilename = "breast.arff";
+
+        // Run tests
+        run();
+
+        // Pull all the results into one file
+        Consolidator.consolidate(outputPath, "C:\\Users\\ahoffer\\Google Drive\\results.csv");
+    }
+
+    static void run() throws IOException, InterruptedException {
+        int experimentLabel = 1;
+        StringBuilder sbuilder = new StringBuilder();
+
+        Character space = ' ';
+        String otherArgs = String.format("-label %d -M %s  -path %s -c last", experimentLabel, metrics, outputPath);
+        List<String> argLines = MoccaBuilder.getArgLines();
+        System.out.printf("Number of experiments to run=%,d\n", argLines.size());
+
+        for (String argLine : argLines) {
+
+            sbuilder.append(javaExecutable);
+            sbuilder.append(space);
+            sbuilder.append("-cp");
+            sbuilder.append(space);
+            sbuilder.append(classPath);
+            sbuilder.append(space);
+            sbuilder.append("weka.subspaceClusterer.MySubspaceClusterEvaluation");
+            sbuilder.append(space);
+            sbuilder.append(argLine);
+            sbuilder.append(space);
+            sbuilder.append(otherArgs);
+
+            dispatch(sbuilder.toString());
+            // System.out.println(sbuilder.toString());
+
+            // Set the ID for the next experiment to run
+            experimentLabel++;
+        }
+    }// method
+}// class

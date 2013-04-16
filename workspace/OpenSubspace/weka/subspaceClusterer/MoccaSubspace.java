@@ -2,19 +2,21 @@ package weka.subspaceClusterer;
 
 public class MoccaSubspace {
 
-    private boolean[] subspace;
-    private int numDims, numCongregatingDims;
     private double[][] discrimObjs;
-    private double width;
     private double[] lower;
-    private double[] upper;
 
-    public MoccaSubspace(double[][] discrimObjs, double width, int numDims) {
+    private int numDimsDiscrimObjs, numCongregatingDims;
+
+    private boolean[] subspace;
+    private double[] upper;
+    private double width;
+
+    public MoccaSubspace(double[][] discrimObjs, double width, int numDimsDiscrimObjs) {
         this.discrimObjs = discrimObjs;
         this.width = width;
-        this.numDims = numDims;
-        lower = new double[numDims];
-        upper = new double[numDims];
+        this.numDimsDiscrimObjs = numDimsDiscrimObjs;
+        lower = new double[numDimsDiscrimObjs];
+        upper = new double[numDimsDiscrimObjs];
     }
 
     public void eval() {
@@ -42,7 +44,7 @@ public class MoccaSubspace {
              * Calculate upper and lower bounds of the hyper volume that surrounds the cluster.
              */
 
-            for (int i = 0; i < numDims; ++i) {
+            for (int i = 0; i < numDimsDiscrimObjs; ++i) {
 
                 sheath = width - lengths[i];
                 lower[i] = minimums[i] - sheath;
@@ -54,6 +56,21 @@ public class MoccaSubspace {
     }// method
 
     /**
+     * @return the lower
+     */
+    public double[] getLower() {
+        return lower.clone();
+    }
+
+    public int getNumCongregatingDims() {
+        return numCongregatingDims;
+    }
+
+    public int getNumDimsDiscrimObjs() {
+        return numDimsDiscrimObjs;
+    }
+
+    /**
      * @return the subspace
      */
     public boolean[] getSubspace() {
@@ -62,21 +79,10 @@ public class MoccaSubspace {
     }
 
     /**
-     * @return the lower
-     */
-    public double[] getLower() {
-        return lower.clone();
-    }
-
-    /**
      * @return the upper
      */
     double[] getUpper() {
         return upper.clone();
-    }
-
-    public int getNumCongregatingDims() {
-        return numCongregatingDims;
     }
 
 }

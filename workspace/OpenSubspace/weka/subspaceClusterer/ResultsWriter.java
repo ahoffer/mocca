@@ -13,9 +13,9 @@ import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
 public class ResultsWriter {
-    static String clustererExpKey = "EXP";
-    static String clustererNameKey = "ALGO";
-    static String dataNameKey = "DATA";
+    static String clustererExpKey = "experiment_ID";
+    static String clustererNameKey = "algorithm";
+    static String dataNameKey = "dataset";
     static String extension = ".csv";
     static int keyFieldWidth = 6;
     static char separator = ',';

@@ -1,2 +1,0 @@
- beta, epsilon, gamma, instance overlap threshold, maxiter, subspace overlap threshold, width,1.0-Entropy,ALGO,Accuracy,DATA,EXP,F1Measure,alpha,num_clusters,quality_max,quality_mean,quality_median,quality_min,quality_std_dev,runtime_clustering_sec,runtime_metrics_sec
-0.35,0.05,0.0,0.5,100,0.8,0.1,0.704524,MOCCA,1.000000,iris.arff,1,0.855420,0.01,8.000000,277.551020,108.855685,108.571429,20.000000,80.126635,0.000000,0.000000

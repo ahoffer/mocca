@@ -314,19 +314,25 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         MoccaSubspace subspace;
         Shuffler shuffler;
         Matrix pointsToCluster, originalDataAsMatrix;
-        int numCongregatingDims;
+        int numCongregatingDims, numRotatedDims;
         ArrayList<Integer> pointIndexes;
 
         // ALLOCATE
         shuffler = new Shuffler(numInstances, 1);
 
         // INITIALIZE
-        // Centering (translating) the original data does not change the
-        // outcomes.
-        // originalDataAsMatrix =
-        // MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
-        originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
+        // Centering (translating) the original data does not change the outcomes.
+        // originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
+        originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
         numCongregatingDims = 0;
+
+        /*
+         * A data comes witha fixed number of attributes (dimensions). However, if a rotation set has fewer instances in
+         * it than there are attributes, the number of principal components will be fewer than the number of dimensions
+         * in the data set. Consequently, the rotated data will have fewer dimensions than the original data set. By
+         * default, assume that no dimensions are lost or that PCA is not used.
+         */
+        numRotatedDims = numDims;
 
         // The original data is only modified if PCA-assist is used. There is no
         // need to create a copy.
@@ -349,6 +355,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
                 // Find the principal components and rotate the data
                 Pca pca = new Pca(roationObjs);
+                numRotatedDims = pca.getColumnDimension();
                 pointsToCluster = pca.rotate(originalDataAsMatrix);
             }// end if
 
@@ -357,7 +364,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
             // Determine the subspace where the points congregate, if any
-            subspace = new MoccaSubspace(discrimPoints.getArray(), width, numDims);
+            subspace = new MoccaSubspace(discrimPoints.getArray(), width, numRotatedDims);
             subspace.eval();
             numCongregatingDims = subspace.getNumCongregatingDims();
             if (numCongregatingDims > 0) {
@@ -380,6 +387,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, MoccaSubspace subspaceObj) {
 
+        // Sanity Check
+        if (subspaceObj.getNumDimsDiscrimObjs() != pointsToCluster.getColumnDimension()) {
+            System.err.println("Contraint violation. Debug here");
+            System.exit(-2);
+        }
+
         ArrayList<Integer> pointsIndexes = new ArrayList<Integer>();
         double[][] points = pointsToCluster.getArray();
         boolean[] subspace = subspaceObj.getSubspace();
@@ -392,7 +405,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             double[] point = points[i];
 
             // Check to see if the point is in the cluster
-            for (int j = 0; j < numDims; ++j) {
+            for (int j = 0; j < subspaceObj.getNumDimsDiscrimObjs(); ++j) {
 
                 /*
                  * Only check bounds if the cluster congregates in this dimension. We don't care about dimensions that
@@ -439,13 +452,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             }// if
 
             else {
-
-                if (rotationSetSize < numDims + 1) {
-                    System.err
-                            .printf("Unrecoverable error. rotation set size, %d, is less number of dimension +1 (%d + 1).\nThe covariance matrix will have a ranks less than number of dimensions. Increase gamma.\n",
-                                    rotationSetSize, numDims);
-                    System.exit(-1);
-                }// if
+                // Eliminated this restriction
+                // if (rotationSetSize < numDims + 1) {
+                // System.err
+                // .printf("Unrecoverable error. rotation set size, %d, is less number of dimension +1 (%d + 1).\nThe covariance matrix will have a ranks less than number of dimensions. Increase gamma.\n",
+                // rotationSetSize, numDims);
+                // System.exit(-1);
+                // }// if
             }// else
         }// outer if
 
