@@ -82,9 +82,9 @@ public class TestRunner {
 
     static void run() throws IOException, InterruptedException {
         int experimentLabel = 1;
-        List<List<String>> argLines = MoccaExperimentBuilder.getArgLines();
+        List<List<String>> argLines = MoccaBuilder.getArgLines();
 
-        System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
+        System.out.printf("Number of experiments to run=%,d\n", argLines.size());
 
         for (List<String> args : argLines) {
 

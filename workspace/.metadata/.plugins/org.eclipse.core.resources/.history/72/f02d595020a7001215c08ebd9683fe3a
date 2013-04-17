@@ -2,6 +2,8 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
+import weka.filters.unsupervised.attribute.Normalize;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -48,6 +50,7 @@ import weka.filters.unsupervised.attribute.Remove;
  * Used to uniquely identify a test run. It used in the filenames of the output files and is included  in the file contentsas to be used a foregin key .
 
  */
+
 public class MySubspaceClusterEvaluation {
 
     private class Task implements Callable<Void> {
@@ -79,6 +82,7 @@ public class MySubspaceClusterEvaluation {
             eval.run();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }// main
 
@@ -87,10 +91,6 @@ public class MySubspaceClusterEvaluation {
     private SubspaceClusterer m_clusterer;
     private ArrayList<Cluster> m_clusters = null;
     ResultsWriter m_writer = new ResultsWriter();
-
-    // Set to true if the experiment does not timeout.
-    // TODO: Pull this out if there is no use for it.
-    private boolean m_successfulRun = false;
 
     /*
      * the command line args
@@ -110,7 +110,6 @@ public class MySubspaceClusterEvaluation {
 
     /* Used to measure the run time. */
     long m_startTime;
-
     long m_stoptTime;
 
     /**
@@ -135,21 +134,28 @@ public class MySubspaceClusterEvaluation {
 
     public void run() throws Exception {
 
-        // Do it
+        // Set up
         setOptions();
         m_writer.setClusterer(m_clusterer);
 
+        // Do any necessary preprocessing
+        runDataPreprocessor();
+
         // Generate clusters and time how long it takes
         startTimer();
+
+        // runClustererWithTimeLimit();
         runClusterer();
+
         stopTimer();
-        m_writer.put("CLSTR_TIME", getElapsedTime());
+        m_writer.put("runtime_clustering_sec", getElapsedTime());
 
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
+        runDescriptiveStats();
         stopTimer();
-        m_writer.put("METRIC_TIME", getElapsedTime());
+        m_writer.put("runtime_metrics_sec", getElapsedTime());
 
         // Write report files
         m_writer.writeResults();
@@ -158,6 +164,35 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    void runDescriptiveStats() {
+        int size = getClusters().size();
+        if (size == 0) {
+            return;
+        }
+
+        // Computer and write statistics
+        m_writer.put("num_clusters", size);
+
+        if (getClusters().get(0) instanceof MoccaCluster) {
+
+            double[] quality = new double[size];
+
+            // Collect quality
+            for (int i = 0; i < size; ++i) {
+                // Starting to look like C++. :-(
+                quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
+            }// for
+
+            m_writer.put("num_trials", ((Mocca) m_clusterer).getNumTrials());
+            m_writer.put("quality_max", StdStats.max(quality));
+            m_writer.put("quality_min", StdStats.min(quality));
+            m_writer.put("quality_mean", StdStats.mean(quality));
+            m_writer.put("quality_std_dev", StdStats.stddev(quality));
+            m_writer.put("quality_median", StdStats.median(quality));
+
+        }// if
+    }// method
 
     /**
      * Calculates all quality metrics specified in m_metrics on the clustering result. Returns the results as a
@@ -169,16 +204,16 @@ public class MySubspaceClusterEvaluation {
 
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
+
             metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
-
         }
 
     }// method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private ArrayList<Cluster> getClusters() {
+    ArrayList<Cluster> getClusters() {
 
         // Lazy init the cluster list field
         if (m_clusters == null) {
@@ -235,9 +270,9 @@ public class MySubspaceClusterEvaluation {
         optionsText.append("\tclustering. The value should be a whole number\n");
         optionsText.append("\tgreater than zero.\n");
 
-        optionsText.append("\t-outpath. The directory where the output files are written\n");
+        optionsText.append("\t-path. The directory where the output files are written\n");
 
-        optionsText.append("-exp <experiment ID>\n");
+        optionsText.append("-label <experiment label>\n");
         optionsText.append("\tUnique ID of this experimental run\n");
 
         // Get scheme-specific options
@@ -256,10 +291,10 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private Double getElapsedTime() {
-        // Return number of milliseconds.
+    Double getElapsedTime() {
+        // Return number of SECONDS.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
-        return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e-6));
+        return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e9));
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -291,7 +326,7 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    void runClusterer() {
+    boolean runClustererWithTimeLimit() {
         // Assume the clusterer compeletes without interruption.
         boolean timeout = false;
 
@@ -303,18 +338,45 @@ public class MySubspaceClusterEvaluation {
         } catch (TimeoutException e) {
             // This is not an error. This is our timeout.
             timeout = true;
-            System.out.println("Timeout!");
         } catch (InterruptedException e) {
-            System.err.println("InterruptedException!");
             e.printStackTrace();
         } catch (ExecutionException e) {
-            System.err.println("InterruptedException!");
             e.printStackTrace();
         }
+
         executor.shutdownNow();
 
         // Assume that no timeout means the clusterer ran successfully
-        m_successfulRun = !timeout;
+        return !timeout;
+    }
+
+    void runDataPreprocessor() {
+        // Normalize values in data to [0,1]
+        // Keeps width values in a smaller range, but may overweight outliers
+
+        Instances newData = null;
+        Normalize normalize = new Normalize();
+        normalize.setIgnoreClass(true);
+
+        try {
+            normalize.setInputFormat(m_dataSet);
+            newData = Filter.useFilter(m_dataSet, normalize);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        m_dataSet = newData;
+
+    }// method
+
+    void runClusterer() {
+        try {
+            m_clusterer.buildSubspaceClusterer(m_dataSet);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -458,14 +520,14 @@ public class MySubspaceClusterEvaluation {
                 setTimeLimit(timeLimit);
             }
 
-            String experimentName = Utils.getOption("exp", m_options);
+            String experimentName = Utils.getOption("label", m_options);
             if (experimentName.length() == 0) {
-                throw new Exception("No experiment name, use -exp");
+                throw new Exception("No experiment label, use -label");
             }
             m_writer.setKey(experimentName);
 
             // If it is not specified, leave it as an empty string.
-            m_writer.setPath(Utils.getOption("outpath", m_options));
+            m_writer.setPath(Utils.getOption("path", m_options));
 
         } catch (Exception e) {
             throw new Exception('\n' + e.getMessage() + getOptionString());

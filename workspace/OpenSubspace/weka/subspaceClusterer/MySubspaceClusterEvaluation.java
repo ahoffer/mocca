@@ -2,6 +2,8 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
+import weka.filters.unsupervised.attribute.Normalize;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -132,8 +134,13 @@ public class MySubspaceClusterEvaluation {
 
     public void run() throws Exception {
 
-        // Do it
+        // Set up
         setOptions();
+
+        // Do any necessary preprocessing
+        runDataPreprocessor();
+
+        // Set clusterer name and options
         m_writer.setClusterer(m_clusterer);
 
         // Generate clusters and time how long it takes
@@ -143,6 +150,8 @@ public class MySubspaceClusterEvaluation {
         runClusterer();
 
         stopTimer();
+
+        // Capture metrics
         m_writer.put("runtime_clustering_sec", getElapsedTime());
 
         // Run the metrics and time how long they take
@@ -150,6 +159,8 @@ public class MySubspaceClusterEvaluation {
         runMetrics();
         runDescriptiveStats();
         stopTimer();
+
+        // Capture metrics
         m_writer.put("runtime_metrics_sec", getElapsedTime());
 
         // Write report files
@@ -187,6 +198,7 @@ public class MySubspaceClusterEvaluation {
             m_writer.put("quality_median", StdStats.median(quality));
 
         }// if
+
     }// method
 
     /**
@@ -344,6 +356,31 @@ public class MySubspaceClusterEvaluation {
         // Assume that no timeout means the clusterer ran successfully
         return !timeout;
     }
+
+    void runDataPreprocessor() {
+        // Normalize values in data to [0,1]
+        // Keeps width values in a smaller range, but may overweight outliers
+
+        if (m_dataSet == null) {
+            System.err.printf("Must set the data before preprocessing it\n");
+            System.exit(-3);
+        }
+
+        Instances newData = null;
+        Normalize normalize = new Normalize();
+        normalize.setIgnoreClass(true);
+
+        try {
+            normalize.setInputFormat(m_dataSet);
+            newData = Filter.useFilter(m_dataSet, normalize);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        m_dataSet = newData;
+
+    }// method
 
     void runClusterer() {
         try {

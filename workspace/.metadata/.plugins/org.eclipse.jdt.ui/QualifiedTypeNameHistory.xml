@@ -55,4 +55,6 @@
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.StdStats"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
+<fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Normalize"/>
 </qualifiedTypeNameHistroy>

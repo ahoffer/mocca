@@ -48,15 +48,13 @@ public class TestRunner {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        // Set platform independent state
+        // Set state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
-        javaExecutable = "javaw.exe";
-
-        // Set platform dependent state
         outputPath = ResultsWriter.separatedPath("C:\\results");
         dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+        javaExecutable = "javaw.exe";
 
         // Datasets to cluster
         dataSets.add("breast.arff");
@@ -82,9 +80,9 @@ public class TestRunner {
 
     static void run() throws IOException, InterruptedException {
         int experimentLabel = 1;
-        List<List<String>> argLines = MoccaExperimentBuilder.getArgLines();
+        List<List<String>> argLines = MoccaBuilder.getArgLines();
 
-        System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
+        System.out.printf("Number of experiments to run=%,d\n", argLines.size());
 
         for (List<String> args : argLines) {
 
