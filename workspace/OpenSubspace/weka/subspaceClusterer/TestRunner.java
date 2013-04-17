@@ -14,6 +14,7 @@ public class TestRunner {
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
     static List<String> dataSets = new ArrayList<String>();
+    static String space = " ";
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
 
@@ -60,7 +61,7 @@ public class TestRunner {
         // outputPath = ResultsWriter.separatedPath("C:\\results");
         // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-		//javaExecutable = "javaw.exe";
+        //javaExecutable = "javaw.exe";
 
         // Linux lab
         outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
@@ -87,7 +88,6 @@ public class TestRunner {
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV
         System.exit(0);
-
     }
 
     static void run() throws IOException, InterruptedException {
@@ -123,8 +123,11 @@ public class TestRunner {
                     args.add("-t");
                     args.add(datafileName);
 
+                    /*****  DEBUG  *****/
+                    printCommandLine(args);
+                    
                     // Schedule the experiment
-                    dispatch(args);
+                    //dispatch(args);
 
                     // Set the ID for the next experiment to run
                     experimentLabel++;
@@ -133,10 +136,21 @@ public class TestRunner {
             }// if
 
             else {
-
                 System.err.printf("File %s is not readable\n", datafile);
             }// else
 
         }// for
     }// method
+    
+    
+    printCommandLine(List<String> line) {
+      
+      for (String element : line) {
+        System.out.printf("%s ", element);
+      }
+    
+      System.out.println("");
+    
+    }
+    
 }// class
