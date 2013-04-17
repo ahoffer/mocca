@@ -1,15 +1,19 @@
 package weka.subspaceClusterer;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunner {
 
-    static String metrics, outputPath, dataSetFilename, command, classPath, javaExecutable;
+    static String metrics, outputPath, command, classPath, javaExecutable, dataPath;
     static int numProcessors;
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
+    static List<String> dataSets = new ArrayList<String>();
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
 
@@ -47,16 +51,32 @@ public class TestRunner {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        // Set state
+        // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
-        outputPath = "C:\\results";
-        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-        javaExecutable = "javaw.exe";
+      
+        // Set platform dependent state
+        // Windows
+        // outputPath = ResultsWriter.separatedPath("C:\\results");
+        // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
+        // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+		//javaExecutable = "javaw.exe";
 
-        // TODO: RUN EXPERIMENTS FOR MULTIPLE DATASETS
-        // ArrayList<String> dataSetFilenames;
-        dataSetFilename = "breast.arff";
+        // Linux lab
+        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
+        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
+        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/weka/subspaceClusterer/*";
+        javaExecutable = "java";
+
+        // Datasets to cluster
+        dataSets.add("breast.arff");
+        dataSets.add("diabetes.arff");
+        dataSets.add("D05.arff");
+        dataSets.add("glass.arff");
+        dataSets.add("liver.arff");
+        dataSets.add("N30.arff");
+        dataSets.add("pendigits.arff");
+        dataSets.add("S1500.arff");
 
         // Run tests
         run();
@@ -72,33 +92,51 @@ public class TestRunner {
 
     static void run() throws IOException, InterruptedException {
         int experimentLabel = 1;
-        List<List<String>> argLines = MoccaBuilder.getArgLines();
-        System.out.printf("Number of experiments to run=%,d\n", argLines.size());
+        List<List<String>> argLines = MoccaExperimentBuilder.getArgLines();
 
-        for (List<String> args : argLines) {
+        System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
 
-            // Build final command line by prepending/appending as necessary.
-            // PREPEND
-            args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
-            args.add(0, classPath);
-            args.add(0, "-cp");
-            args.add(0, javaExecutable);
-            // APPEND
-            args.add("-label");
-            args.add("" + experimentLabel);
-            args.add("-M");
-            args.add(metrics);
-            args.add("-path");
-            args.add(outputPath);
-            args.add("-c");
-            args.add("last");
-            args.add("-t");
-            args.add(dataSetFilename);
+        for (String dataFname : dataSets) {
 
-            dispatch(args);
+            Path datafile = Paths.get(dataPath, dataFname);
+            if (Files.isReadable(datafile)) {
 
-            // Set the ID for the next experiment to run
-            experimentLabel++;
+                String datafileName = datafile.toString();
+
+                for (List<String> args : argLines) {
+
+                    // Build final command line by prepending/appending as necessary.
+                    // PREPEND
+                    args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
+                    args.add(0, classPath);
+                    args.add(0, "-cp");
+                    args.add(0, javaExecutable);
+                    // APPEND
+                    args.add("-label");
+                    args.add("" + experimentLabel);
+                    args.add("-M");
+                    args.add(metrics);
+                    args.add("-path");
+                    args.add(outputPath);
+                    args.add("-c");
+                    args.add("last");
+                    args.add("-t");
+                    args.add(datafileName);
+
+                    // Schedule the experiment
+                    dispatch(args);
+
+                    // Set the ID for the next experiment to run
+                    experimentLabel++;
+                }// for
+
+            }// if
+
+            else {
+
+                System.err.printf("File %s is not readable\n", datafile);
+            }// else
+
         }// for
     }// method
 }// class
