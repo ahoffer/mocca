@@ -286,17 +286,20 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         for (Cluster otherCluster : clusters) {
             MoccaCluster other = (MoccaCluster) otherCluster;
             subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
-            clusterOverlap = newCluster.getClusterOverlapScore(other);
-            if (subspaceOverlap > subspaceOverlapThreshold && clusterOverlap > instanceOverlapThreshold) {
-                // Keep the cluster with the highest quality
-                if (newCluster.quality > other.quality) {
-                    // Keep new cluster, remove other cluster
-                    removeList.add(otherCluster);
-                } else {
-                    // Do not keep the new cluster.
-                    return;
-                }
-            }// if
+
+            if (subspaceOverlap > subspaceOverlapThreshold) {
+                clusterOverlap = newCluster.getClusterOverlapScore(other);
+                if (clusterOverlap > instanceOverlapThreshold) {
+                    // Keep the cluster with the highest quality
+                    if (newCluster.quality > other.quality) {
+                        // Keep new cluster, remove other cluster
+                        removeList.add(otherCluster);
+                    } else {
+                        // Do not keep the new cluster.
+                        return;
+                    }
+                }// inner if
+            }// outer if
         }// for
 
         clusters.removeAll(removeList);
