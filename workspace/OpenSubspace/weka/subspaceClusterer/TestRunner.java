@@ -65,7 +65,7 @@ public class TestRunner {
         // Linux lab
         outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
         dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
-        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/weka/subspaceClusterer/*";
+        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
         javaExecutable = "java";
 
         // Datasets to cluster
