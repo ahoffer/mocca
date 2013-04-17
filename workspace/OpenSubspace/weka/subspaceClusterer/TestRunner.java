@@ -11,7 +11,7 @@ public class TestRunner {
 
     static String metrics, outputPath, command, classPath, javaExecutable, dataPath;
     static int numProcessors;
-    static boolean dryrun=false;
+    static boolean dryrun = false;
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
     static List<String> dataSets = new ArrayList<String>();
@@ -53,20 +53,20 @@ public class TestRunner {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-      if (args.length>0 && args[0] == "-dryrun") {
-        dryrun=true;
-       }
-    
-      // Set platform independent state
+        if (args.length > 0 && args[0].equals("-dryrun")) {
+            dryrun = true;
+        }
+
+        // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
-      
+
         // Set platform dependent state
         // Windows
         // outputPath = ResultsWriter.separatedPath("C:\\results");
         // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-        //javaExecutable = "javaw.exe";
+        // javaExecutable = "javaw.exe";
 
         // Linux lab
         outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
@@ -129,12 +129,11 @@ public class TestRunner {
                     args.add(datafileName);
 
                     if (dryrun) {
-                    /*****  DEBUG  *****/
-                      printCommandLine(args);
-                    }
-                    else {
-                      // Schedule the experiment
-                      dispatch(args);
+                        /***** DEBUG *****/
+                        printCommandLine(args);
+                    } else {
+                        // Schedule the experiment
+                        dispatch(args);
                     }
                     // Set the ID for the next experiment to run
                     experimentLabel++;
@@ -148,20 +147,19 @@ public class TestRunner {
 
         }// for
     }// method
-    
-    
+
     static void printCommandLine(List<String> line) {
-      
-      for (String element : line) {
-        System.out.printf("%s ", element);
-      }
-    
-      System.out.println("");
-    
+
+        for (String element : line) {
+            System.out.printf("%s ", element);
+        }
+
+        System.out.println("");
+
     }
-    
+
     static String quote(String string) {
-      return "\""+string+"\"";
+        return "\"" + string + "\"";
     }
-    
+
 }// class
