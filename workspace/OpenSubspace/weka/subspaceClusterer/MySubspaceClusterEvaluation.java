@@ -421,10 +421,10 @@ public class MySubspaceClusterEvaluation {
         }
         if (theClass != -1) {
             if (theClass < 1 || theClass > m_dataSet.numAttributes())
-                throw new Exception("Class is out of range!");
+                throw new Exception("Class attribute is out of range. Did you forget -c last ?");
 
             if (!m_dataSet.attribute(theClass - 1).isNominal())
-                throw new Exception("Class must be nominal!");
+                throw new Exception("Class attribute must be nominal!");
 
             m_dataSet.setClassIndex(theClass - 1);
         }
