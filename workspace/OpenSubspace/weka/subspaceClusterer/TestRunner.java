@@ -54,18 +54,19 @@ public class TestRunner {
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
-        javaExecutable = "javaw.exe";
-
+      
         // Set platform dependent state
         // Windows
         // outputPath = ResultsWriter.separatedPath("C:\\results");
         // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+		//javaExecutable = "javaw.exe";
 
         // Linux lab
         outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
         dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
         classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/weka/subspaceClusterer/*";
+        javaExecutable = "java";
 
         // Datasets to cluster
         dataSets.add("breast.arff");
