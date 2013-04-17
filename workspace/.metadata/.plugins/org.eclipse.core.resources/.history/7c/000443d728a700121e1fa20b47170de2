@@ -57,15 +57,9 @@ public class TestRunner {
         javaExecutable = "javaw.exe";
 
         // Set platform dependent state
-        // Windows
-        // outputPath = ResultsWriter.separatedPath("C:\\results");
-        // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
-        // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-
-        // Linux lab
-        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
-        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
-        classPath = "/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
+        outputPath = ResultsWriter.separatedPath("C:\\results");
+        dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
+        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
 
         // Datasets to cluster
         dataSets.add("breast.arff");
