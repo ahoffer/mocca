@@ -11,6 +11,7 @@ public class TestRunner {
 
     static String metrics, outputPath, command, classPath, javaExecutable, dataPath;
     static int numProcessors;
+    static boolean dryrun=false;
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
     static List<String> dataSets = new ArrayList<String>();
@@ -52,7 +53,11 @@ public class TestRunner {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        // Set platform independent state
+      if (args.length>0 && args[0] == "-dryrun") {
+        dryrun=true;
+       }
+    
+      // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
       
@@ -66,7 +71,7 @@ public class TestRunner {
         // Linux lab
         outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
         dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
-        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/weka/subspaceClusterer/*";
+        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
         javaExecutable = "java";
 
         // Datasets to cluster
@@ -108,7 +113,7 @@ public class TestRunner {
                     // Build final command line by prepending/appending as necessary.
                     // PREPEND
                     args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
-                    args.add(0, classPath);
+                    args.add(0, quote(classPath));
                     args.add(0, "-cp");
                     args.add(0, javaExecutable);
                     // APPEND
@@ -123,12 +128,14 @@ public class TestRunner {
                     args.add("-t");
                     args.add(datafileName);
 
+                    if (dryrun) {
                     /*****  DEBUG  *****/
-                    printCommandLine(args);
-                    
-                    // Schedule the experiment
-                    //dispatch(args);
-
+                      printCommandLine(args);
+                    }
+                    else {
+                      // Schedule the experiment
+                      dispatch(args);
+                    }
                     // Set the ID for the next experiment to run
                     experimentLabel++;
                 }// for
@@ -143,7 +150,7 @@ public class TestRunner {
     }// method
     
     
-    printCommandLine(List<String> line) {
+    static void printCommandLine(List<String> line) {
       
       for (String element : line) {
         System.out.printf("%s ", element);
@@ -151,6 +158,10 @@ public class TestRunner {
     
       System.out.println("");
     
+    }
+    
+    static String quote(String string) {
+      return "\""+string+"\"";
     }
     
 }// class
