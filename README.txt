@@ -23,3 +23,8 @@ Example of making it run on windows:
 Here is a version run out of the eclipse project directory with relative paths:
 
 java -cp ".;.\lib\*" weka.subspaceClusterer.Mocca -m 5000 -w 1 -i 0.3 -b 0.35 -g 0.2 -t breast.arff -c last
+
+
+To run the evaluationa afrom the Eclipse project directory:
+
+java -cp ".:lib/*" weka.subspaceClusterer.MySubspaceClusterEvaluation -sc Mocca -t "../../data/breast.arff" -c last -g 0 -w 0.5 -i 0.8 -s 0.95 -maxiter 1000 -a 0.1 -e 0.5 -b 0.35 -label 1 -M F1Measure:Accuracy -path "."
