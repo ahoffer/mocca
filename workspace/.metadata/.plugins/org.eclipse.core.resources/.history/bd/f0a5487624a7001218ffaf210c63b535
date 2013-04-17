@@ -1,9 +1,7 @@
 package weka.subspaceClusterer;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,47 +87,37 @@ public class TestRunner {
 
         System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
 
-        for (String dataFname : dataSets) {
+        for (List<String> args : argLines) {
 
-            Path datafile = Paths.get(dataPath, dataFname);
-            if (Files.isReadable(datafile)) {
+            for (String dataFname : dataSets) {
 
-                String datafileName = datafile.toString();
+                Path datafile = Path.get(dataPath, dataFname);
 
-                for (List<String> args : argLines) {
+                // Build final command line by prepending/appending as necessary.
+                // PREPEND
+                args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
+                args.add(0, classPath);
+                args.add(0, "-cp");
+                args.add(0, javaExecutable);
+                // APPEND
+                args.add("-label");
+                args.add("" + experimentLabel);
+                args.add("-M");
+                args.add(metrics);
+                args.add("-path");
+                args.add(outputPath);
+                args.add("-c");
+                args.add("last");
+                args.add("-t");
+                args.add();
 
-                    // Build final command line by prepending/appending as necessary.
-                    // PREPEND
-                    args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
-                    args.add(0, classPath);
-                    args.add(0, "-cp");
-                    args.add(0, javaExecutable);
-                    // APPEND
-                    args.add("-label");
-                    args.add("" + experimentLabel);
-                    args.add("-M");
-                    args.add(metrics);
-                    args.add("-path");
-                    args.add(outputPath);
-                    args.add("-c");
-                    args.add("last");
-                    args.add("-t");
-                    args.add(datafileName);
+                // Schedule the experiment
+                dispatch(args);
 
-                    // Schedule the experiment
-                    dispatch(args);
+                // Set the ID for the next experiment to run
+                experimentLabel++;
 
-                    // Set the ID for the next experiment to run
-                    experimentLabel++;
-                }// for
-
-            }// if
-
-            else {
-
-                System.err.printf("File %s is not readable\n", datafile);
-            }// else
-
+            }// for
         }// for
     }// method
 }// class

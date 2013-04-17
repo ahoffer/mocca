@@ -94,9 +94,9 @@ public class TestRunner {
             Path datafile = Paths.get(dataPath, dataFname);
             if (Files.isReadable(datafile)) {
 
-                String datafileName = datafile.toString();
-
                 for (List<String> args : argLines) {
+
+                    String datafileName = datafile.toString();
 
                     // Build final command line by prepending/appending as necessary.
                     // PREPEND

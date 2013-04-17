@@ -89,14 +89,14 @@ public class TestRunner {
 
         System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
 
-        for (String dataFname : dataSets) {
+        for (List<String> args : argLines) {
 
-            Path datafile = Paths.get(dataPath, dataFname);
-            if (Files.isReadable(datafile)) {
+            for (String dataFname : dataSets) {
 
-                String datafileName = datafile.toString();
+                Path datafile = Paths.get(dataPath, dataFname);
+                if (Files.isReadable(datafile)) {
 
-                for (List<String> args : argLines) {
+                    String datafileName = datafile.toString();
 
                     // Build final command line by prepending/appending as necessary.
                     // PREPEND
@@ -121,15 +121,14 @@ public class TestRunner {
 
                     // Set the ID for the next experiment to run
                     experimentLabel++;
-                }// for
 
-            }// if
+                }// if
 
-            else {
+                else {
 
-                System.err.printf("File %s is not readable\n", datafile);
-            }// else
-
+                    System.err.printf("File %s is not readable\n", datafile);
+                }
+            }// for
         }// for
     }// method
 }// class
