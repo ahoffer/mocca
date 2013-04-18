@@ -98,12 +98,12 @@ public class TestRunner {
 
     static void run() throws IOException, InterruptedException {
         int experimentLabel;
-        List<List<String>> argLines;
+
+        List<List<String>> argLines = MoccaExperimentBuilder.getArgLines();
 
         // Do not modify the arg list because it is used every time through the data set filename loop
-        List<String> args;
+        List<String> argLine;
 
-        argLines = MoccaExperimentBuilder.getArgLines();
         System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
         experimentLabel = 1;
         for (String dataFname : dataSets) {
@@ -114,7 +114,7 @@ public class TestRunner {
 
                 for (List<String> orginalArgLine : argLines) {
 
-                    args = new ArrayList<String>(orginalArgLine);
+                    argLine = new ArrayList<String>(orginalArgLine);
 
                     // Build final command line by prepending/appending as necessary.
                     // PREPEND

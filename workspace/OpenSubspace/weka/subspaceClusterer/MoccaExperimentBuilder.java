@@ -19,7 +19,7 @@ public class MoccaExperimentBuilder {
     static double[] widths = { .0001, .001, .01 };
     static double[] betas = { 0.35, 0.5 };
     static double[] epsilons = { 0.05 };
-    static double[] subspaceOverlapThresholds = { 0.95, };
+    static double[] subspaceOverlapThresholds = { 0.95 };
     static double[] objectOverlapThresholds = { 0.5, 0.9, 0.99 };
     static int maxiter = 50000;
     static String subspaceClutererName = "Mocca";

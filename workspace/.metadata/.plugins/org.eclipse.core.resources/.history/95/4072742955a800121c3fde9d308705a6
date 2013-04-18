@@ -101,7 +101,7 @@ public class TestRunner {
         List<List<String>> argLines;
 
         // Do not modify the arg list because it is used every time through the data set filename loop
-        List<String> args;
+        List<String> argLine;
 
         argLines = MoccaExperimentBuilder.getArgLines();
         System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
@@ -114,7 +114,7 @@ public class TestRunner {
 
                 for (List<String> orginalArgLine : argLines) {
 
-                    args = new ArrayList<String>(orginalArgLine);
+                    argLine = new ArrayList<String>(orginalArgLine);
 
                     // Build final command line by prepending/appending as necessary.
                     // PREPEND
