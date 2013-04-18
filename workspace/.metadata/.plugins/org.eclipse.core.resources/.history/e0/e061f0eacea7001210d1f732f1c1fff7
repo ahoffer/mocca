@@ -61,19 +61,18 @@ public class TestRunner {
         numProcessors = Runtime.getRuntime().availableProcessors();
         metrics = "F1Measure:Accuracy:Entropy";
 
-        // WINDOWS - Set platform dependent state 
-        // 
-        outputPath = ResultsWriter.separatedPath("C:\\results");
-        dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
-        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-        javaExecutable = "javaw.exe";
+        // Set platform dependent state
+        // Windows
+        // outputPath = ResultsWriter.separatedPath("C:\\results");
+        // dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
+        // classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+        // javaExecutable = "javaw.exe";
 
-        // LINUX LAB - Set platform dependent state 
-        //
-        // outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
-        // dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
-        // classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
-        // javaExecutable = "java";
+        // Linux lab
+        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
+        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
+        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
+        javaExecutable = "java";
 
         // Datasets to cluster
         dataSets.add("breast.arff");
