@@ -8417,3 +8417,13 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.e
 
 !ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2013-04-17 20:10:38.816
 !MESSAGE No repository found at file:/C:/Users/ahoffer/Downloads/visualvm_launcher_u1_eclipse_36/.
+!SESSION 2013-04-18 11:31:53.561 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_17
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2013-04-18 11:33:07.044
+!MESSAGE No repository found at file:/C:/Users/ahoffer/Downloads/visualvm_launcher_u1_eclipse_36/.

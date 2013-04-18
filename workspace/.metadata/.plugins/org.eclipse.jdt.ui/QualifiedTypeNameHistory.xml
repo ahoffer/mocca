@@ -40,7 +40,6 @@
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="org.supercsv.io.CsvMapWriter"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
-<fullyQualifiedTypeName name="java.lang.Process"/>
 <fullyQualifiedTypeName name="weka.gui.experiment.RunNumberPanel"/>
 <fullyQualifiedTypeName name="java.nio.file.DirectoryStream"/>
 <fullyQualifiedTypeName name="java.io.File"/>
@@ -57,4 +56,5 @@
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="java.nio.file.Paths"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
+<fullyQualifiedTypeName name="java.lang.Process"/>
 </qualifiedTypeNameHistroy>

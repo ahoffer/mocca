@@ -73,9 +73,7 @@ public class TestRunner {
         run();
 
         // Pull all the results into one file
-        if (!dryrun) {
-            Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
-        }
+        Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
 
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV

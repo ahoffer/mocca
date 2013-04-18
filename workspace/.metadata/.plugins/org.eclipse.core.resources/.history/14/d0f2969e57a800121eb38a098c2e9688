@@ -9,12 +9,12 @@ import java.util.List;
 
 public class TestRunner {
 
-    static List<String> dataSets = new ArrayList<String>();
-    static boolean dryrun = false;
     static String metrics, outputPath, command, classPath, javaExecutable, dataPath;
     static int numProcessors;
+    static boolean dryrun = false;
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
+    static List<String> dataSets = new ArrayList<String>();
     static String space = " ";
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
@@ -60,47 +60,59 @@ public class TestRunner {
         metrics = "F1Measure:Accuracy:Entropy";
 
         // WINDOWS - Set platform dependent state
+        //
         setForWindows();
 
         // LINUX LAB - Set platform dependent state
         // setForLinuxLab();
 
-        // Select the data sets to use.
-        // TODO: Maybe I should just use every .arff in the data directory?. Yes. Do that.
         setDataSets();
 
         // Run tests
         run();
 
         // Pull all the results into one file
-        if (!dryrun) {
-            Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
-        }
+        Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
 
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV
         System.exit(0);
     }
 
+    public static void setForLinuxLab() {
+        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
+        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
+        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
+        javaExecutable = "java";
+    }
+
+    public static void setForWindows() {
+        outputPath = ResultsWriter.separatedPath("C:\\results");
+        dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
+        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
+        javaExecutable = "javaw.exe";
+    }
+
+    public static void setDataSets() {
+        // Datasets to cluster
+        dataSets.add("breast.arff");
+        dataSets.add("diabetes.arff");
+        dataSets.add("D05.arff");
+        dataSets.add("glass.arff");
+        dataSets.add("liver.arff");
+        dataSets.add("N30.arff");
+        dataSets.add("pendigits.arff");
+        dataSets.add("S1500.arff");
+    }
+
+    public static void waitForAll() throws InterruptedException {
+        for (Process proc : runningProcs) {
+            proc.waitFor();
+        }
+    }
+
     public static void parseArgs(String[] args) {
         dryrun = args.length > 0 && args[0].equals("-dryrun");
-    }
-
-    static void printCommandLine(List<String> line) {
-        // Dump a list of string to the transcipt.
-        // Separate each string element by one space.
-        for (String element : line) {
-            System.out.printf("%s ", element);
-        }
-
-        // Move to the next line.
-        System.out.printf("\n");
-
-    }
-
-    static String quote(String string) {
-        // Enclose a string in double quotes
-        return "\"" + string + "\"";
     }
 
     static void run() throws IOException, InterruptedException {
@@ -165,37 +177,18 @@ public class TestRunner {
 
     }// method
 
-    public static void setDataSets() {
-        // Datasets to cluster
-        dataSets.add("breast.arff");
-        dataSets.add("diabetes.arff");
-        dataSets.add("D05.arff");
-        dataSets.add("glass.arff");
-        dataSets.add("liver.arff");
-        dataSets.add("N30.arff");
-        dataSets.add("pendigits.arff");
-        dataSets.add("S1500.arff");
-        dataSets.add("sonar.arff");
-    }
+    static void printCommandLine(List<String> line) {
 
-    public static void setForLinuxLab() {
-        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
-        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
-        classPath = ".;/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
-        javaExecutable = "java";
-    }
-
-    public static void setForWindows() {
-        outputPath = ResultsWriter.separatedPath("C:\\results");
-        dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
-        classPath = "\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*;";
-        javaExecutable = "javaw.exe";
-    }
-
-    public static void waitForAll() throws InterruptedException {
-        for (Process proc : runningProcs) {
-            proc.waitFor();
+        for (String element : line) {
+            System.out.printf("%s ", element);
         }
+
+        System.out.printf("\n");
+
+    }
+
+    static String quote(String string) {
+        return "\"" + string + "\"";
     }
 
 }// class

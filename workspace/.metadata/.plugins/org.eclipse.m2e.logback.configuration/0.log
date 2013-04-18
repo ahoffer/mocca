@@ -146,3 +146,6 @@ org.apache.lucene.index.IndexNotFoundException: no segments* file found in org.a
 2013-04-17 11:39:36,857 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
 2013-04-17 19:24:17,975 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
 2013-04-17 20:12:23,018 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
+2013-04-18 11:32:45,938 [Thread-5] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (org.apache.commons.httpclient.NoHttpResponseException) caught when processing request: The server download.eclipse.org failed to respond
+2013-04-18 11:32:45,944 [Thread-5] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-18 11:36:56,160 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8

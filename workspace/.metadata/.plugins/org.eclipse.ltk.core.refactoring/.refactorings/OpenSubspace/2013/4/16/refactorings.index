@@ -14,3 +14,10 @@
 1366143704452	Rename local variable 'aLine'
 1366175408603	Rename type 'MoccaBuilder'
 1366254733830	Delete element
+1366310065216	Extract method 'setDryrun'
+1366310130621	Rename method 'setDryrun'
+1366310246726	Extract method 'waitForAll'
+1366310343730	Rename type 'MoccaExperimentBuilder'
+1366310443832	Extract method 'setDataSets'
+1366310463295	Extract method 'setForWindows'
+1366310497043	Extract method 'setForLinuxLab'

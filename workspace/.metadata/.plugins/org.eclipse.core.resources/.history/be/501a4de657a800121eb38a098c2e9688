@@ -73,9 +73,7 @@ public class TestRunner {
         run();
 
         // Pull all the results into one file
-        if (!dryrun) {
-            Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
-        }
+        Consolidator.consolidate(outputPath, outputPath + "\\results.csv");
 
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV
@@ -87,13 +85,11 @@ public class TestRunner {
     }
 
     static void printCommandLine(List<String> line) {
-        // Dump a list of string to the transcipt.
-        // Separate each string element by one space.
+        // Dump a list of string to the transcipt. Separate each string element by one space.
         for (String element : line) {
             System.out.printf("%s ", element);
         }
 
-        // Move to the next line.
         System.out.printf("\n");
 
     }
@@ -175,7 +171,6 @@ public class TestRunner {
         dataSets.add("N30.arff");
         dataSets.add("pendigits.arff");
         dataSets.add("S1500.arff");
-        dataSets.add("sonar.arff");
     }
 
     public static void setForLinuxLab() {
