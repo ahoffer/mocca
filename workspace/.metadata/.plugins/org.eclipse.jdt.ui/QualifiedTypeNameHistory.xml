@@ -51,10 +51,10 @@
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.StdStats"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 <fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Normalize"/>
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="java.nio.file.Paths"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="java.lang.Process"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 </qualifiedTypeNameHistroy>

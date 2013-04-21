@@ -16,7 +16,7 @@ public class MoccaExperimentGenerator {
 
     static double[] gammas = { 0.0, 0.1, 0.5, 0.75, 1.0 };
     static double[] alphas = { 0.1 };
-    static double[] widths = { .00001, .0001, .001, .01 };
+    static double[] widths = { .000001, .00001, .0001, .001 };
     static double[] betas = { 0.35, 0.5 };
     static double[] epsilons = { 0.05 };
     static double[] subspaceOverlapThresholds = { 0.95 };

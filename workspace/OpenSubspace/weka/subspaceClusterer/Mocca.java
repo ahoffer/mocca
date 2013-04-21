@@ -201,7 +201,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     public void setInstanceOverlapThreshold(double maxOverlap) {
         if (maxOverlap > 0.0)
-            subspaceOverlapThreshold = maxOverlap;
+            instanceOverlapThreshold = maxOverlap;
     }
 
     public void setMaxiter(int d) {
@@ -472,15 +472,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return gamma > 0;
     }
 
+    // Do not set default values. Values should be set from command line. If there is an error in the command line
+    // settings, default values hide the error.
     private static final long serialVersionUID = 5624336775621682596L;
-    private double alpha = 0.08;
-    private double beta = 0.35;
-    private double epsilon = 0.05;
-    private double gamma = 0.00; // Zero means "do not use PCA"
-    private double instanceOverlapThreshold = 0.50;
-    private int maxiter = 10001;
-    private double subspaceOverlapThreshold = 0.20;
-    private double width = 100.0;
+    private double alpha;
+    private double beta;
+    private double epsilon;
+    private double gamma; // Gamma zero means "do not use PCA"
+    private double instanceOverlapThreshold;
+    private int maxiter;
+    private double subspaceOverlapThreshold;
+    private double width;
     List<Cluster> clusters = new ArrayList<Cluster>();
     Instances dataAsInstances;
     int discrimSetSize;
