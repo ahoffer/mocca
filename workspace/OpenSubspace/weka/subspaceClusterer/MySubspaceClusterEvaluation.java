@@ -191,6 +191,7 @@ public class MySubspaceClusterEvaluation {
             }// for
 
             m_writer.put("num_trials", ((Mocca) m_clusterer).getNumTrials());
+            m_writer.put("computed_trials", ((Mocca) m_clusterer).calculateNumTrials());
             m_writer.put("quality_max", StdStats.max(quality));
             m_writer.put("quality_min", StdStats.min(quality));
             m_writer.put("quality_mean", StdStats.mean(quality));

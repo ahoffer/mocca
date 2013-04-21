@@ -64,6 +64,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     }
 
     public int getNumTrials() {
+        return Math.min(calculateNumTrials(), getMaxiter());
+
+    }
+
+    public int calculateNumTrials() {
         double d = numDims;
         double ln4 = Math.log(4);
         double log10alpha = Math.log10(alpha);
@@ -71,9 +76,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
         double est = 1 + 4 / alpha * Math.pow(d / ln4, log10alpha / log10beta) * Math.log(1 / epsilon);
         int numTrials = Utils.round(est);
-
-        return Math.min(numTrials, getMaxiter());
-
+        return numTrials;
     }
 
     public double getAlpha() {
