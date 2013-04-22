@@ -173,19 +173,14 @@ public class MySubspaceClusterEvaluation {
 
     void runDescriptiveStats() {
         int size = getClusters().size();
+        if (size == 0) {
+            return;
+        }
 
         // Computer and write statistics
         m_writer.put("num_clusters", size);
 
-        int actualNumTrial = -1;
-        int calculatedNumTrials = -1;
-        double maxQuality = -1;
-        double minQuality = -1;
-        double meanQuality = -1;
-        double stddevQuality = -1;
-        double medianQuality = -1;
-
-        if (size > 0 && getClusters().get(0) instanceof MoccaCluster) {
+        if (getClusters().get(0) instanceof MoccaCluster) {
 
             double[] quality = new double[size];
 
@@ -195,28 +190,17 @@ public class MySubspaceClusterEvaluation {
                 quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
             }// for
 
-            actualNumTrial = ((Mocca) m_clusterer).getNumTrials();
-            calculatedNumTrials = ((Mocca) m_clusterer).calculateNumTrials();
-            maxQuality = StdStats.max(quality);
-            minQuality = StdStats.min(quality);
-            meanQuality = StdStats.mean(quality);
-            stddevQuality = StdStats.stddev(quality);
-            medianQuality = StdStats.median(quality);
+            m_writer.put("num_trials", ((Mocca) m_clusterer).getNumTrials());
+            m_writer.put("computed_trials", ((Mocca) m_clusterer).calculateNumTrials());
+            m_writer.put("quality_max", StdStats.max(quality));
+            m_writer.put("quality_min", StdStats.min(quality));
+            m_writer.put("quality_mean", StdStats.mean(quality));
+            m_writer.put("quality_std_dev", StdStats.stddev(quality));
+            m_writer.put("quality_median", StdStats.median(quality));
+
         }// if
 
-        m_writer.put("actual_num_trials", actualNumTrial);
-        m_writer.put("computed_trials", calculatedNumTrials);
-        m_writer.put("quality_max", maxQuality);
-        m_writer.put("quality_min", minQuality);
-        m_writer.put("quality_mean", meanQuality);
-        m_writer.put("quality_std_dev", stddevQuality);
-        m_writer.put("quality_median", medianQuality);
-
     }// method
-
-    public double minQuality(double[] quality) {
-        return StdStats.min(quality);
-    }
 
     /**
      * Calculates all quality metrics specified in m_metrics on the clustering result. Returns the results as a

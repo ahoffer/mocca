@@ -173,11 +173,11 @@ public class MySubspaceClusterEvaluation {
 
     void runDescriptiveStats() {
         int size = getClusters().size();
-
+        
         // Computer and write statistics
         m_writer.put("num_clusters", size);
 
-        int actualNumTrial = -1;
+        int numTrials = -1;
         int calculatedNumTrials = -1;
         double maxQuality = -1;
         double minQuality = -1;
@@ -185,7 +185,7 @@ public class MySubspaceClusterEvaluation {
         double stddevQuality = -1;
         double medianQuality = -1;
 
-        if (size > 0 && getClusters().get(0) instanceof MoccaCluster) {
+        if  > 0 && getClusters().get(0) instanceof MoccaCluster) {
 
             double[] quality = new double[size];
 
@@ -195,7 +195,7 @@ public class MySubspaceClusterEvaluation {
                 quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
             }// for
 
-            actualNumTrial = ((Mocca) m_clusterer).getNumTrials();
+            numTrials = ((Mocca) m_clusterer).getNumTrials();
             calculatedNumTrials = ((Mocca) m_clusterer).calculateNumTrials();
             maxQuality = StdStats.max(quality);
             minQuality = StdStats.min(quality);
@@ -204,7 +204,7 @@ public class MySubspaceClusterEvaluation {
             medianQuality = StdStats.median(quality);
         }// if
 
-        m_writer.put("actual_num_trials", actualNumTrial);
+        m_writer.put("num_trials", numTrials);
         m_writer.put("computed_trials", calculatedNumTrials);
         m_writer.put("quality_max", maxQuality);
         m_writer.put("quality_min", minQuality);

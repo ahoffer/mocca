@@ -204,7 +204,7 @@ public class MySubspaceClusterEvaluation {
             medianQuality = StdStats.median(quality);
         }// if
 
-        m_writer.put("actual_num_trials", actualNumTrial);
+        m_writer.put("num_trials", actualNumTrial);
         m_writer.put("computed_trials", calculatedNumTrials);
         m_writer.put("quality_max", maxQuality);
         m_writer.put("quality_min", minQuality);

@@ -155,3 +155,16 @@ org.apache.lucene.index.IndexNotFoundException: no segments* file found in org.a
 2013-04-20 22:22:04,318 [Stop Help Server] INFO  o.e.j.server.handler.ContextHandler - stopped o.e.j.s.ServletContextHandler{/help,null}
 2013-04-21 08:58:10,193 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
 2013-04-21 11:03:31,211 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
+2013-04-22 08:51:29,627 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:51:29,633 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 08:51:50,645 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:51:50,645 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 08:52:11,657 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:52:11,657 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 08:52:53,915 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:52:53,915 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 08:53:14,917 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:53:14,917 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 08:53:35,931 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2013-04-22 08:53:35,931 [Thread-7] INFO  o.a.c.httpclient.HttpMethodDirector - Retrying request
+2013-04-22 09:10:27,557 [main] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="ExtractTempWizard">
+		<item value="true" key="replaceOccurrences"/>
+		<item value="false" key="declareFinal"/>
+	</section>
 	<section name="RefactoringWizard.preview">
 		<item value="484" key="height"/>
 		<item value="991" key="width"/>
@@ -7,9 +11,9 @@
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
 		<item value="true" key="deleteSubPackages"/>
 		<item value="false" key="CreateTopLevel"/>
-		<item value="false" key="CreateSetters"/>
-		<item value="false" key="CreateGetters"/>
 		<item value="*" key="patterns"/>
+		<item value="false" key="CreateGetters"/>
+		<item value="false" key="CreateSetters"/>
 		<item value="false" key="moveWizard.updateQualifiedNames"/>
 	</section>
 </section>
