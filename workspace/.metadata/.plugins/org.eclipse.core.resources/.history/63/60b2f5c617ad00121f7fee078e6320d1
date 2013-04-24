@@ -286,43 +286,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
          */
         List<Cluster> removeList = new ArrayList<Cluster>();
 
-        // DEBUG
-        System.out.println("----------New Cluster----------------");
-        System.out.println(newCluster.toStringWeka());
-
         for (Cluster otherCluster : clusters) {
             MoccaCluster other = (MoccaCluster) otherCluster;
             subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
 
-            // DEBUG
-            System.out.println("Other Cluster");
-            System.out.println(other.toStringWeka());
-
-            // Test if the clusters' subspaces are similar enought to be considered the same.
-            // If threshold is 0, all subspaces with at least one dimension in common are considered to be
-            // in the same subspace.
-            // If threshold is 1, only subspaces with exactly the same dimensions are considered to be in the
-            // same subspace.
-            //Cluster with the same subspace will be checked for duplicate object sets.
             if (subspaceOverlap > subspaceOverlapThreshold) {
-                // OK, the cluster's subsapces are considered the same.
-
-                // Test if the clusters' contain enough similar objects to be considered the same.
-                // If threshold is 0 (permissive), clusters with at least one object in common are considered to be the
-                // same.
-                // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
-                // is also part of the larger cluster.
-                clusterOverlap = newCluster.getClusterOverlapScore(other); 
+                clusterOverlap = newCluster.getClusterOverlapScore(other);
                 if (clusterOverlap > instanceOverlapThreshold) {
-                    // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
-                    // the same cluster.
-
                     // Keep the cluster with the highest quality
                     if (newCluster.quality > other.quality) {
-
                         // Keep new cluster, remove other cluster
                         removeList.add(otherCluster);
-
                     } else {
                         // Do not keep the new cluster.
                         return;
@@ -389,13 +363,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 Pca pca = new Pca(roationObjs);
                 numRotatedDims = pca.getColumnDimension();
                 pointsToCluster = pca.rotate(originalDataAsMatrix);
-
-                // DEBUG
-                // System.out.println("PCA matrix");
-                // pca.principleComponents.print(8, 4);
-                // System.out.println("Rotated Points");
-                // pointsToCluster.print(8, 4);
-
+                
+                //DEBUG
+                System.out.println("PCA matrix");
+                pca.principleComponents.print(8,  4);
+                System.out.println("Rotated Points");
+                pointsToCluster.print(8,4);
+                
+                
             }// end if
 
             // Randomly select discriminating set

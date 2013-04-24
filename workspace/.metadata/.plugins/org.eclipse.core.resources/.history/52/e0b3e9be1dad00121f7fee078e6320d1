@@ -287,7 +287,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         List<Cluster> removeList = new ArrayList<Cluster>();
 
         // DEBUG
-        System.out.println("----------New Cluster----------------");
+        System.out.println("New Cluster");
         System.out.println(newCluster.toStringWeka());
 
         for (Cluster otherCluster : clusters) {
@@ -312,7 +312,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 // same.
                 // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
                 // is also part of the larger cluster.
-                clusterOverlap = newCluster.getClusterOverlapScore(other); 
+                clusterOverlap = newCluster.getClusterOverlapScore(other);
                 if (clusterOverlap > instanceOverlapThreshold) {
                     // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
                     // the same cluster.

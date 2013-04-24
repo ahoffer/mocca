@@ -42,7 +42,7 @@ public class MoccaCluster extends Cluster {
 
         overlap = MoccaUtils.intersection(m_objects, otherCluster.m_objects);
         smallerCardinality = Math.min(getCardinality(), otherCluster.getCardinality());
-        normalizedOverlap = overlap / smallerCardinality;
+        normalizedOverlap = overlap / (double) smallerCardinality;
         return normalizedOverlap;
     }
 
