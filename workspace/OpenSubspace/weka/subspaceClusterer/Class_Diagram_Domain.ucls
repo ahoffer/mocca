@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="false" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="weka.subspaceClusterer.Mocca" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/Mocca.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1062" y="479"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="weka.subspaceClusterer.MoccaCluster" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MoccaCluster.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="749" y="787"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="weka.subspaceClusterer.SubspaceClusterer" project="OpenSubspace" 
+    file="/OpenSubspace/lib/i9-weka.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="564" y="322"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="false" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="i9.subspace.base.Cluster" project="OpenSubspace" 
+    file="/OpenSubspace/lib/i9-subspace.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="501" y="763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="weka.subspaceClusterer.Pca" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/Pca.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1356" y="264"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="weka.subspaceClusterer.MoccaUtils" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MoccaUtils.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1386" y="542"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <note id="7">    
+    <position height="100" width="200" x="1467" y="276"/>    
+    <text><![CDATA[Mathematical functions that do not belong uniquely to cluster analysis.]]>
+    </text>  
+  </note>  
+  <generalization id="8">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <text-link id="9">    
+    <link-end type="SOURCE" refId="7"/>    
+    <link-end type="TARGET" refId="5"/>  
+  </text-link>  
+  <text-link id="10">    
+    <link-end type="SOURCE" refId="7"/>    
+    <link-end type="TARGET" refId="6"/>  
+  </text-link>  
+  <association id="11">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="12" name="m_Clusters"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <generalization id="17">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="false">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

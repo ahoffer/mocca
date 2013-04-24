@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="weka.subspaceClusterer.TestRunner" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/TestRunner.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="74" y="31"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="weka.subspaceClusterer.Consolidator" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/Consolidator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="297" y="-44"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="weka.subspaceClusterer.MoccaExperimentGenerator" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MoccaExperimentGenerator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="352" y="161"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="weka.subspaceClusterer.MySubspaceClusterEvaluation" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MySubspaceClusterEvaluation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="300" y="371"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="java.lang.ProcessBuilder" project="OpenSubspace" 
+    file="C:/Program Files/Java/jre7/lib/rt.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="65" y="260"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <note id="6">    
+    <position height="100" width="200" x="-32" y="309"/>    
+    <text><![CDATA[MySubspaceClusterEvaluation is started as an OS processes as if java had been invoked from the command line.]]>
+    </text>  
+  </note>  
+  <note id="7">    
+    <position height="100" width="200" x="511" y="45"/>    
+    <text><![CDATA[The array are the sets of values to use in the experiments. Nested loops generate command line arguments to run Mocca with different parameters.]]>
+    </text>  
+  </note>  
+  <class id="8" language="java" name="weka.subspaceClusterer.ResultsWriter" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/ResultsWriter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="506" y="370"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <note id="9">    
+    <position height="100" width="200" x="512" y="189"/>    
+    <text><![CDATA[The ResultsWriter class creates two comma-separated value files for each run. The first files includes all the indepdendent varaibles (input parameters) and depedent variables (output/results). The second file lists all of the clusters found in that run.]]>
+    </text>  
+  </note>  
+  <note id="10">    
+    <position height="100" width="200" x="403" y="-104"/>    
+    <text><![CDATA[Pulls the individual CSV result files into a single CSV file suitable for analysis in Excel.]]>
+    </text>  
+  </note>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="12">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="13" name="procBuilder"/>      
+      <multiplicity id="14" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="16" name="m_writer"/>      
+      <multiplicity id="17" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="18">    
+    <link-end type="SOURCE" refId="6"/>    
+    <link-end type="TARGET" refId="4"/>  
+  </text-link>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <text-link id="20">    
+    <link-end type="SOURCE" refId="7"/>    
+    <link-end type="TARGET" refId="3"/>  
+  </text-link>  
+  <text-link id="21">    
+    <link-end type="SOURCE" refId="9"/>    
+    <link-end type="TARGET" refId="8"/>  
+  </text-link>  
+  <text-link id="22">    
+    <link-end type="SOURCE" refId="6"/>    
+    <link-end type="TARGET" refId="5"/>  
+  </text-link>  
+  <text-link id="23">    
+    <link-end type="SOURCE" refId="10"/>    
+    <link-end type="TARGET" refId="2"/>  
+  </text-link>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

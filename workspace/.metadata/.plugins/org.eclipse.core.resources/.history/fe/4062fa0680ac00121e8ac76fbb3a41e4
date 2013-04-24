@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="false" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="weka.subspaceClusterer.MySubspaceClusterEvaluation" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MySubspaceClusterEvaluation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="631" y="284"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="weka.subspaceClusterer.MySubspaceClusterEvaluation.Task" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/MySubspaceClusterEvaluation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="903" y="167"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="i9.subspace.base.Cluster" project="OpenSubspace" 
+    file="/OpenSubspace/lib/i9-subspace.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="895" y="657"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="weka.clusterquality.ClusterQualityMeasure" project="OpenSubspace" 
+    file="/OpenSubspace/lib/i9-weka.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="552" y="641"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="weka.subspaceClusterer.ResultsWriter" project="OpenSubspace" 
+    file="/OpenSubspace/weka/subspaceClusterer/ResultsWriter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="273" y="283"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="weka.subspaceClusterer.SubspaceClusterer" project="OpenSubspace" 
+    file="/OpenSubspace/lib/i9-weka.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="900" y="348"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <note id="7">    
+    <position height="100" width="200" x="138" y="565"/>    
+    <text><![CDATA[Cluster quality measures are provided  by the Opensubspace framework. They are the most important dependent variables because they tell how well the algorithm performed on any particular test run]]>
+    </text>  
+  </note>  
+  <note id="8">    
+    <position height="100" width="200" x="724" y="-37"/>    
+    <text><![CDATA[The Evaluation class drives a test run. It is instrumented to determine the characteristics of a test run including evaluation metrics, descriptive statistics about the clusters that were found, and runtime. It also controls the ResultsWriter.]]>
+    </text>  
+  </note>  
+  <note id="9">    
+    <position height="100" width="200" x="968" y="-8"/>    
+    <text><![CDATA[The Task class allows a trial to be conducted in a separate thread. The thread is killed if the trial for too long. The allowed runtime is set on the command line.]]>
+    </text>  
+  </note>  
+  <note id="10">    
+    <position height="100" width="200" x="1015" y="394"/>    
+    <text><![CDATA[The Clusterer is the implementation of the algorithm. It is handed a data set and a set of parameters and is then told to generate clusters from the data.]]>
+    </text>  
+  </note>  
+  <note id="11">    
+    <position height="100" width="200" x="273" y="-39"/>    
+    <text><![CDATA[The ResultsWriter class creates two comma-separated value files for each run. The first files includes all the indepdendent varaibles (input parameters) and depedent variables (output/results). The second file lists all of the clusters found in that run.]]>
+    </text>  
+  </note>  
+  <text-link id="12">    
+    <link-end type="SOURCE" refId="11"/>    
+    <link-end type="TARGET" refId="5"/>  
+  </text-link>  
+  <association id="13">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="14" name="m_clusterer"/>      
+      <multiplicity id="15" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="16">    
+    <link-end type="SOURCE" refId="10"/>    
+    <link-end type="TARGET" refId="3"/>  
+  </text-link>  
+  <association id="17">    
+    <bendpoint x="623" y="524"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="18" name="m_metricsObjects"/>      
+      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="20">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </nesting>  
+  <text-link id="21">    
+    <link-end type="SOURCE" refId="10"/>    
+    <link-end type="TARGET" refId="6"/>  
+  </text-link>  
+  <text-link id="22">    
+    <link-end type="SOURCE" refId="7"/>    
+    <link-end type="TARGET" refId="4"/>  
+  </text-link>  
+  <association id="23">    
+    <bendpoint x="940" y="492"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="24" name="m_Clusters"/>      
+      <multiplicity id="25" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="26">    
+    <link-end type="SOURCE" refId="8"/>    
+    <link-end type="TARGET" refId="1"/>  
+  </text-link>  
+  <association id="27">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="28" name="m_writer"/>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="31" name="clusterer"/>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="34" name="m_trueClusters"/>      
+      <multiplicity id="35" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
