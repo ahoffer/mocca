@@ -15,3 +15,11 @@
 1366765951791	Delete element
 1366766464880	Delete element
 1366769005336	Delete elements
+1366850637789	Rename method 'getSubspaceOverlapScore'
+1366850722134	Rename local variable 'subspaceOverlap'
+1366850799890	Rename field 'subspaceOverlapThreshold'
+1366850818250	Rename method 'getClusterOverlapScore'
+1366850893119	Rename local variable 'clusterOverlap'
+1366850907243	Rename field 'instanceOverlapThreshold'
+1366851808629	Rename field 'subspaceOverlapThresholds'
+1366851819397	Rename field 'objectOverlapThresholds'

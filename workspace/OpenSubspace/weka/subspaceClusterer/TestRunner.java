@@ -57,7 +57,7 @@ public class TestRunner {
 
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
-        metrics = "F1Measure:Accuracy:Entropy";
+        metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage";
 
         // WINDOWS - Set platform dependent state
         setForWindows();
@@ -170,9 +170,9 @@ public class TestRunner {
         dataSets.add("breast.arff");
         dataSets.add("diabetes.arff");
         dataSets.add("D05.arff");
-        dataSets.add("glass.arff");
-        dataSets.add("liver.arff");
-        dataSets.add("N30.arff");
+        // dataSets.add("glass.arff");
+        // dataSets.add("liver.arff");
+        // dataSets.add("N30.arff");
         dataSets.add("S1500.arff");
         dataSets.add("sonar.arff");
 

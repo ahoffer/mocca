@@ -10,6 +10,7 @@ public class Pca {
     // Instance variables
     Matrix input;
     Matrix principleComponents;
+    Matrix rotation;
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
@@ -94,5 +95,22 @@ public class Pca {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    Matrix getRotationMatrix() {
+        if (principleComponents == null) {
+            return null;
+        }
+        // rotation = principleComponents.copy();
+        int originalDimensions = input.getColumnDimension();
+        int colsToAppend = originalDimensions - getColumnDimension();
+        Matrix mat = new Matrix(getRowDimension(), colsToAppend, 0);
+
+        for (int appendIdx = getColumnDimension(); appendIdx < originalDimensions; ++appendIdx) {
+            mat.set(appendIdx, appendIdx, 1);
+        }
+
+        return MatrixUtils.concat(principleComponents, mat);
+
+    }// end method
 
 }// end class

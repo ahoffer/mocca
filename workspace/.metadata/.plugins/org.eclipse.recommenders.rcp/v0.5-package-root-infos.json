@@ -156,17 +156,17 @@
     "javaRuntime": false
   },
   {
-    "symbolicName": "jre",
+    "symbolicName": "i9-subspace",
     "version": {
-      "major": 1,
-      "minor": 0,
-      "micro": 0,
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
       "qualifier": ""
     },
-    "jarFileFingerprint": "abd730a724364204bff29f4e0b3ced4d08f09a47",
-    "jarFileModificationDate": "2013-04-16T12:58:02.238-07:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\charsets.jar",
-    "javaRuntime": true
+    "jarFileFingerprint": "a3d5174410a028c4ebb086e02306873b6d8fc06d",
+    "jarFileModificationDate": "2013-03-15T18:52:08.972-07:00",
+    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
+    "javaRuntime": false
   },
   {
     "symbolicName": "jre",
@@ -182,17 +182,17 @@
     "javaRuntime": true
   },
   {
-    "symbolicName": "i9-subspace",
+    "symbolicName": "jre",
     "version": {
-      "major": -1,
-      "minor": -1,
-      "micro": -1,
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
       "qualifier": ""
     },
-    "jarFileFingerprint": "a3d5174410a028c4ebb086e02306873b6d8fc06d",
-    "jarFileModificationDate": "2013-03-15T18:52:08.972-07:00",
-    "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\i9-subspace.jar",
-    "javaRuntime": false
+    "jarFileFingerprint": "abd730a724364204bff29f4e0b3ced4d08f09a47",
+    "jarFileModificationDate": "2013-04-16T12:58:02.238-07:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\charsets.jar",
+    "javaRuntime": true
   },
   {
     "symbolicName": "Jama",
@@ -215,9 +215,9 @@
       "micro": 0,
       "qualifier": ""
     },
-    "jarFileFingerprint": "a0b7abe9a4133d6a18d370d9869d0077957d8bc7",
-    "jarFileModificationDate": "2013-04-16T12:57:56.648-07:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\jaccess.jar",
+    "jarFileFingerprint": "318535c12e8ed9df6d2139664f51c5dd841cf10f",
+    "jarFileModificationDate": "2013-04-16T12:57:56.688-07:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\jfr.jar",
     "javaRuntime": true
   },
   {
@@ -228,9 +228,9 @@
       "micro": 0,
       "qualifier": ""
     },
-    "jarFileFingerprint": "318535c12e8ed9df6d2139664f51c5dd841cf10f",
-    "jarFileModificationDate": "2013-04-16T12:57:56.688-07:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\jfr.jar",
+    "jarFileFingerprint": "a0b7abe9a4133d6a18d370d9869d0077957d8bc7",
+    "jarFileModificationDate": "2013-04-16T12:57:56.648-07:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\jaccess.jar",
     "javaRuntime": true
   },
   {
@@ -247,19 +247,6 @@
     "javaRuntime": false
   },
   {
-    "symbolicName": "jre",
-    "version": {
-      "major": 1,
-      "minor": 0,
-      "micro": 0,
-      "qualifier": ""
-    },
-    "jarFileFingerprint": "1fbfeeb3449860cd85925cef06714daa4c8220ca",
-    "jarFileModificationDate": "2013-04-16T12:58:02.148-07:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
-    "javaRuntime": true
-  },
-  {
     "symbolicName": "weka",
     "version": {
       "major": -1,
@@ -271,6 +258,19 @@
     "jarFileModificationDate": "2013-03-15T18:52:09.182-07:00",
     "location": "C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\weka.jar",
     "javaRuntime": false
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "1fbfeeb3449860cd85925cef06714daa4c8220ca",
+    "jarFileModificationDate": "2013-04-16T12:58:02.148-07:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
+    "javaRuntime": true
   },
   {
     "symbolicName": "jre",

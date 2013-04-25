@@ -96,7 +96,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     }
 
     public double getInstanceOverlapThreshold() {
-        return instanceOverlapThreshold;
+        return objectSimilarityThreshold;
     }
 
     public int getMaxiter() {
@@ -122,9 +122,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("-e");
         options.add("" + epsilon);
         options.add("-s");
-        options.add("" + subspaceOverlapThreshold);
+        options.add("" + subspaceSimilarityThreshold);
         options.add("-i");
-        options.add("" + instanceOverlapThreshold);
+        options.add("" + objectSimilarityThreshold);
         options.add("-w");
         options.add("" + width);
         options.add("-maxiter");
@@ -138,12 +138,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     @Override
     public String getParameterString() {
         return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
-                + subspaceOverlapThreshold + "; instance overlap threshold=" + instanceOverlapThreshold + "; width="
-                + width + "; gamma=" + gamma + "; maxiter=" + maxiter;
+                + subspaceSimilarityThreshold + "; instance overlap threshold=" + objectSimilarityThreshold
+                + "; width=" + width + "; gamma=" + gamma + "; maxiter=" + maxiter;
     }
 
     public double getSubspaceOverlapThreshold() {
-        return subspaceOverlapThreshold;
+        return subspaceSimilarityThreshold;
     }
 
     public double getWidth() {
@@ -204,7 +204,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     public void setInstanceOverlapThreshold(double maxOverlap) {
         if (maxOverlap > 0.0)
-            instanceOverlapThreshold = maxOverlap;
+            objectSimilarityThreshold = maxOverlap;
     }
 
     public void setMaxiter(int d) {
@@ -261,7 +261,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
      * Setter
      */
     public void setSubspaceOverlapThreshold(double maxOverlap) {
-        subspaceOverlapThreshold = maxOverlap;
+        subspaceSimilarityThreshold = maxOverlap;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -278,7 +278,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     private void add(MoccaCluster newCluster) {
 
-        double subspaceOverlap, clusterOverlap;
+        double subspaceSimilarity, clusterSimilarity;
 
         /*
          * Modifying a list invalidates any iterator objects created from it. Do not remove objects while iterating over
@@ -287,24 +287,24 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         List<Cluster> removeList = new ArrayList<Cluster>();
 
         // DEBUG
-        System.out.println("----------New Cluster----------------");
-        System.out.println(newCluster.toStringWeka());
+        // System.out.println("----------New Cluster----------------");
+        // System.out.println(newCluster.toStringWeka());
 
         for (Cluster otherCluster : clusters) {
             MoccaCluster other = (MoccaCluster) otherCluster;
-            subspaceOverlap = newCluster.getSubspaceOverlapScore(other);
+            subspaceSimilarity = newCluster.getSubspaceSimilarity(other);
 
             // DEBUG
-            System.out.println("Other Cluster");
-            System.out.println(other.toStringWeka());
+            // System.out.println("Other Cluster");
+            // System.out.println(other.toStringWeka());
 
             // Test if the clusters' subspaces are similar enought to be considered the same.
             // If threshold is 0, all subspaces with at least one dimension in common are considered to be
             // in the same subspace.
             // If threshold is 1, only subspaces with exactly the same dimensions are considered to be in the
             // same subspace.
-            //Cluster with the same subspace will be checked for duplicate object sets.
-            if (subspaceOverlap > subspaceOverlapThreshold) {
+            // Cluster with the same subspace will be checked for duplicate object sets.
+            if (subspaceSimilarity > subspaceSimilarityThreshold) {
                 // OK, the cluster's subsapces are considered the same.
 
                 // Test if the clusters' contain enough similar objects to be considered the same.
@@ -312,8 +312,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 // same.
                 // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
                 // is also part of the larger cluster.
-                clusterOverlap = newCluster.getClusterOverlapScore(other); 
-                if (clusterOverlap > instanceOverlapThreshold) {
+                clusterSimilarity = newCluster.getObjectSimilarity(other);
+                if (clusterSimilarity > objectSimilarityThreshold) {
                     // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
                     // the same cluster.
 
@@ -515,9 +515,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     private double beta;
     private double epsilon;
     private double gamma; // Gamma zero means "do not use PCA"
-    private double instanceOverlapThreshold;
+    private double objectSimilarityThreshold;
     private int maxiter;
-    private double subspaceOverlapThreshold;
+    private double subspaceSimilarityThreshold;
     private double width;
     List<Cluster> clusters = new ArrayList<Cluster>();
     Instances dataAsInstances;

@@ -1,51 +1,74 @@
-2013-04-24 10:56:47.472 [Worker-2] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Diagram Add-On 1.1.x - EVAL until 2013-05-23
-2013-04-24 10:56:47.482 [Worker-2] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Sequence Diagram 1.1.x - EVAL until 2013-05-23
-2013-04-24 10:56:48.622 [Worker-1] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[ucls]: com.objectaid.uml.cls.model.ClassDiagramFactory@65d68f6f
-2013-04-24 10:56:48.702 [Worker-1] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[useq]: com.objectaid.uml.seq.model.SequenceDiagramFactory@6a645db2
-2013-04-24 10:56:48.892 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.892 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.RasterRenderFormat
-2013-04-24 10:56:48.902 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.RasterRenderFormat
-2013-04-24 10:56:48.902 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.IndexedRasterRenderFormat
-2013-04-24 10:56:48.912 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.addon.render.SVGRenderFormat
-2013-04-24 10:56:48.912 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.addon.render.PDFRenderFormat
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.932 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.942 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.952 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:48.962 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
-2013-04-24 10:56:49.012 [Worker-1] INFO    com.objectaid.uml.model.manage.LanguageElementManager getLanguageElementFactories: com.objectaid.uml.languageElementFactories: com.objectaid.uml.java.JavaElementFactory
+2013-04-24 17:42:41.035 [Worker-3] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Diagram Add-On 1.1.x - EVAL until 2013-05-23
+2013-04-24 17:42:41.035 [Worker-3] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Sequence Diagram 1.1.x - EVAL until 2013-05-23
+2013-04-24 17:42:42.111 [Worker-3] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[ucls]: com.objectaid.uml.cls.model.ClassDiagramFactory@5c769243
+2013-04-24 17:42:42.127 [Worker-3] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[useq]: com.objectaid.uml.seq.model.SequenceDiagramFactory@47d821bf
+2013-04-24 17:42:42.408 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.408 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.RasterRenderFormat
+2013-04-24 17:42:42.423 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.RasterRenderFormat
+2013-04-24 17:42:42.439 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.render.IndexedRasterRenderFormat
+2013-04-24 17:42:42.439 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.addon.render.SVGRenderFormat
+2013-04-24 17:42:42.439 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.renderFormats=com.objectaid.uml.addon.render.PDFRenderFormat
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.455 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.470 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.486 [main] INFO    com.objectaid.uml.util.extend.ExecutableExtensionManager loadExtensions: found com.objectaid.uml.accessors=com.objectaid.uml.model.accessor.ReflectionAccessor
+2013-04-24 17:42:42.564 [Worker-3] INFO    com.objectaid.uml.model.manage.LanguageElementManager getLanguageElementFactories: com.objectaid.uml.languageElementFactories: com.objectaid.uml.java.JavaElementFactory
+2013-04-24 17:45:17.704 [ModalContext] SEVERE  com.objectaid.uml.UMLException log: ! understands( javaElement ): double subspaceOverlap [in add(MoccaCluster) [in Mocca [in [Working copy] Mocca.java [in weka.subspaceClusterer [in <project root> [in OpenSubspace]]]]]]
+com.objectaid.uml.UMLException: ! understands( javaElement ): double subspaceOverlap [in add(MoccaCluster) [in Mocca [in [Working copy] Mocca.java [in weka.subspaceClusterer [in <project root> [in OpenSubspace]]]]]]
+	at com.objectaid.uml.java.JavaElementFactory.createIdentifier(JavaElementFactory.java:171)
+	at com.objectaid.uml.java.JavaElementFactory.createIdentifier(JavaElementFactory.java:61)
+	at com.objectaid.uml.util.LanguageHelper.getLanguageElementHandle(LanguageHelper.java:58)
+	at com.objectaid.uml.java.RefactoringHelper.getLanguageElementHandle(RefactoringHelper.java:41)
+	at com.objectaid.uml.java.RefactoringHelper.needsRefactoring(RefactoringHelper.java:102)
+	at com.objectaid.uml.java.JavaRenameParticipant.initialize(JavaRenameParticipant.java:70)
+	at org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant.initialize(RefactoringParticipant.java:105)
+	at org.eclipse.ltk.core.refactoring.participants.ParticipantExtensionPoint.getParticipants(ParticipantExtensionPoint.java:100)
+	at org.eclipse.ltk.core.refactoring.participants.ParticipantManager.loadRenameParticipants(ParticipantManager.java:74)
+	at org.eclipse.jdt.internal.corext.refactoring.rename.RenameModifications.loadParticipants(RenameModifications.java:193)
+	at org.eclipse.jdt.internal.corext.refactoring.rename.JavaRenameProcessor.loadParticipants(JavaRenameProcessor.java:41)
+	at org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring.checkFinalConditions(ProcessorBasedRefactoring.java:233)
+	at org.eclipse.ltk.core.refactoring.Refactoring.checkAllConditions(Refactoring.java:162)
+	at org.eclipse.jdt.internal.ui.refactoring.RefactoringExecutionHelper$Operation.run(RefactoringExecutionHelper.java:80)
+	at org.eclipse.jdt.internal.core.BatchOperation.executeOperation(BatchOperation.java:39)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:728)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2344)
+	at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:5204)
+	at org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter.run(WorkbenchRunnableAdapter.java:106)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+

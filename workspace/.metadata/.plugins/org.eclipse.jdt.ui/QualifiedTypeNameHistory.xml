@@ -57,4 +57,5 @@
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="java.lang.Process"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
+<fullyQualifiedTypeName name="Jama.Matrix"/>
 </qualifiedTypeNameHistroy>
