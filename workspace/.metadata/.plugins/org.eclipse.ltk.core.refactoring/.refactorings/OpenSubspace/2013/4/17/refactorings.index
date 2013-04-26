@@ -23,3 +23,5 @@
 1366850907243	Rename field 'instanceOverlapThreshold'
 1366851808629	Rename field 'subspaceOverlapThresholds'
 1366851819397	Rename field 'objectOverlapThresholds'
+1366864767746	Rename local variable 'colsToAppend'
+1366930361322	Extract local variable 'centered'

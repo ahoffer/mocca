@@ -10,7 +10,8 @@ public class Pca {
     // Instance variables
     Matrix input;
     Matrix principleComponents;
-    Matrix rotation;
+
+    // Matrix rotation;
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
@@ -31,7 +32,8 @@ public class Pca {
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     public Pca eval() {
-        Matrix covar = MatrixUtils.covariance(MatrixUtils.center(input, MatrixUtils.columnMeans(input)));
+        Matrix centered = MatrixUtils.center(input, MatrixUtils.columnMeans(input));
+        Matrix covar = MatrixUtils.covariance(centered);
         // Rank tell us the maximum number of non-zero eigenvalues to expect.
         int covRank = covar.rank();
 
@@ -42,7 +44,7 @@ public class Pca {
         double[] eigenvalues = eigenDecomp.getRealEigenvalues();
         int numNonZeroEigenVals = 0;
         for (int i = 0; i < eigenvalues.length; ++i) {
-            if (eigenvalues[i] > MatrixUtils.epsilon) {
+            if (MatrixUtils.greaterThanZero(eigenvalues[i])) {
                 numNonZeroEigenVals++;
             }// end if
         }// end for
@@ -50,7 +52,7 @@ public class Pca {
         // Verify number of non zero eigenvalues is the same as the rank of
         // the covariance matrix
         if (numNonZeroEigenVals != covRank) {
-            System.err.println("SOMETHING WHACKY IN PCA");
+            System.err.printf("Contrainst violation: nNumber of non-zeroSOMETHING WHACKY IN PCA");
         }
 
         /*
@@ -67,10 +69,16 @@ public class Pca {
          * 
          * getMatrix(Initial row index, Final row index, Initial column index, Final column index)
          */
-        int size = eigenvectors.getRowDimension();
-        int last = size - 1;
-        int firstCol = size - covRank;
-        principleComponents = eigenvectors.getMatrix(0, last, firstCol, last);
+
+        // Using the principal compmonents as a roation matrix is different than usuing the principal components
+        // individually. To get a rotation matrix, do not truncate the matrix that contains the eigen vectors, otherwise
+        // there will be fewer dimensions after rotation than before.
+        //
+        // int size = eigenvectors.getRowDimension();
+        // int last = size - 1;
+        // int firstCol = size - covRank;
+        // principleComponents = eigenvectors.getMatrix(0, last, firstCol, last);
+        principleComponents = eigenvectors;
 
         // Return this instance
         return this;
@@ -90,26 +98,7 @@ public class Pca {
 
         // 2) D * fliplr(T)
         // Re-order the pcs so most significant pc is the first column.
-        // return input.times(MatrixUtils.fliplr(principleComponents));
-
-    }// end method
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-    Matrix getRotationMatrix() {
-        if (principleComponents == null) {
-            return null;
-        }
-        // rotation = principleComponents.copy();
-        int originalDimensions = input.getColumnDimension();
-        int colsToAppend = originalDimensions - getColumnDimension();
-        Matrix mat = new Matrix(getRowDimension(), colsToAppend, 0);
-
-        for (int appendIdx = getColumnDimension(); appendIdx < originalDimensions; ++appendIdx) {
-            mat.set(appendIdx, appendIdx, 1);
-        }
-
-        return MatrixUtils.concat(principleComponents, mat);
+        // return input.times(MatrixUtils.fliplr(getRotationMatrix()));
 
     }// end method
 

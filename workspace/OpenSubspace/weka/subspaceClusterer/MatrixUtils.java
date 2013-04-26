@@ -9,6 +9,14 @@ public class MatrixUtils {
     // Pick a small values that means zero.
     public static double epsilon = 1E-8;
 
+    public static boolean greaterThanZero(double d) {
+        return d > epsilon;
+    }
+
+    public static boolean equalToOne(double d) {
+        return Math.abs(d - 1) < epsilon;
+    }
+
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     /*
