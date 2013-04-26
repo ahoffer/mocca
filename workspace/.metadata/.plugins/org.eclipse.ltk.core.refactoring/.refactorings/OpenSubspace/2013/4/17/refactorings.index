@@ -25,3 +25,4 @@
 1366851819397	Rename field 'objectOverlapThresholds'
 1366864767746	Rename local variable 'colsToAppend'
 1366930361322	Extract local variable 'centered'
+1366949520667	Delete element

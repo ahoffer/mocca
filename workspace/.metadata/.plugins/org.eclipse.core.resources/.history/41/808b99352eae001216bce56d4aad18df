@@ -137,7 +137,7 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        // Preprocessing the data
+        // Do any necessary preprocessing
         runDataPreprocessor();
 
         // Set clusterer name and options
