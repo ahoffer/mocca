@@ -18,8 +18,7 @@ import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 
-    // Do not set default values. Values should be set from command line. If there is an error in the command line
-    // settings, default values hide the error.
+
     private static final long serialVersionUID = 5624336775621682596L;
 
     public static void main(String[] argv) throws IOException {
@@ -27,11 +26,16 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         runSubspaceClusterer(new Mocca(), argv);
     }
 
+
+    // Do not set default values. Values should be set from command line. If there is an error in the command line
+    // settings, default values hide the error.
     private double alpha;
 
     private double beta;
 
     List<Cluster> clusters = new ArrayList<Cluster>();
+
+    private double clusterSimilarityThreshold;
 
     Instances dataAsInstances;
 
@@ -48,8 +52,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     int numDims;
 
     int numInstances;
-
-    private double objectSimilarityThreshold;
 
     int rotationSetSize;
 
@@ -85,7 +87,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             // If threshold is 1, only subspaces with exactly the same dimensions are considered to be in the
             // same subspace.
             // Cluster with the same subspace will be checked for duplicate object sets.
-            if (subspaceSimilarity > subspaceSimilarityThreshold) {
+            if (MoccaUtils.isSimilar(subspaceSimilarity, subspaceSimilarityThreshold)) {
                 // OK, the cluster's subsapces are considered the same.
 
                 // Test if the clusters' contain enough similar objects to be considered the same.
@@ -93,8 +95,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 // same.
                 // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
                 // is also part of the larger cluster.
-                clusterSimilarity = newCluster.getObjectSimilarity(other);
-                if (clusterSimilarity > objectSimilarityThreshold) {
+                clusterSimilarity = newCluster.getClusterSimilarity(other);
+                if (MoccaUtils.isSimilar(clusterSimilarity, clusterSimilarityThreshold)) {
                     // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
                     // the same cluster.
 
@@ -131,17 +133,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         discrimSetSize = getDiscrimSetSize();
         rotationSetSize = (int) Math.round(gamma * numInstances);
 
-        // validateGammaSHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
+        // Validate gamma SHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
         validateGamma();
 
         // Do it!
         run();
 
-        // Sort quality from low to high.
+        // Sort quality from high to low.
         Collections.sort(clusters, new Comparator<Cluster>() {
 
             public int compare(Cluster a, Cluster b) {
-                return Double.valueOf(((MoccaCluster) a).quality).compareTo(((MoccaCluster) b).quality);
+                return Double.valueOf(((MoccaCluster) b).quality).compareTo(((MoccaCluster) a).quality);
             }
         });
 
@@ -151,8 +153,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         // Print results
         toString();
     }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     public int calculateNumTrials() {
         double d = numDims;
@@ -213,12 +213,22 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return pointsIndexes;
     }// method
 
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    public boolean gammaIs100Percent() {
+        return MoccaUtils.equalToOne(getGamma());
+    }
+
     public double getAlpha() {
         return alpha;
     }
 
     public double getBeta() {
         return beta;
+    }
+
+    public double getClusterSimilarityThreshold() {
+        return clusterSimilarityThreshold;
     }
 
     public int getDiscrimSetSize() {
@@ -228,6 +238,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return Math.max(2, temp);
     }
 
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
     public double getEpsilon() {
         return epsilon;
     }
@@ -236,12 +248,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     public double getGamma() {
         return gamma;
-    }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-    public double getInstanceOverlapThreshold() {
-        return objectSimilarityThreshold;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -282,7 +288,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("-s");
         options.add("" + subspaceSimilarityThreshold);
         options.add("-i");
-        options.add("" + objectSimilarityThreshold);
+        options.add("" + clusterSimilarityThreshold);
         options.add("-w");
         options.add("" + width);
         options.add("-maxiter");
@@ -295,12 +301,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     @Override
     public String getParameterString() {
-        return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace overlap threshold="
-                + subspaceSimilarityThreshold + "; instance overlap threshold=" + objectSimilarityThreshold
+        return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace similarity threshold="
+                + subspaceSimilarityThreshold + "; cluster similarity threshold=" + clusterSimilarityThreshold
                 + "; width=" + width + "; gamma=" + gamma + "; maxiter=" + maxiter;
     }
 
-    public double getSubspaceOverlapThreshold() {
+    public double getSubspaceSimilarityThreshold() {
         return subspaceSimilarityThreshold;
     }
 
@@ -322,13 +328,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         Vector vector = new Vector();
 
         // Option(description, name, numArguments, synopsis)
-        vector.addElement(new Option("\talpha (default = 0.08)", "alpha", 1, "-a <double>"));
-        vector.addElement(new Option("\tbeta (default = 0.35)", "beta", 1, "-b <double>"));
-        vector.addElement(new Option("\tepsilon (default = 0.05)", "epsilon", 1, "-e <double>"));
-        vector.addElement(new Option("\tsubspace overlap threshold (default = 0.90)", "subsapceOverlapThreshold", 1,
-                "-s <double>"));
-        vector.addElement(new Option("\tinstance overlap threshold (default = 0.2)", "instanceOverlapThreshold", 1,
-                "-i <double>"));
+        vector.addElement(new Option("\talpha", "alpha", 1, "-a <double>"));
+        vector.addElement(new Option("\tbeta", "beta", 1, "-b <double>"));
+        vector.addElement(new Option("\tepsilon", "epsilon", 1, "-e <double>"));
+        vector.addElement(new Option("\tsubspace similarity threshold", "subsapceSimilarityThreshold", 1, "-s <double>"));
+        vector.addElement(new Option("\tobject similarity threshold", "clusterSimilarityThreshold", 1, "-i <double>"));
         vector.addElement(new Option("\twidth (default = 1.0)", "width", 1, "-w <double>"));
         vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1, "-g <double>"));
         vector.addElement(new Option("\tmaximum iteration (default = 10000)", "maxiter", 1, "-m <int>"));
@@ -449,6 +453,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             this.beta = beta;
     }
 
+    public void setClusterSimilarityThreshold(double maxOverlap) {
+        if (maxOverlap > 0.0)
+            clusterSimilarityThreshold = maxOverlap;
+    }
+
     public void setEpsilon(double epsilon) {
         if (epsilon > 0.0 && epsilon < 1.0)
             this.epsilon = epsilon;
@@ -458,11 +467,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         if (g >= 0.0 && g <= 1.0) {
             gamma = g;
         }
-    }
-
-    public void setInstanceOverlapThreshold(double maxOverlap) {
-        if (maxOverlap > 0.0)
-            objectSimilarityThreshold = maxOverlap;
     }
 
     public void setMaxiter(int d) {
@@ -494,7 +498,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
         optionString = Utils.getOption("i", options);
         if (optionString.length() != 0) {
-            setInstanceOverlapThreshold(Double.parseDouble(optionString));
+            setClusterSimilarityThreshold(Double.parseDouble(optionString));
         }
 
         optionString = Utils.getOption("w", options);
@@ -563,9 +567,5 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         }// outer if
 
     }// method
-
-    public boolean gammaIs100Percent() {
-        return MoccaUtils.equalToOne(getGamma());
-    }
 
 } // end class

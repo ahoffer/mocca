@@ -36,7 +36,7 @@ public class MoccaCluster extends Cluster {
      * Normalized overlap is defined as the number of points two clusters have in common, divided by the cardinality of
      * the smaller cluster.
      */
-    public double getObjectSimilarity(MoccaCluster otherCluster) {
+    public double getClusterSimilarity(MoccaCluster otherCluster) {
         int overlap, smallerCardinality;
         double normalizedOverlap;
 

@@ -12,7 +12,6 @@
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Shuffler"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
 <fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MatrixUtils"/>
@@ -58,4 +57,5 @@
 <fullyQualifiedTypeName name="java.lang.Process"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 <fullyQualifiedTypeName name="Jama.Matrix"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 </qualifiedTypeNameHistroy>

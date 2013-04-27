@@ -17,6 +17,11 @@ public class MoccaUtils {
         return Math.abs(d - 1) < epsilon;
     }
 
+    public static boolean isSimilar(double similarityScore, double similarityThreshold) {
+        // Return true if the similarity score exceeds the threshold OR if the similarity score is 1.
+        return similarityScore > similarityThreshold || equalToOne(similarityScore);
+    }
+
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     /*

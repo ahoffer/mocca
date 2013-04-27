@@ -20,7 +20,7 @@ public class MoccaExperimentGenerator {
     static double[] betas = { 0.35, 0.5 };
     static double[] epsilons = { 0.05 };
     static double[] subspaceSimilarityThresholds = { 0.95 };
-    static double[] objectSimilarityThresholds = { 0, 0.05 };
+    static double[] clusterSimilarityThresholds = { 0, 0.05 };
     static int maxiter = 100000;
     static String subspaceClutererName = "Mocca";
 
@@ -33,7 +33,7 @@ public class MoccaExperimentGenerator {
             for (double a : alphas) {
                 for (double b : betas) {
                     for (double s : subspaceSimilarityThresholds) {
-                        for (double i : objectSimilarityThresholds) {
+                        for (double i : clusterSimilarityThresholds) {
                             for (double g : gammas) {
                                 for (double w : widths) {
 
