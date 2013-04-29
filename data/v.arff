@@ -1,0 +1,36 @@
+@relation letter_v
+
+@attribute X numeric
+@attribute Y numeric
+@attribute class {a, b}
+
+@data
+0, 0, a
+1, 1, a
+2, 2, a
+3, 3, a
+4, 4, a
+5, 5, a
+6, 6, a
+7, 7, a
+8, 8, a
+9, 9, a
+10, 10, a
+11, 11, a
+12, 12, a
+13, 13, a
+15, 13, b
+16, 12, b
+17, 11, b
+18, 10, b
+19, 9, b
+20, 8, b
+21, 7, b
+22, 6, b
+23, 5, b
+24, 4, b
+25, 3, b
+26, 2, b
+27, 1, b
+28, 0, b
+

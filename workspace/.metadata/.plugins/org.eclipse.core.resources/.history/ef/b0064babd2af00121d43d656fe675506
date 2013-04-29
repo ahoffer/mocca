@@ -18,12 +18,14 @@ import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
 
+
     private static final long serialVersionUID = 5624336775621682596L;
 
     public static void main(String[] argv) throws IOException {
 
         runSubspaceClusterer(new Mocca(), argv);
     }
+
 
     // Do not set default values. Values should be set from command line. If there is an error in the command line
     // settings, default values hide the error.
@@ -356,6 +358,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         // Note that the data is centered before the covariance matrix is generated as part of PCA.
         // originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
         originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
+        numCongregatingDims = 0;
 
         /*
          * A data comes witha fixed number of attributes (dimensions). However, if a rotation set has fewer instances in

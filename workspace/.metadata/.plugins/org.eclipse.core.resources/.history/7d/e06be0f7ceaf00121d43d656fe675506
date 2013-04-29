@@ -57,7 +57,7 @@ public class TestRunner {
 
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
-        metrics = "F1Measure:Accuracy:Entropy";
+        setMetrics();
 
         // WINDOWS - Set platform dependent state
         setForWindows();
@@ -170,9 +170,9 @@ public class TestRunner {
         dataSets.add("breast.arff");
         dataSets.add("diabetes.arff");
         dataSets.add("D05.arff");
-        dataSets.add("glass.arff");
-        dataSets.add("liver.arff");
-        dataSets.add("N30.arff");
+        // dataSets.add("glass.arff");
+        // dataSets.add("liver.arff");
+        // dataSets.add("N30.arff");
         dataSets.add("S1500.arff");
         dataSets.add("sonar.arff");
 
@@ -192,6 +192,10 @@ public class TestRunner {
         dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = ".;\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*";
         javaExecutable = "javaw.exe";
+    }
+
+    public static void setMetrics() {
+        metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
     }
 
     public static void waitForAll() throws InterruptedException {

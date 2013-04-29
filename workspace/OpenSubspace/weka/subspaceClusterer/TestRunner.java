@@ -166,15 +166,15 @@ public class TestRunner {
     }// method
 
     public static void setDataSets() {
+        
+        dataSets.add("v.arff");
+        
         // Datasets to cluster
-        dataSets.add("breast.arff");
-        dataSets.add("diabetes.arff");
-        dataSets.add("D05.arff");
         // dataSets.add("glass.arff");
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");
-        dataSets.add("S1500.arff");
-        dataSets.add("sonar.arff");
+        // dataSets.add("S1500.arff");
+        // dataSets.add("sonar.arff");
 
         // Pendigits takes a really long time. Don't use it in normal runs.
         // dataSets.add("pendigits.arff");
