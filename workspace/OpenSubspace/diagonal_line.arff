@@ -1,9 +1,7 @@
 @relation diagonal_line
-
 @attribute X numeric
 @attribute Y numeric
 @attribute CLASS {b}
-
 @data
 0,0,b
 1,1,b
@@ -30,3 +28,4 @@
 22,22,b
 23,23,b
 24,24,b
+

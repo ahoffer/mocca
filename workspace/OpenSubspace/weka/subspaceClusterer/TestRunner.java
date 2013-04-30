@@ -195,7 +195,8 @@ public class TestRunner {
     }
 
     public static void setMetrics() {
-        metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
+        //metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
+        metrics = "F1Measure:Accuracy:Entropy:Coverage";
     }
 
     public static void waitForAll() throws InterruptedException {

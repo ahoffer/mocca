@@ -102,8 +102,11 @@ public class MySubspaceClusterEvaluation {
         this.m_options = options;
     }
 
-    /** The data set to perform the clustering on. */
+    /** The raw instances loaded from disk. */
     Instances m_dataSet;
+
+    /** The data that is to clusters. The class attribute is removed and data may be scaled or normalized. **/
+    Instances m_preprocessedDataSet;
 
     /* The metrics to perform on the clustering result. */
     ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
@@ -137,8 +140,10 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        // Preprocessing the data
-        runDataPreprocessor();
+        // Preprocess the data
+        // Remove class attributes and scale data
+        Instances data = removeClassAttribute(m_dataSet);
+        m_preprocessedDataSet = runDataPreprocessor(data);
 
         // Set clusterer name and options
         m_writer.setClusterer(m_clusterer);
@@ -355,7 +360,7 @@ public class MySubspaceClusterEvaluation {
         boolean timeout = false;
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Void> future = executor.submit(new Task(m_clusterer, removeClassAttribute(m_dataSet)));
+        Future<Void> future = executor.submit(new Task(m_clusterer, m_preprocessedDataSet));
 
         try {
             future.get(m_timeLimit, TimeUnit.MINUTES);
@@ -374,34 +379,34 @@ public class MySubspaceClusterEvaluation {
         return !timeout;
     }
 
-    void runDataPreprocessor() {
+    Instances runDataPreprocessor(Instances data) {
         // Normalize values in data to [0,1]
         // Keeps width values in a smaller range, but may overweight outliers
 
-        if (m_dataSet == null) {
+        if (data == null) {
             System.err.printf("Must set the data before preprocessing it\n");
             System.exit(-3);
         }
 
         Instances newData = null;
         Normalize normalize = new Normalize();
-        normalize.setIgnoreClass(true);
+        // normalize.setIgnoreClass(true);
 
         try {
-            normalize.setInputFormat(m_dataSet);
-            newData = Filter.useFilter(m_dataSet, normalize);
+            normalize.setInputFormat(data);
+            newData = Filter.useFilter(data, normalize);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        m_dataSet = newData;
+        return newData;
 
     }// method
 
     void runClusterer() {
         try {
-            m_clusterer.buildSubspaceClusterer(m_dataSet);
+            m_clusterer.buildSubspaceClusterer(m_preprocessedDataSet);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

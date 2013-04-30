@@ -14,9 +14,9 @@ public class MoccaExperimentGenerator {
      * build the parameter string.
      */
 
-    static double[] gammas = { 0.0, 0.2, 1.0 };
+    static double[] gammas = { 0.0, 0.2, 0.4, 1.0 };
     static double[] alphas = { 0.1 };
-    static double[] widths = { .00001, .0001, .001 };
+    static double[] widths = { .00001, .0001, .001, .01, .1, 1 };
     static double[] betas = { 0.35, 0.5 };
     static double[] epsilons = { 0.05 };
     static double[] subspaceSimilarityThresholds = { 0.95 };
