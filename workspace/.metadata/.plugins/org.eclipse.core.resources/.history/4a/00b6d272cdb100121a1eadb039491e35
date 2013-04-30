@@ -490,7 +490,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
         optionString = Utils.getOption("s", options);
         if (optionString.length() != 0) {
-            setSubspaceSimilarityThreshold(Double.parseDouble(optionString));
+            setSubspaceOverlapThreshold(Double.parseDouble(optionString));
         }
 
         optionString = Utils.getOption("i", options);
@@ -517,8 +517,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     /*
      * Setter
      */
-    public void setSubspaceSimilarityThreshold(double maxSimilarity) {
-        subspaceSimilarityThreshold = maxSimilarity;
+    public void setSubspaceOverlapThreshold(double maxOverlap) {
+        subspaceSimilarityThreshold = maxOverlap;
     }
 
     /*
