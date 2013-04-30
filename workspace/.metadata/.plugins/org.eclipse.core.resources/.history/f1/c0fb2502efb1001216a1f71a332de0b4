@@ -170,7 +170,7 @@ public class TestRunner {
         // dataSets.add("v.arff");
 
         // Datasets to cluster
-        dataSets.add("breast.arff");
+        dataSets.add("breasts.arff");
         dataSets.add("glass.arff");
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");

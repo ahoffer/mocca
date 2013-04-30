@@ -85,7 +85,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             // If threshold is 1, only subspaces with exactly the same dimensions are considered to be in the
             // same subspace.
             // Cluster with the same subspace will be checked for duplicate object sets.
-            if (subspaceSimilarity > subspaceSimilarityThreshold || MoccaUtils.equalToOne(subspaceSimilarity)) {
+            if (MoccaUtils.isSimilar(subspaceSimilarity, subspaceSimilarityThreshold)) {
                 // OK, the cluster's subsapces are considered the same.
 
                 // Test if the clusters' contain enough similar objects to be considered the same.
@@ -94,7 +94,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
                 // is also part of the larger cluster.
                 clusterSimilarity = newCluster.getClusterSimilarity(other);
-                if (clusterSimilarity > clusterSimilarityThreshold || MoccaUtils.equalToOne(clusterSimilarity)) {
+                if (MoccaUtils.isSimilar(clusterSimilarity, clusterSimilarityThreshold)) {
                     // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
                     // the same cluster.
 

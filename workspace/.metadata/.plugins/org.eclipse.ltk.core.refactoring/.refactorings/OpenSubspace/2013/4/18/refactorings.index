@@ -1,2 +1,3 @@
 1367350672782	Rename method 'setSubspaceOverlapThreshold'
 1367350681889	Rename local variable 'maxOverlap'
+1367364783092	Inline method 'isSimilar'

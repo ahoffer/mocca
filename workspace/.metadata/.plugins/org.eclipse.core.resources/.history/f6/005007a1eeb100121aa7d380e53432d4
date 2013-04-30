@@ -166,12 +166,11 @@ public class TestRunner {
     }// method
 
     public static void setDataSets() {
-
-        // dataSets.add("v.arff");
-
+        
+        dataSets.add("v.arff");
+        
         // Datasets to cluster
-        dataSets.add("breast.arff");
-        dataSets.add("glass.arff");
+        // dataSets.add("glass.arff");
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");
         // dataSets.add("S1500.arff");
@@ -196,7 +195,7 @@ public class TestRunner {
     }
 
     public static void setMetrics() {
-        // metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
+        //metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
         metrics = "F1Measure:Accuracy:Entropy:Coverage";
     }
 
