@@ -1,0 +1,7 @@
+package weka.subspaceClusterer;
+
+public class Prnt {
+    public static do(Instances data) {
+        
+    }
+}

@@ -1,0 +1,10 @@
+package weka.subspaceClusterer;
+
+import weka.core.Instances;
+
+public class Prnt {
+    
+    public static void print(Instances data) {
+        
+    }
+}

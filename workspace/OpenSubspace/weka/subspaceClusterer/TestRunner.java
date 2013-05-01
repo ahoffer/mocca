@@ -175,7 +175,7 @@ public class TestRunner {
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");
         // dataSets.add("S1500.arff");
-        // dataSets.add("sonar.arff");
+        dataSets.add("sonar.arff");
 
         // Pendigits takes a really long time. Don't use it in normal runs.
         // dataSets.add("pendigits.arff");

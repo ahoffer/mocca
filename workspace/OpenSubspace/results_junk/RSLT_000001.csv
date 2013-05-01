@@ -1,0 +1,2 @@
+ beta, cluster similarity threshold, epsilon, gamma, maxiter, subspace similarity threshold, width,1.0-Entropy,Accuracy,F1Measure,actual_num_trials,algorithm,alpha,computed_trials,dataset,experiment_ID,num_clusters,quality_max,quality_mean,quality_median,quality_min,quality_std_dev,runtime_clustering_sec,runtime_metrics_sec
+0.35,0.8,0.05,0.0,500,0.8,0.1,0.337003,0.732323,0.646595,500.000000,MOCCA,0.1,125316.000000,..\..\data\breast.arff,1,349.000000,5256529479.130144,16129406.293931,1523.174868,89.795918,281504586.264528,0.000000,1.000000

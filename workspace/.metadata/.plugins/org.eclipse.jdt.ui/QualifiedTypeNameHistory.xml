@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
-<fullyQualifiedTypeName name="weka.core.Instances"/>
 <fullyQualifiedTypeName name="weka.filters.Filter"/>
 <fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Center"/>
 <fullyQualifiedTypeName name="i9.data.core.Instance"/>
@@ -58,4 +57,6 @@
 <fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 <fullyQualifiedTypeName name="Jama.Matrix"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
+<fullyQualifiedTypeName name="weka.core.Instances"/>
+<fullyQualifiedTypeName name="i9.data.core.Attribute"/>
 </qualifiedTypeNameHistroy>

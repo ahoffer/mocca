@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;weka.subspaceClusterer.Prnt&apos; to &apos;Out&apos;&#x0D;&#x0A;- Original project: &apos;OpenSubspace&apos;&#x0D;&#x0A;- Original element: &apos;weka.subspaceClusterer.Prnt&apos;&#x0D;&#x0A;- Renamed element: &apos;weka.subspaceClusterer.Out&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Prnt&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/&lt;weka.subspaceClusterer{Prnt.java[Prnt" matchStrategy="1" name="Out" qualified="false" references="true" similarDeclarations="false" stamp="1367425776446" textual="false" version="1.0"/>
+</session>

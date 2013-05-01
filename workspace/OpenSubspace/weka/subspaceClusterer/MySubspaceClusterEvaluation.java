@@ -140,6 +140,8 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
+        //Out.print(m_dataSet);
+
         // Preprocess the data
         // Remove class attributes and scale data
         Instances data = removeClassAttribute(m_dataSet);

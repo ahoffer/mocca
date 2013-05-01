@@ -1,0 +1,31 @@
+package weka.subspaceClusterer;
+
+import i9.data.core.Attribute;
+import weka.core.Instances;
+
+public class Out {
+
+    public static void print(Instances data) {
+        int classification;
+        Instances copy = new Instances(data);
+
+        System.out.println(copy.relationName());
+
+        for (int i = 0; i < copy.numClasses(); ++i) {
+
+            int temp = (int) copy.classIndex();
+            classification = (int) copy.kthSmallestValue(copy.classIndex(), i);
+
+            System.out.printf("class %d [", classification);
+
+            for (int j = 0; j < copy.numInstances(); ++j) {
+
+                if (classification == (int) copy.instance(j).classValue()) {
+                    System.out.printf("%d, ", i);
+                }// if
+
+            }// for j
+            System.out.printf("]\n");
+        } // for i
+    }// method
+} // class
