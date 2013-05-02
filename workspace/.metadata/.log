@@ -12855,3 +12855,77 @@ com.objectaid.uml.UMLException: ! understands( javaElement ): double maxOverlap 
 	at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:5204)
 	at org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter.run(WorkbenchRunnableAdapter.java:106)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+!SESSION 2013-05-01 14:58:31.505 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.core.net 4 0 2013-05-01 15:02:39.810
+!MESSAGE WinHttp.DetectAutoProxyConfigUrl for wpad failed with error 'The Proxy Auto-configuration URL was not found.
+' #12180.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2013-05-01 15:02:42.181
+!MESSAGE 'remote-models (http://download.eclipse.org/recommenders/models/juno/, releases+snapshots)' did not send ETAG header for 'org.eclipse.recommenders:index:zip:0.0.0'.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2013-05-01 15:02:50.465
+!MESSAGE 'remote-models (http://download.eclipse.org/recommenders/models/juno/, releases+snapshots)' did not send ETAG header for 'org.eclipse.recommenders:index:zip:0.0.0'.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 15:02:50.496
+!MESSAGE Failed to open search index.
+!SESSION 2013-05-01 17:17:36.642 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.core.net 4 0 2013-05-01 17:23:16.200
+!MESSAGE WinHttp.DetectAutoProxyConfigUrl for wpad failed with error 'The Proxy Auto-configuration URL was not found.
+' #12180.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 17:23:16.290
+!MESSAGE Failed to open search index.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 17:23:16.472
+!MESSAGE Failed to open search index.
+!SESSION 2013-05-01 18:17:14.043 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.core.net 4 0 2013-05-01 18:18:01.937
+!MESSAGE WinHttp.DetectAutoProxyConfigUrl for wpad failed with error 'The Proxy Auto-configuration URL was not found.
+' #12180.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 18:18:02.167
+!MESSAGE Failed to open search index.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 18:18:02.247
+!MESSAGE Failed to open search index.
+!SESSION 2013-05-01 18:49:16.193 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.core.net 4 0 2013-05-01 18:54:07.551
+!MESSAGE WinHttp.DetectAutoProxyConfigUrl for wpad failed with error 'The Proxy Auto-configuration URL was not found.
+' #12180.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 18:54:16.842
+!MESSAGE Failed to open search index.
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-01 18:54:17.389
+!MESSAGE Failed to open search index.
+
+!ENTRY org.eclipse.jdt.ui 2 0 2013-05-01 19:36:26.402
+!MESSAGE The 'org.eclipse.jdt.ui.JavaAllCompletionProposalComputer' proposal computer from the 'org.eclipse.jdt.ui' plug-in did not complete normally. The extension took too long to return from the 'computeCompletionProposals()' operation.

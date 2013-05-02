@@ -1,5 +1,7 @@
 package weka.subspaceClusterer;
 
+import i9.subspace.base.Cluster;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +19,24 @@ public class MoccaUtils {
         return Math.abs(d - 1) < epsilon;
     }
 
-    
+    public static ArrayList<Cluster> setToFullsapce(List<Cluster> clusters) {
+        // Return a list of cluster objects where all the subspaces have been set to the full space.
+        // These clusters are only useful when evaluating the CE or RNIA metrics.
+        // Copy the objects so the original clusters are not mutated.
+        ArrayList<Cluster> newClusters = new ArrayList<Cluster>();
+        Cluster temp;
+
+        for (Cluster each : clusters) {
+            temp = new Cluster(each.m_subspace.clone(), new ArrayList<Integer>(each.m_objects));
+            for (int i = 0; i < temp.m_subspace.length; ++i) {
+                temp.m_subspace[i] = true;
+            }// for
+
+            newClusters.add(temp);
+
+        }// for
+        return newClusters;
+    }// method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 

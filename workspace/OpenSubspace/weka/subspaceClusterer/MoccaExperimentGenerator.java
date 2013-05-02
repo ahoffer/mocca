@@ -14,13 +14,13 @@ public class MoccaExperimentGenerator {
      * build the parameter string.
      */
 
-    static double[] gammas = { 0.0, 0.1, 0.2, 0.3 };
+    static double[] gammas = { 0.0, 0.1, 0.3, 0.5 };
     static double[] alphas = { 0.1 };
     static double[] widths = { .001, .01, .1, };
-    static double[] betas = { 0.2, 0.3, 0.4, 0.5, 0.6 };
+    static double[] betas = { 0.25, 0.45 };
     static double[] epsilons = { 0.01 };
     static double[] subspaceSimilarityThresholds = { -1 };
-    static double[] clusterSimilarityThresholds = { 0, 0.1 };
+    static double[] clusterSimilarityThresholds = { 0, 0.1, 0.5 };
     static int maxiter = 1000000;
     static String subspaceClutererName = "Mocca";
 

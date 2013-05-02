@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
 <fullyQualifiedTypeName name="weka.filters.Filter"/>
 <fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Center"/>
 <fullyQualifiedTypeName name="i9.data.core.Instance"/>
@@ -30,8 +29,6 @@
 <fullyQualifiedTypeName name="java.util.NavigableSet"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.ift.CellProcessor"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.FmtNumber"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.SubspaceClusterer"/>
@@ -56,7 +53,10 @@
 <fullyQualifiedTypeName name="java.lang.Process"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 <fullyQualifiedTypeName name="Jama.Matrix"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 <fullyQualifiedTypeName name="weka.core.Instances"/>
 <fullyQualifiedTypeName name="i9.data.core.Attribute"/>
+<fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

@@ -1,7 +1,6 @@
 package weka.subspaceClusterer;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 
 public class TestRunner {
 
+    static String dataSetExt = ".arff";
     static List<String> dataSets = new ArrayList<String>();
     static boolean dryrun = false;
     static String metrics, outputPath, command, classPath, javaExecutable, dataPath;
@@ -16,6 +16,7 @@ public class TestRunner {
     static ProcessBuilder procBuilder;
     static ArrayList<Process> runningProcs = new ArrayList<Process>();
     static String space = " ";
+    static String trueSetExt = ".true";
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
 
@@ -115,48 +116,52 @@ public class TestRunner {
         experimentLabel = 1;
         for (String dataFname : dataSets) {
             Path datafile = Paths.get(dataPath, dataFname);
-            if (Files.isReadable(datafile)) {
+            // Remvoed this check when I externalized the file extensions.
+            // I did that because I started working with .true files as well as .arff files.
+            // if (Files.isReadable(datafile)) {
 
-                String datafileName = datafile.toString();
+            String datafileName = datafile.toString();
 
-                for (List<String> orginalArgLine : argLines) {
+            for (List<String> orginalArgLine : argLines) {
 
-                    args = new ArrayList<String>(orginalArgLine);
+                args = new ArrayList<String>(orginalArgLine);
 
-                    // Build final command line by prepending/appending as necessary.
-                    // PREPEND
-                    args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
-                    args.add(0, quote(classPath));
-                    args.add(0, "-cp");
-                    args.add(0, javaExecutable);
-                    // APPEND
-                    args.add("-label");
-                    args.add("" + experimentLabel);
-                    args.add("-M");
-                    args.add(metrics);
-                    args.add("-path");
-                    args.add(outputPath);
-                    args.add("-c");
-                    args.add("last");
-                    args.add("-t");
-                    args.add(datafileName);
+                // Build final command line by prepending/appending as necessary.
+                // PREPEND
+                args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
+                args.add(0, quote(classPath));
+                args.add(0, "-cp");
+                args.add(0, javaExecutable);
+                // APPEND
+                args.add("-label");
+                args.add("" + experimentLabel);
+                args.add("-M");
+                args.add(metrics);
+                args.add("-path");
+                args.add(outputPath);
+                args.add("-c");
+                args.add("last");
+                args.add("-t");
+                args.add(datafileName + dataSetExt);
+                args.add("-T");
+                args.add(datafileName + trueSetExt);
 
-                    if (dryrun) {
-                        /***** DEBUG *****/
-                        printCommandLine(args);
-                    } else {
-                        // Schedule the experiment
-                        dispatch(args);
-                    }
-                    // Set the ID for the next experiment to run
-                    experimentLabel++;
-                }// for
+                if (dryrun) {
+                    /***** DEBUG *****/
+                    printCommandLine(args);
+                } else {
+                    // Schedule the experiment
+                    dispatch(args);
+                }
+                // Set the ID for the next experiment to run
+                experimentLabel++;
+            }// for
 
-            }// if
-
-            else {
-                System.err.printf("File %s is not readable\n", datafile);
-            }// else
+            // }// if
+            //
+            // else {
+            // System.err.printf("File %s is not readable\n", datafile);
+            // }// else
 
         }// for
 
@@ -170,12 +175,12 @@ public class TestRunner {
         // dataSets.add("v.arff");
 
         // Datasets to cluster
-        dataSets.add("breast.arff");
-        dataSets.add("glass.arff");
+        dataSets.add("breast");
+        dataSets.add("glass");
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");
         // dataSets.add("S1500.arff");
-        dataSets.add("sonar.arff");
+        // dataSets.add("sonar");
 
         // Pendigits takes a really long time. Don't use it in normal runs.
         // dataSets.add("pendigits.arff");
@@ -196,8 +201,8 @@ public class TestRunner {
     }
 
     public static void setMetrics() {
-        // metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage:ClusterDistribution";
-        metrics = "F1Measure:Accuracy:Entropy:Coverage";
+        metrics = "F1Measure:Accuracy:Entropy:CE:RNIA:Coverage";
+        // metrics = "F1Measure:Accuracy:Entropy:Coverage";
     }
 
     public static void waitForAll() throws InterruptedException {

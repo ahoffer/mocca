@@ -1,1 +1,3 @@
 1367425776446	Rename type 'Prnt'
+1367454484739	Extract method 'getNumDims'
+1367454498662	Inline local variable 'numDims'

@@ -2,8 +2,6 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
-import weka.filters.unsupervised.attribute.Normalize;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -22,6 +20,7 @@ import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.Remove;
 
 /*
@@ -140,7 +139,7 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        //Out.print(m_dataSet);
+        // Out.print(m_dataSet);
 
         // Preprocess the data
         // Remove class attributes and scale data
@@ -233,10 +232,14 @@ public class MySubspaceClusterEvaluation {
      */
     void runMetrics() {
 
+        // PCA-assisted MOCCA loses reference to the original dimension, but dimensionality is used in certain metrics.
+        // The answer is to set the subspace of the clusters to be the full space.
+        ArrayList<Cluster> clusters = MoccaUtils.setToFullsapce(getClusters());
+
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
 
-            metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
+            metricObj.calculateQuality(clusters, m_dataSet, m_trueClusters);
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
         }
 
@@ -598,9 +601,11 @@ public class MySubspaceClusterEvaluation {
      */
     void setTrueClusters(String fileName) throws Exception {
         File trueClusterFile = new File(fileName);
-        int numDims = m_dataSet.numAttributes() - 1; // class is one of the
-        // attributes
-        m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, numDims);
+        m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, getNumDims());
+    }
+
+    public int getNumDims() {
+        return m_dataSet.numAttributes() - 1;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
