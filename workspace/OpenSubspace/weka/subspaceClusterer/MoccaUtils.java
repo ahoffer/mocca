@@ -2,9 +2,13 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import weka.core.Instances;
 
 public class MoccaUtils {
 
@@ -37,6 +41,19 @@ public class MoccaUtils {
         }// for
         return newClusters;
     }// method
+
+    public static boolean hasClassAttribute(Instances data) {
+        return data.classIndex() > 0;
+    }
+
+    public static int numDims(Instances data) {
+        int temp = data.numAttributes();
+        return hasClassAttribute(data) ? temp - 1 : temp;
+    }
+
+    public static void backspace(StringBuffer sb) {
+        sb.deleteCharAt(sb.length() - 1);
+    }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
@@ -270,6 +287,13 @@ public class MoccaUtils {
             result[i] = (input[i] >= value) ? true : false;
         }
         return result;
+    }
+
+    public static void testFileReadable(String filename) {
+        if (!Files.isReadable(Paths.get(filename))) {
+            System.err.printf("File %s is not readable.\n", filename);
+            System.exit(-5);
+        }
     }
 
 }// end class

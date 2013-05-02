@@ -58,6 +58,10 @@ public class TestRunner {
 
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
+
+        // Leave one processor free because I need to be able to use my laptop
+        numProcessors--;
+
         setMetrics();
 
         // WINDOWS - Set platform dependent state
@@ -112,7 +116,7 @@ public class TestRunner {
         List<String> args;
 
         argLines = MoccaExperimentGenerator.getArgLines();
-        System.out.printf("Number of experiments to run=%,d\n", argLines.size() * dataSets.size());
+        printNumRuns(argLines);
         experimentLabel = 1;
         for (String dataFname : dataSets) {
             Path datafile = Paths.get(dataPath, dataFname);
@@ -149,6 +153,7 @@ public class TestRunner {
                 if (dryrun) {
                     /***** DEBUG *****/
                     printCommandLine(args);
+
                 } else {
                     // Schedule the experiment
                     dispatch(args);
@@ -165,18 +170,29 @@ public class TestRunner {
 
         }// for
 
+        if (dryrun) {
+            printNumRuns(argLines);
+        }
+
         // For for all experiments to finish before exiting method.
         waitForAll();
 
     }// method
 
+    public static void printNumRuns(List<List<String>> argLines) {
+        System.out.printf("Number of experiments =%,d\n", argLines.size() * dataSets.size());
+    }
+
     public static void setDataSets() {
+
+        dataSets.add("lymphoma");
+        dataSets.add("diabetes");
 
         // dataSets.add("v.arff");
 
         // Datasets to cluster
-        dataSets.add("breast");
-        dataSets.add("glass");
+        // dataSets.add("breast");
+        // dataSets.add("glass");
         // dataSets.add("liver.arff");
         // dataSets.add("N30.arff");
         // dataSets.add("S1500.arff");
@@ -194,10 +210,10 @@ public class TestRunner {
     }
 
     public static void setForWindows() {
-        outputPath = ResultsWriter.separatedPath("C:\\results");
+        outputPath = ResultsWriter.separatedPath("C:\\results_may2");
         dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = ".;\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*";
-        javaExecutable = "javaw.exe";
+        javaExecutable = "java.exe";
     }
 
     public static void setMetrics() {

@@ -125,7 +125,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
         // Set instance variables
         this.dataAsInstances = data;
-        numDims = data.numAttributes();
+        numDims = MoccaUtils.numDims(data);
         numInstances = data.numInstances();
         minNumInstances = Utils.round(alpha * numInstances);
         discrimSetSize = getDiscrimSetSize();

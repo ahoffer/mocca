@@ -10,18 +10,17 @@ public class MoccaExperimentGenerator {
     }
 
     /*
-     * TODO: Turn all the instance variables into a hashmap. Then create a superclass that iterates over the table to
-     * build the parameter string.
+     * TODO: Use JSON to read write all experiment parameters.
      */
 
     static double[] gammas = { 0.0, 0.1, 0.3, 0.5 };
     static double[] alphas = { 0.1 };
-    static double[] widths = { .001, .01, .1, };
-    static double[] betas = { 0.25, 0.45 };
+    static double[] widths = { 0.0001, 0.001, 0.01, 0.1 };
+    static double[] betas = { 0.15, 0.25, 0.35 };
     static double[] epsilons = { 0.01 };
     static double[] subspaceSimilarityThresholds = { -1 };
-    static double[] clusterSimilarityThresholds = { 0, 0.1, 0.5 };
-    static int maxiter = 1000000;
+    static double[] clusterSimilarityThresholds = { 0, 0.1, 0.25, 0.5 };
+    static int maxiter = 500000;
     static String subspaceClutererName = "Mocca";
 
     public static List<List<String>> getArgLines() {

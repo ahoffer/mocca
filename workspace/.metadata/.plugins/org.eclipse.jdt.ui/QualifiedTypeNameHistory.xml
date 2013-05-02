@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="weka.filters.Filter"/>
-<fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Center"/>
 <fullyQualifiedTypeName name="i9.data.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Matrix"/>
@@ -29,7 +27,6 @@
 <fullyQualifiedTypeName name="java.util.NavigableSet"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.ift.CellProcessor"/>
 <fullyQualifiedTypeName name="org.supercsv.cellprocessor.FmtNumber"/>
-<fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaCluster"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.SubspaceClusterer"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
@@ -41,7 +38,6 @@
 <fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
 <fullyQualifiedTypeName name="java.io.StringWriter"/>
-<fullyQualifiedTypeName name="java.io.PrintWriter"/>
 <fullyQualifiedTypeName name="java.io.BufferedWriter"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.StdStats"/>
@@ -49,14 +45,19 @@
 <fullyQualifiedTypeName name="weka.filters.unsupervised.attribute.Normalize"/>
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="java.nio.file.Paths"/>
-<fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="java.lang.Process"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.ResultsWriter"/>
 <fullyQualifiedTypeName name="Jama.Matrix"/>
-<fullyQualifiedTypeName name="weka.core.Instances"/>
 <fullyQualifiedTypeName name="i9.data.core.Attribute"/>
 <fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.io.PrintWriter"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="java.io.Writer"/>
+<fullyQualifiedTypeName name="weka.core.Instances"/>
+<fullyQualifiedTypeName name="java.lang.StringBuffer"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
+<fullyQualifiedTypeName name="java.nio.file.Files"/>
 </qualifiedTypeNameHistroy>

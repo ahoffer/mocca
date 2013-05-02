@@ -1,30 +1,84 @@
 package weka.subspaceClusterer;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import weka.core.Instances;
 
 public class Out {
 
-    public static void print(Instances data) {
+    // PRECONDITION: Class attribute must be integer, or a double that can be cast to an integer.
+    public static StringBuffer getTrueInfo(Instances data) {
+
+        StringBuffer sb = new StringBuffer();
+
+        if (!MoccaUtils.hasClassAttribute(data)) {
+            System.err.printf("Out.print() error. Instance has no class attribute.\n");
+            System.exit(-6);
+        }
+
         Instances copy = new Instances(data);
+        int numDims = MoccaUtils.numDims(data);
+        int numObjects;
 
-        System.out.println(copy.relationName());
+        sb.append(copy.relationName() + " TRUE\n");
 
-        for (int i = 0; i < copy.numClasses(); ++i) {
+        for (int classValue = 0; classValue < copy.numClasses(); ++classValue) {
 
-            System.out.printf("class %d  [", i);
+            // Write the subspace for the hidden cluster
+            for (int d = 0; d < numDims; ++d) {
+                sb.append("1 ");
+            }// for subspace loop
 
-            for (int j = 0; j < copy.numInstances(); ++j) {
+            // Write the cardinality
+            numObjects = data.numDistinctValues(data.classAttribute());
+            sb.append(numObjects);
+            sb.append(" ");
 
-                if (i == (int) copy.instance(j).classValue()) {
+            // Write the objects
+            for (int objIdx = 0; objIdx < copy.numInstances(); ++objIdx) {
 
-                    System.out.printf("%d, ", j);
-
+                if (classValue == (int) copy.instance(objIdx).classValue()) {
+                    sb.append(objIdx);
+                    sb.append(" ");
                 }// if
 
-            }// for j
+            }// for object index
 
-            System.out.printf("]\n");
+            // End this cluster
+            // Erase last space
+            MoccaUtils.backspace(sb);
+            // Insert newline
+            sb.append("\n");
 
-        } // for i
+        } // for class value
+
+        return sb;
+
     }// method
+
+    public static void writeTrueFile(String filename, Instances data) {
+
+        PrintWriter pw = null;
+
+        try {
+
+            pw = new PrintWriter(new FileWriter(filename));
+            pw.print(getTrueInfo(data));
+            pw.flush();
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+            // Close the PrintWriter
+            if (pw != null)
+                pw.close();
+
+        }
+
+    }// method
+
 } // class

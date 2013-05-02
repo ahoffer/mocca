@@ -139,7 +139,7 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        // Out.print(m_dataSet);
+        //Out.writeTrueFile("Lymphonma.true", m_dataSet);
 
         // Preprocess the data
         // Remove class attributes and scale data
@@ -152,6 +152,8 @@ public class MySubspaceClusterEvaluation {
         // Generate clusters and time how long it takes
         startTimer();
 
+        // TODO:Change this around that there is no so that if the timelimit is not specified, the thread is never
+        // killed. That way, I don't need two methods to do the job of one.
         // runClustererWithTimeLimit();
         runClusterer();
 
@@ -474,14 +476,25 @@ public class MySubspaceClusterEvaluation {
     /**
      * /** Sets the data set to use in the clustering from a file name.
      * 
-     * @param fileName
+     * @param filename
      *            The name of an arff file containing data to cluster.
      * @throws Exception
      *             If there is a problem opening fileName or loading the data set.
      */
-    void setDataSet(String fileName) throws Exception {
-        DataSource source = new DataSource(fileName);
-        m_dataSet = source.getDataSet();
+    void setDataSet(String filename) {
+
+        DataSource source = null;
+
+        MoccaUtils.testFileReadable(filename);
+
+        try {
+            source = new DataSource(filename);
+            m_dataSet = source.getDataSet();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -596,11 +609,14 @@ public class MySubspaceClusterEvaluation {
     /**
      * Sets the true clusters using the file referred to by fileName.
      * 
-     * @param fileName
+     * @param filename
      * @throws Exception
      */
-    void setTrueClusters(String fileName) throws Exception {
-        File trueClusterFile = new File(fileName);
+    void setTrueClusters(String filename) throws Exception {
+
+        MoccaUtils.testFileReadable(filename);
+
+        File trueClusterFile = new File(filename);
         m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, getNumDims());
     }
 

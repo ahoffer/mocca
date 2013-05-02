@@ -1,0 +1,69 @@
+package weka.subspaceClusterer;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import weka.core.Instances;
+
+public class Out {
+
+    public static void print(Instances data) {
+        Instances copy = new Instances(data);
+
+        System.out.println(copy.relationName());
+
+        for (int i = 0; i < copy.numClasses(); ++i) {
+
+            System.out.printf("class %d  [", i);
+
+            for (int j = 0; j < copy.numInstances(); ++j) {
+
+                if (i == (int) copy.instance(j).classValue()) {
+
+                    System.out.printf("%d, ", j);
+
+                }// if
+
+            }// for j
+
+            System.out.printf("]\n");
+
+        } // for i
+    }// method
+    
+    
+    public static void getTrueFile(String filename, Instances data) {
+        
+                 PrintWriter pw = null;
+
+            try {
+
+                pw = new PrintWriter(new FileWriter(filename));
+
+
+              }
+
+              pw.flush();
+
+            }
+            catch (IOException e) {
+              e.printStackTrace();
+            }
+            finally {
+              
+              //Close the PrintWriter
+              if (pw != null)
+                pw.close();
+              
+            }
+        
+        
+        
+        
+        
+        
+    }
+    
+    
+} // class
