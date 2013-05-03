@@ -25,8 +25,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         runSubspaceClusterer(new Mocca(), argv);
     }
 
-    // Do not set default values. Values should be set from command line. If there is an error in the command line
-    // settings, default values hide the error.
+    /*
+     * In general, do not set default values. Values should be set from command line. If there is an error in the
+     * command line settings, default values hide the error.
+     */
     private double alpha;
 
     private double beta;
@@ -37,21 +39,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     Instances dataAsInstances;
 
-    int discrimSetSize;
-
     private double epsilon;
 
     private double gamma; // Gamma zero means "do not use PCA"
 
     private int maxiter;
 
-    int minNumInstances;
+    private int minDiscrimSetSize = 2; // Algorithm needs at least two discriminating points.
 
     int numDims;
 
     int numInstances;
-
-    int rotationSetSize;
 
     private double subspaceSimilarityThreshold;
 
@@ -127,9 +125,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         this.dataAsInstances = data;
         numDims = MoccaUtils.numDims(data);
         numInstances = data.numInstances();
-        minNumInstances = Utils.round(alpha * numInstances);
-        discrimSetSize = getDiscrimSetSize();
-        rotationSetSize = (int) Math.round(gamma * numInstances);
 
         // Validate gamma SHOULD ONLY BE CALLED AFTER OTHER VARIABLES ARE SET
         validateGamma();
@@ -152,20 +147,27 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         toString();
     }
 
-    public int calculateNumTrials() {
-        double d = numDims;
-        double ln4 = Math.log(4);
-        double log10alpha = Math.log10(alpha);
-        double log10beta = Math.log10(beta);
+    public boolean gammaIs100Percent() {
+        return MoccaUtils.equalToOne(getGamma());
+    }
 
-        double est = 1 + 4 / alpha * Math.pow(d / ln4, log10alpha / log10beta) * Math.log(1 / epsilon);
-        int numTrials = Utils.round(est);
-        return numTrials;
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public double getBeta() {
+        return beta;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    private ArrayList<Integer> findCongregatingPoints(Matrix pointsToCluster, MoccaSubspace subspaceObj) {
+    public double getClusterSimilarityThreshold() {
+        return clusterSimilarityThreshold;
+    }
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
+    private ArrayList<Integer> getCongregatingObjects(Matrix pointsToCluster, MoccaSubspace subspaceObj) {
 
         // Sanity Check - No longer relevant.
         // if (subspaceObj.getNumDimsDiscrimObjs() != pointsToCluster.getColumnDimension()) {
@@ -211,35 +213,34 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return pointsIndexes;
     }// method
 
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-    public boolean gammaIs100Percent() {
-        return MoccaUtils.equalToOne(getGamma());
-    }
-
-    public double getAlpha() {
-        return alpha;
-    }
-
-    public double getBeta() {
-        return beta;
-    }
-
-    public double getClusterSimilarityThreshold() {
-        return clusterSimilarityThreshold;
-    }
-
     public int getDiscrimSetSize() {
-        double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
-        int temp = Utils.round(s_est);
         // Need at least two discriminating points to find a cluster
-        return Math.max(2, temp);
+        return Math.max(getMinDiscrimSetSize(), getEstimatedDiscrimSetSize());
     }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     public double getEpsilon() {
         return epsilon;
+    }
+
+    public int getEstimatedDiscrimSetSize() {
+        double s_est = Math.log10(numDims / Math.log(4)) / Math.log10(1 / beta);
+        int temp = Utils.round(s_est);
+        return temp;
+    }
+
+    public int getEstimatedNumTrials() {
+        double d = numDims;
+        double ln4 = Math.log(4);
+        double log10alpha = Math.log10(alpha);
+        double log10beta = Math.log10(beta);
+
+        double est = 1 + 4 / alpha * Math.pow(d / ln4, log10alpha / log10beta) * Math.log(1 / epsilon);
+        int numTrials = Utils.round(est);
+        return numTrials;
+    }
+
+    public int getEstimatedRotationSetSize() {
+        return (int) Math.round(gamma * numInstances);
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -256,6 +257,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
+    public int getMinDiscrimSetSize() {
+        return minDiscrimSetSize;
+    }
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+
     @Override
     public String getName() {
         return "MOCCA";
@@ -264,7 +271,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
     public int getNumTrials() {
-        return Math.min(calculateNumTrials(), getMaxiter());
+        return Math.min(getEstimatedNumTrials(), getMaxiter());
 
     }
 
@@ -293,6 +300,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("" + maxiter);
         options.add("-g");
         options.add("" + gamma);
+        options.add("-mindiscrim");
+        options.add("" + getMinDiscrimSetSize());
 
         return MoccaUtils.toStringArray(options);
     }
@@ -302,6 +311,14 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace similarity threshold="
                 + subspaceSimilarityThreshold + "; cluster similarity threshold=" + clusterSimilarityThreshold
                 + "; width=" + width + "; gamma=" + gamma + "; maxiter=" + maxiter;
+    }
+
+    public int getRotationSetSize() {
+        /*
+         * The rotation set size must equal to or greater than the discriminating set size because the discriminating
+         * set is sampled (without replacement) from the rotation set.
+         */
+        return Math.min(getMinDiscrimSetSize(), getEstimatedRotationSetSize());
     }
 
     public double getSubspaceSimilarityThreshold() {
@@ -331,9 +348,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         vector.addElement(new Option("\tepsilon", "epsilon", 1, "-e <double>"));
         vector.addElement(new Option("\tsubspace similarity threshold", "subsapceSimilarityThreshold", 1, "-s <double>"));
         vector.addElement(new Option("\tobject similarity threshold", "clusterSimilarityThreshold", 1, "-i <double>"));
-        vector.addElement(new Option("\twidth (default = 1.0)", "width", 1, "-w <double>"));
-        vector.addElement(new Option("\tgamma (default = 0.00)", "gamma", 1, "-g <double>"));
-        vector.addElement(new Option("\tmaximum iteration (default = 10000)", "maxiter", 1, "-m <int>"));
+        vector.addElement(new Option("\twidth", "width", 1, "-w <double>"));
+        vector.addElement(new Option("\tgamma", "gamma", 1, "-g <double>"));
+        vector.addElement(new Option("\tmaximum iteration", "maxiter", 1, "-maxiter <int>"));
+        vector.addElement(new Option("\tminimum discriminating set size (default = 2)", "minDiscrimSetSize", 1,
+                "-mindiscrim <int>"));
         return vector.elements();
     }
 
@@ -395,7 +414,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 else {
 
                     // Randomly select rotation set based on gamma
-                    int rotationIndexes[] = shuffler.next(rotationSetSize);
+                    int rotationIndexes[] = shuffler.next(getRotationSetSize());
 
                     // Get rotation objects
                     Matrix roationObjs = MatrixUtils.getRowsByIndex(originalDataAsMatrix, rotationIndexes);
@@ -417,7 +436,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             }// end if
 
             // Randomly select discriminating set
-            int discrimSetIndexes[] = shuffler.next(discrimSetSize);
+            int discrimSetIndexes[] = shuffler.next(getDiscrimSetSize());
             Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
             // Determine the subspace where the points congregate, if any
@@ -427,7 +446,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             if (numCongregatingDims > 0) {
 
                 // Determine which points are in the cluster
-                pointIndexes = findCongregatingPoints(pointsToCluster, subspace);
+                pointIndexes = getCongregatingObjects(pointsToCluster, subspace);
 
                 // Create cluster object.
                 MoccaCluster newCluster = new MoccaCluster(subspace.getSubspace(), pointIndexes, numCongregatingDims,
@@ -471,6 +490,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             this.maxiter = d;
     }
 
+    public void setMinDiscrimSetSize(int minDiscrimSetSize) {
+        this.minDiscrimSetSize = minDiscrimSetSize;
+    }
+
     public void setOptions(String[] options) throws Exception {
 
         String optionString = Utils.getOption("a", options);
@@ -512,6 +535,12 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         if (optionString.length() != 0) {
             setMaxiter(Integer.parseInt(optionString));
         }
+
+        optionString = Utils.getOption("mindiscrim", options);
+        if (optionString.length() != 0) {
+            setMinDiscrimSetSize(Integer.parseInt(optionString));
+        }
+
     }
 
     /*
@@ -534,34 +563,46 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return gamma > 0;
     }
 
-    // TODO: Change this over to throw an exception to be caught all the way up in MySubspaceClusterEvaluation so that a
-    // proper error message can be created in the in the results file for the experiment.
     void validateGamma() {
         /*
          * The rotation set size must equal to or greater than the discriminating set size because the discriminating
          * set is sampled (without replacement) from the rotation set.
          */
 
-        // If the algorithm is not using PCA, gamma is not used.
-        if (usePca()) {
+        /*
+         * If the algorithm is not using PCA, gamma is not used.
+         */
 
-            if (rotationSetSize < discrimSetSize) {
-                System.err
-                        .printf("Unrecoverable error. rotation set size, %d, is not greater than/equal to discriminating set size, %d\n",
-                                rotationSetSize, discrimSetSize);
-                System.exit(-1);
-            }// if
+        // if (usePca()) {
 
-            else {
-                // Eliminated this restriction
-                // if (rotationSetSize < numDims + 1) {
-                // System.err
-                // .printf("Unrecoverable error. rotation set size, %d, is less number of dimension +1 (%d + 1).\nThe covariance matrix will have a ranks less than number of dimensions. Increase gamma.\n",
-                // rotationSetSize, numDims);
-                // System.exit(-1);
-                // }// if
-            }// else
-        }// outer if
+        /*
+         * NOTE: A parameter to set the discrim set size was added. The size of the rotation set is now set to be at
+         * minimu, the size of the discriminating set.
+         */
+
+        // if (rotationSetSize < discrimSetSize) {
+        // System.err
+        // .printf("Unrecoverable error. rotation set size, %d, is not greater than/equal to discriminating set size, %d\n",
+        // rotationSetSize, discrimSetSize);
+        // System.exit(-1);
+        // }// if
+
+        // else {
+
+        /*
+         * Eliminated this restriction by using all the eigen vectors to rotate the data set. The idea is that even is
+         * PCA computation is underdetermined, the PCA matrix can still be used to rotate the data. The data set retains
+         * its original orientation when multiplied by the eigenvectors which are not principal components.
+         */
+
+        // if (rotationSetSize < numDims + 1) {
+        // System.err
+        // .printf("Unrecoverable error. rotation set size, %d, is less number of dimension +1 (%d + 1).\nThe covariance matrix will have a ranks less than number of dimensions. Increase gamma.\n",
+        // rotationSetSize, numDims);
+        // System.exit(-1);
+        // }// if
+        // }// else
+        // }// outer if
 
     }// method
 

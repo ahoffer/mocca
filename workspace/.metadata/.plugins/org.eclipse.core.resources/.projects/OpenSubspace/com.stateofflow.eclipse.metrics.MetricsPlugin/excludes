@@ -1,3 +1,1 @@
-<file>i9/subspace/sepc/SepcCluster.java
-<file>weka/subspaceClusterer/Sepc.java
-<file>i9/subspace/sepc/SepcWrapper.java
+<regex>weka/subspaceClusterer/*.java

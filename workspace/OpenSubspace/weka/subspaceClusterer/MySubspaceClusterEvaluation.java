@@ -87,7 +87,7 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /** the clusterer */
-    private SubspaceClusterer m_clusterer;
+    SubspaceClusterer m_clusterer;
     private ArrayList<Cluster> m_clusters = null;
     ResultsWriter m_writer = new ResultsWriter();
 
@@ -139,7 +139,7 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        //Out.writeTrueFile("Lymphonma.true", m_dataSet);
+        // Out.writeTrueFile("Lymphonma.true", m_dataSet);
 
         // Preprocess the data
         // Remove class attributes and scale data
@@ -165,7 +165,6 @@ public class MySubspaceClusterEvaluation {
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
-        runDescriptiveStats();
         stopTimer();
 
         // Capture metrics
@@ -178,49 +177,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
-    void runDescriptiveStats() {
-        int size = getClusters().size();
-
-        // Computer and write statistics
-        m_writer.put("num_clusters", size);
-
-        int actualNumTrial = -1;
-        int calculatedNumTrials = -1;
-        double maxQuality = -1;
-        double minQuality = -1;
-        double meanQuality = -1;
-        double stddevQuality = -1;
-        double medianQuality = -1;
-
-        if (size > 0 && getClusters().get(0) instanceof MoccaCluster) {
-
-            double[] quality = new double[size];
-
-            // Collect quality
-            for (int i = 0; i < size; ++i) {
-                // Starting to look like C++. :-(
-                quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
-            }// for
-
-            actualNumTrial = ((Mocca) m_clusterer).getNumTrials();
-            calculatedNumTrials = ((Mocca) m_clusterer).calculateNumTrials();
-            maxQuality = StdStats.max(quality);
-            minQuality = StdStats.min(quality);
-            meanQuality = StdStats.mean(quality);
-            stddevQuality = StdStats.stddev(quality);
-            medianQuality = StdStats.median(quality);
-        }// if
-
-        m_writer.put("actual_num_trials", actualNumTrial);
-        m_writer.put("computed_trials", calculatedNumTrials);
-        m_writer.put("quality_max", maxQuality);
-        m_writer.put("quality_min", minQuality);
-        m_writer.put("quality_mean", meanQuality);
-        m_writer.put("quality_std_dev", stddevQuality);
-        m_writer.put("quality_median", medianQuality);
-
-    }// method
 
     public double minQuality(double[] quality) {
         return StdStats.min(quality);

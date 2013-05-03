@@ -79,7 +79,7 @@ public class TestRunner {
 
         // Pull all the results into one file
         if (!dryrun) {
-            Consolidator.consolidate(outputPath, ResultsWriter.separatedPath(outputPath) + "results.csv");
+            Consolidator.consolidate(outputPath, ResultsWriter.getSeparatedPath(outputPath) + "results.csv");
         }
 
         // Avoid the error
@@ -203,15 +203,15 @@ public class TestRunner {
     }
 
     public static void setForLinuxLab() {
-        outputPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/results");
-        dataPath = ResultsWriter.separatedPath("/net/metis/home2/ahoffer/git/sepc/data");
+        outputPath = ResultsWriter.getSeparatedPath("/net/metis/home2/ahoffer/results");
+        dataPath = ResultsWriter.getSeparatedPath("/net/metis/home2/ahoffer/git/sepc/data");
         classPath = ".:/net/metis/home2/ahoffer/git/sepc/workspace/OpenSubspace/lib/*";
         javaExecutable = "java";
     }
 
     public static void setForWindows() {
-        outputPath = ResultsWriter.separatedPath("C:\\results_may2");
-        dataPath = ResultsWriter.separatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
+        outputPath = ResultsWriter.getSeparatedPath("C:\\results_may2");
+        dataPath = ResultsWriter.getSeparatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = ".;\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*";
         javaExecutable = "java.exe";
     }

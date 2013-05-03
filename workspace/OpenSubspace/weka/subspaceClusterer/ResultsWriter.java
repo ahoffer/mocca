@@ -5,7 +5,7 @@ import i9.subspace.base.Cluster;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -21,7 +21,7 @@ public class ResultsWriter {
     static char separator = ',';
     static char spacer = ',';
 
-    static public String separatedPath(String string) {
+    static public String getSeparatedPath(String string) {
         if (string.charAt(string.length() - 1) != File.separatorChar) {
             string += File.separator;
         }
@@ -51,7 +51,7 @@ public class ResultsWriter {
     }
 
     String getPath() {
-        return separatedPath(path);
+        return getSeparatedPath(path);
     }
 
     TreeMap<String, String> getRecord(Cluster cluster) {
@@ -137,6 +137,17 @@ public class ResultsWriter {
             output.put(strings[0], strings[1]);
         }
 
+        if (clusterer instanceof Mocca) {
+            Mocca mocca = (Mocca) clusterer;
+            put("actual_num_trials", mocca.getNumTrials());
+            put("estimated_trials", mocca.getEstimatedNumTrials());
+            put("actual_discrim_set_size", mocca.getDiscrimSetSize());
+            put("estimated_discrim_set_size", mocca.getEstimatedDiscrimSetSize());
+            put("actual_discrim_set_size", mocca.getDiscrimSetSize());
+            put("estimated_discrim_set_size", mocca.getEstimatedDiscrimSetSize());
+
+        }
+
     }
 
     public void setDataName(String name) {
@@ -167,14 +178,12 @@ public class ResultsWriter {
         }
     }// method
 
-    public void writeClusters(ArrayList<Cluster> clusters) throws Exception {
+    public void writeClusters(List<Cluster> clusters) throws Exception {
 
-        /*
-         * Screw you Java. You're dispatch model is a griefer.
-         * 
-         * TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
-         * abort illegal attempt to cast a Cluster to a MoccaCluster
-         */
+        // Damn you Java. You're dispatch model is a griefer.
+
+        // TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
+        // abort illegal attempt to cast a Cluster to a MoccaCluster
 
         // Protect against empty clusters
         if (clusters.isEmpty()) {
@@ -195,6 +204,9 @@ public class ResultsWriter {
             writer.write(map.values().toArray(new String[0]));
         }
 
+        // Write the descriptive statistics
+        writeDescriptiveStats(clusters);
+
         // Shutdown IO
         writer.close();
     }
@@ -214,6 +226,43 @@ public class ResultsWriter {
         put(name, (double) value);
 
     }// method
+
+    void writeDescriptiveStats(List<Cluster> clusters) {
+        int size = clusters.size();
+
+        // Computer and write statistics
+        put("num_clusters", size);
+
+        double maxQuality = -1;
+        double minQuality = -1;
+        double meanQuality = -1;
+        double stddevQuality = -1;
+        double medianQuality = -1;
+
+        if (size > 0 && clusters.get(0) instanceof MoccaCluster) {
+
+            double[] quality = new double[size];
+
+            // Collect quality
+            for (int i = 0; i < size; ++i) {
+                // Starting to look like C++. :-(
+                quality[i] = ((MoccaCluster) clusters.get(i)).quality;
+            }// for
+
+            maxQuality = StdStats.max(quality);
+            minQuality = StdStats.min(quality);
+            meanQuality = StdStats.mean(quality);
+            stddevQuality = StdStats.stddev(quality);
+            medianQuality = StdStats.median(quality);
+        }// if
+
+        put("quality_max", maxQuality);
+        put("quality_min", minQuality);
+        put("quality_mean", meanQuality);
+        put("quality_std_dev", stddevQuality);
+        put("quality_median", medianQuality);
+
+    }
 
 }// class
 

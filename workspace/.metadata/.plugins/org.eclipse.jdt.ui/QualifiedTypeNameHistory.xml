@@ -31,7 +31,6 @@
 <fullyQualifiedTypeName name="weka.subspaceClusterer.SubspaceClusterer"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="org.supercsv.io.CsvMapWriter"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
 <fullyQualifiedTypeName name="weka.gui.experiment.RunNumberPanel"/>
 <fullyQualifiedTypeName name="java.nio.file.DirectoryStream"/>
 <fullyQualifiedTypeName name="java.io.File"/>
@@ -50,7 +49,6 @@
 <fullyQualifiedTypeName name="Jama.Matrix"/>
 <fullyQualifiedTypeName name="i9.data.core.Attribute"/>
 <fullyQualifiedTypeName name="i9.subspace.base.Cluster"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.io.PrintWriter"/>
 <fullyQualifiedTypeName name="java.io.FileWriter"/>
@@ -60,4 +58,6 @@
 <fullyQualifiedTypeName name="java.lang.StringBuffer"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
 </qualifiedTypeNameHistroy>
