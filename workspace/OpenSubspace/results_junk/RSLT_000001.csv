@@ -1,0 +1,2 @@
+ beta, cluster similarity threshold, epsilon, gamma, maxiter, subspace similarity threshold, width,1.0-ClusErr,1.0-Entropy,1.0-RNIA,Accuracy,F1Measure,actual_discrim_set_size,actual_num_trials,algorithm,alpha,dataset,estimated_discrim_set_size,estimated_trials,experiment_ID,runtime_clustering_sec,runtime_metrics_sec
+0.15,0.1,0.05,0.1,10000,-1.0,0.1,NaN,0.511207,NaN,0.762626,0.576982,3.000000,5617.000000,MOCCA,0.1,..\..\data\breast.arff,2.000000,5617.000000,1,117.000000,0.000000

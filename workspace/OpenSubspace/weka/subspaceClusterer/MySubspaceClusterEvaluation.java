@@ -146,9 +146,6 @@ public class MySubspaceClusterEvaluation {
         Instances data = removeClassAttribute(m_dataSet);
         m_preprocessedDataSet = runDataPreprocessor(data);
 
-        // Set clusterer name and options
-        m_writer.setClusterer(m_clusterer);
-
         // Generate clusters and time how long it takes
         startTimer();
 
@@ -169,6 +166,9 @@ public class MySubspaceClusterEvaluation {
 
         // Capture metrics
         m_writer.put("runtime_metrics_sec", getElapsedTime());
+
+        // Set clusterer name and options
+        m_writer.setClusterer(m_clusterer);
 
         // Write report files
         m_writer.writeResults();

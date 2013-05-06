@@ -2,8 +2,6 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
-import weka.filters.unsupervised.attribute.Normalize;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -22,6 +20,7 @@ import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.Remove;
 
 /*
@@ -88,7 +87,7 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /** the clusterer */
-    private SubspaceClusterer m_clusterer;
+    SubspaceClusterer m_clusterer;
     private ArrayList<Cluster> m_clusters = null;
     ResultsWriter m_writer = new ResultsWriter();
 
@@ -102,8 +101,11 @@ public class MySubspaceClusterEvaluation {
         this.m_options = options;
     }
 
-    /** The data set to perform the clustering on. */
+    /** The raw instances loaded from disk. */
     Instances m_dataSet;
+
+    /** The data that is to clusters. The class attribute is removed and data may be scaled or normalized. **/
+    Instances m_preprocessedDataSet;
 
     /* The metrics to perform on the clustering result. */
     ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
@@ -137,8 +139,12 @@ public class MySubspaceClusterEvaluation {
         // Set up
         setOptions();
 
-        // Preprocessing the data
-        runDataPreprocessor();
+        // Out.writeTrueFile("Lymphonma.true", m_dataSet);
+
+        // Preprocess the data
+        // Remove class attributes and scale data
+        Instances data = removeClassAttribute(m_dataSet);
+        m_preprocessedDataSet = runDataPreprocessor(data);
 
         // Set clusterer name and options
         m_writer.setClusterer(m_clusterer);
@@ -146,6 +152,8 @@ public class MySubspaceClusterEvaluation {
         // Generate clusters and time how long it takes
         startTimer();
 
+        // TODO:Change this around that there is no so that if the timelimit is not specified, the thread is never
+        // killed. That way, I don't need two methods to do the job of one.
         // runClustererWithTimeLimit();
         runClusterer();
 
@@ -157,7 +165,6 @@ public class MySubspaceClusterEvaluation {
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
-        runDescriptiveStats();
         stopTimer();
 
         // Capture metrics
@@ -171,49 +178,6 @@ public class MySubspaceClusterEvaluation {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
 
-    void runDescriptiveStats() {
-        int size = getClusters().size();
-
-        // Computer and write statistics
-        m_writer.put("num_clusters", size);
-
-        int actualNumTrial = -1;
-        int calculatedNumTrials = -1;
-        double maxQuality = -1;
-        double minQuality = -1;
-        double meanQuality = -1;
-        double stddevQuality = -1;
-        double medianQuality = -1;
-
-        if (size > 0 && getClusters().get(0) instanceof MoccaCluster) {
-
-            double[] quality = new double[size];
-
-            // Collect quality
-            for (int i = 0; i < size; ++i) {
-                // Starting to look like C++. :-(
-                quality[i] = ((MoccaCluster) getClusters().get(i)).quality;
-            }// for
-
-            actualNumTrial = ((Mocca) m_clusterer).getNumTrials();
-            calculatedNumTrials = ((Mocca) m_clusterer).calculateNumTrials();
-            maxQuality = StdStats.max(quality);
-            minQuality = StdStats.min(quality);
-            meanQuality = StdStats.mean(quality);
-            stddevQuality = StdStats.stddev(quality);
-            medianQuality = StdStats.median(quality);
-        }// if
-
-        m_writer.put("actual_num_trials", actualNumTrial);
-        m_writer.put("computed_trials", calculatedNumTrials);
-        m_writer.put("quality_max", maxQuality);
-        m_writer.put("quality_min", minQuality);
-        m_writer.put("quality_mean", meanQuality);
-        m_writer.put("quality_std_dev", stddevQuality);
-        m_writer.put("quality_median", medianQuality);
-
-    }// method
-
     public double minQuality(double[] quality) {
         return StdStats.min(quality);
     }
@@ -226,10 +190,14 @@ public class MySubspaceClusterEvaluation {
      */
     void runMetrics() {
 
+        // PCA-assisted MOCCA loses reference to the original dimension, but dimensionality is used in certain metrics.
+        // The answer is to set the subspace of the clusters to be the full space.
+        ArrayList<Cluster> clusters = MoccaUtils.setToFullsapce(getClusters());
+
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
 
-            metricObj.calculateQuality(getClusters(), m_dataSet, m_trueClusters);
+            metricObj.calculateQuality(clusters, m_dataSet, m_trueClusters);
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
         }
 
@@ -355,7 +323,7 @@ public class MySubspaceClusterEvaluation {
         boolean timeout = false;
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Void> future = executor.submit(new Task(m_clusterer, removeClassAttribute(m_dataSet)));
+        Future<Void> future = executor.submit(new Task(m_clusterer, m_preprocessedDataSet));
 
         try {
             future.get(m_timeLimit, TimeUnit.MINUTES);
@@ -374,34 +342,34 @@ public class MySubspaceClusterEvaluation {
         return !timeout;
     }
 
-    void runDataPreprocessor() {
+    Instances runDataPreprocessor(Instances data) {
         // Normalize values in data to [0,1]
         // Keeps width values in a smaller range, but may overweight outliers
 
-        if (m_dataSet == null) {
+        if (data == null) {
             System.err.printf("Must set the data before preprocessing it\n");
             System.exit(-3);
         }
 
         Instances newData = null;
         Normalize normalize = new Normalize();
-        normalize.setIgnoreClass(true);
+        // normalize.setIgnoreClass(true);
 
         try {
-            normalize.setInputFormat(m_dataSet);
-            newData = Filter.useFilter(m_dataSet, normalize);
+            normalize.setInputFormat(data);
+            newData = Filter.useFilter(data, normalize);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        m_dataSet = newData;
+        return newData;
 
     }// method
 
     void runClusterer() {
         try {
-            m_clusterer.buildSubspaceClusterer(m_dataSet);
+            m_clusterer.buildSubspaceClusterer(m_preprocessedDataSet);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -464,14 +432,25 @@ public class MySubspaceClusterEvaluation {
     /**
      * /** Sets the data set to use in the clustering from a file name.
      * 
-     * @param fileName
+     * @param filename
      *            The name of an arff file containing data to cluster.
      * @throws Exception
      *             If there is a problem opening fileName or loading the data set.
      */
-    void setDataSet(String fileName) throws Exception {
-        DataSource source = new DataSource(fileName);
-        m_dataSet = source.getDataSet();
+    void setDataSet(String filename) {
+
+        DataSource source = null;
+
+        MoccaUtils.testFileReadable(filename);
+
+        try {
+            source = new DataSource(filename);
+            m_dataSet = source.getDataSet();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -586,14 +565,19 @@ public class MySubspaceClusterEvaluation {
     /**
      * Sets the true clusters using the file referred to by fileName.
      * 
-     * @param fileName
+     * @param filename
      * @throws Exception
      */
-    void setTrueClusters(String fileName) throws Exception {
-        File trueClusterFile = new File(fileName);
-        int numDims = m_dataSet.numAttributes() - 1; // class is one of the
-        // attributes
-        m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, numDims);
+    void setTrueClusters(String filename) throws Exception {
+
+        MoccaUtils.testFileReadable(filename);
+
+        File trueClusterFile = new File(filename);
+        m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, getNumDims());
+    }
+
+    public int getNumDims() {
+        return m_dataSet.numAttributes() - 1;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

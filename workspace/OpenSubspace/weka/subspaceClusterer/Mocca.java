@@ -362,7 +362,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         MoccaSubspace subspace;
         Shuffler shuffler;
         Matrix pointsToCluster, originalDataAsMatrix;
-        int numCongregatingDims, numRotatedDims;
+        int numCongregatingDims;
         ArrayList<Integer> pointIndexes;
         boolean dataHasBeenRotated;
         Pca pca = null;
@@ -375,14 +375,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         // Note that the data is centered before the covariance matrix is generated as part of PCA.
         // originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
         originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
-
-        /*
-         * A data comes witha fixed number of attributes (dimensions). However, if a rotation set has fewer instances in
-         * it than there are attributes, the number of principal components will be fewer than the number of dimensions
-         * in the data set. Consequently, the rotated data will have fewer dimensions than the original data set. By
-         * default, assume that no dimensions are lost or that PCA is not used.
-         */
-        numRotatedDims = numDims;
 
         // The original data is only modified if PCA-assist is used. There is no
         // need to create a copy.
@@ -425,8 +417,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
                 }
 
-                numRotatedDims = pca.getColumnDimension();
-
                 // DEBUG
                 // System.out.println("Original Points");
                 // originalDataAsMatrix.print(8, 4);
@@ -440,7 +430,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
 
             // Determine the subspace where the points congregate, if any
-            subspace = new MoccaSubspace(discrimPoints.getArray(), width, numRotatedDims);
+            subspace = new MoccaSubspace(discrimPoints.getArray(), width, numDims);
             subspace.eval();
             numCongregatingDims = subspace.getNumCongregatingDims();
             if (numCongregatingDims > 0) {
