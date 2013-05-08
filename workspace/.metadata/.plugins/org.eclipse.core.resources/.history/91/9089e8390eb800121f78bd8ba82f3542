@@ -1,4 +1,4 @@
-//TODO: Update the commons-math JAR library in the "Referenced Libraries" resources. Then get rid of this class and use the Apache common math routines.
+//TODO: Updated the commons-math JAR library in the "Referenced Libraries" resources. Then get rid of this class and use the Apache common math routines.
 package weka.subspaceClusterer;
 
 import java.util.Arrays;

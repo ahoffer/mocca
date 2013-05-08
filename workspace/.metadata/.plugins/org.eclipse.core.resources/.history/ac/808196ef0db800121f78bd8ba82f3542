@@ -48,9 +48,13 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
          * the list. Add them to a "remove items list" and remove them before exiting.
          */
         List<Cluster> removeList = new ArrayList<Cluster>();
+        // DEBUG
+        // System.out.println("----------New Cluster----------------");
+        // System.out.println(newCluster.toStringWeka());
         for (Cluster otherCluster : clusters) {
             MoccaCluster other = (MoccaCluster) otherCluster;
             subspaceSimilarity = newCluster.getSubspaceSimilarity(other);
+
             /*
              * Test if the clusters' subspaces are similar enought to be considered the same. If threshold is 0, all
              * subspaces with at least one dimension in common are considered to be in the same subspace. If threshold
@@ -58,18 +62,17 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
              * with the same subspace will be checked for duplicate object sets.
              */
             if (subspaceSimilarity > subspaceSimilarityThreshold || MoccaUtils.equalToOne(subspaceSimilarity)) {
-                /*
-                 * OK, the cluster's subsapces are considered the same. Test if the clusters' contain enough similar
-                 * objects to be considered the same. If threshold is 0 (permissive), clusters with at least one object
-                 * in common are considered to be the same. If threshold is 1 (strict), clusters are considered the same
-                 * iff every object in the smaller cluster is also part of the larger cluster.
-                 */
+                // OK, the cluster's subsapces are considered the same.
+                // Test if the clusters' contain enough similar objects to be considered the same.
+                // If threshold is 0 (permissive), clusters with at least one object in common are considered to be the
+                // same.
+                // If threshold is 1 (strict), clusters are considered the same iff every object in the smaller cluster
+                // is also part of the larger cluster.
                 clusterSimilarity = newCluster.getClusterSimilarity(other);
                 if (clusterSimilarity > clusterSimilarityThreshold || MoccaUtils.equalToOne(clusterSimilarity)) {
-                    /*
-                     * The clusters' subspaces and sets of objects are similar enought that we consider them to be the
-                     * same cluster. Keep the cluster with the highest quality
-                     */
+                    // OK, the clusters' subspaces and sets of objects are similar enought that we consider them to be
+                    // the same cluster.
+                    // Keep the cluster with the highest quality
                     if (newCluster.quality > other.quality) {
                         // Keep new cluster, remove other cluster
                         removeList.add(otherCluster);
@@ -81,9 +84,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             }// outer if
         }// for
         clusters.removeAll(removeList);
-        /*
-         * There is no sufficiently similar cluster with higher quality. Add this cluster.
-         */
+        // There is no sufficiently similar cluster with higher quality.
+        // Add this cluster.
         clusters.add(newCluster);
     }
 
@@ -299,6 +301,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     }
 
     void run() throws Exception {
+        // DECLARE
         MoccaSubspace subspace;
         Shuffler shuffler;
         Matrix pointsToCluster, originalDataAsMatrix;
@@ -306,12 +309,15 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         ArrayList<Integer> pointIndexes;
         boolean dataHasBeenRotated;
         Pca pca = null;
+        // ALLOCATE
         shuffler = new Shuffler(numInstances, 1);
-
+        // INITIALIZE
+        // Centering (translating) the original data does not change the outcomes.
+        // Note that the data is centered before the covariance matrix is generated as part of PCA.
+        // originalDataAsMatrix = MatrixUtils.center(MatrixUtils.toMatrix(dataAsInstances));
         originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
-        /*
-         * The original data is only modified if PCA-assist is used. There is no need to create a copy.
-         */
+        // The original data is only modified if PCA-assist is used. There is no
+        // need to create a copy.
         pointsToCluster = originalDataAsMatrix;
         /*
          * If gamma is 100%, PCA and subsequent rotation of the data need only be performed once because the results of
