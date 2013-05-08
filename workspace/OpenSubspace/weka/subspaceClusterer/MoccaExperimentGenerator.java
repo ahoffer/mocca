@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoccaExperimentGenerator {
-
     public static void main(String[] args) {
-
     }
 
     /*
      * TODO: Use JSON to read write all experiment parameters.
      */
-
     static double[] gammas = { 0.0, 0.1, 0.3, 0.5 };
     static double[] alphas = { 0.1 };
     static double[] widths = { 0.0001, 0.001, 0.01, 0.1 };
@@ -24,10 +21,8 @@ public class MoccaExperimentGenerator {
     static String subspaceClutererName = "Mocca";
 
     public static List<List<String>> getArgLines() {
-
         ArrayList<List<String>> argLines = new ArrayList<List<String>>();
         ArrayList<String> args;
-
         for (double e : epsilons) {
             for (double a : alphas) {
                 for (double b : betas) {
@@ -35,7 +30,6 @@ public class MoccaExperimentGenerator {
                         for (double i : clusterSimilarityThresholds) {
                             for (double g : gammas) {
                                 for (double w : widths) {
-
                                     args = new ArrayList<String>();
                                     args.add("-sc");
                                     args.add(subspaceClutererName);
@@ -63,7 +57,6 @@ public class MoccaExperimentGenerator {
                 }
             }
         }
-
         return argLines;
     }
 }// class

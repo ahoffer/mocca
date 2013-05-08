@@ -26,7 +26,6 @@ import java.util.Arrays;
  *     std dev   1.581
  *
  *************************************************************************/
-
 /**
  * <i>Standard statistics</i>. This class provides methods for computing statistics such as min, max, mean, sample
  * standard deviation, and sample variance.
@@ -35,7 +34,6 @@ import java.util.Arrays;
  * <i>Introduction to Programming in Java: An Interdisciplinary Approach</i> by Robert Sedgewick and Kevin Wayne.
  */
 public final class StdStats {
-
     private StdStats() {
     }
 
@@ -303,27 +301,18 @@ public final class StdStats {
         if (l == 0) {
             return Double.NaN;
         }
-
         if (l == 1) {
             return a[0];
         }
-
         if (l == 2) {
-
             return (a[0] + a[1]) / 2.0;
         }
         Arrays.sort(a);
-
         int half = l / 2;
-
         if (l % 2 == 0) {
             return (a[half - 1] + a[half + 1]) / 2.0;
-        }
-
-        else {
+        } else {
             return a[half];
         }
-
     }// method
-
 }

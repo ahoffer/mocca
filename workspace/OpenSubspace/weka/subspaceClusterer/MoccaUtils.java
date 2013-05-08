@@ -11,7 +11,6 @@ import java.util.List;
 import weka.core.Instances;
 
 public class MoccaUtils {
-
     // Pick a small values that means zero.
     public static double epsilon = 1E-8;
 
@@ -29,15 +28,12 @@ public class MoccaUtils {
         // Copy the objects so the original clusters are not mutated.
         ArrayList<Cluster> newClusters = new ArrayList<Cluster>();
         Cluster temp;
-
         for (Cluster each : clusters) {
             temp = new Cluster(each.m_subspace.clone(), new ArrayList<Integer>(each.m_objects));
             for (int i = 0; i < temp.m_subspace.length; ++i) {
                 temp.m_subspace[i] = true;
             }// for
-
             newClusters.add(temp);
-
         }// for
         return newClusters;
     }// method
@@ -56,7 +52,6 @@ public class MoccaUtils {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Binary search on a sorted array of integers to determine if the element exists Use Arrays.binarySearch() instead.
      */
@@ -85,9 +80,7 @@ public class MoccaUtils {
     // return false;
     //
     // }// end method
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Compare two SORTED lists of integers and return the elements in common.
      * 
@@ -123,9 +116,7 @@ public class MoccaUtils {
     // }
     // return toArray(results);
     // }// method
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Compare two lists of integers and return the number of elements in common.
      */
@@ -135,20 +126,16 @@ public class MoccaUtils {
         int size1, size2, count;
         List<Integer> toIterate;
         HashSet<Integer> hash;
-
         size1 = list1.size();
         size2 = list2.size();
         count = 0;
-
         if (size1 > size2) {
             hash = new HashSet<Integer>(list2);
             toIterate = list1;
         } else {
             hash = new HashSet<Integer>(list1);
             toIterate = list2;
-
         }
-
         for (Integer each : toIterate) {
             if (hash.contains(each)) {
                 count++;
@@ -162,13 +149,11 @@ public class MoccaUtils {
      * Convert a list of integers to an array of primitive integers.
      */
     public static int[] toArray(List<Integer> input) {
-
         int size = input.size();
         int array[] = new int[size];
         for (int i = 0; i < size; ++i) {
             array[i] = input.get(i).intValue();
         }// end for
-
         return array;
     }// end method
 
@@ -177,18 +162,15 @@ public class MoccaUtils {
      * Convert a list of Strings to an array of Strings.
      */
     public static String[] toStringArray(List<String> input) {
-
         int size = input.size();
         String array[] = new String[size];
         for (int i = 0; i < size; ++i) {
             array[i] = input.get(i);
         }// end for
-
         return array;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static ArrayList<Integer> toList(int input[]) {
         ArrayList<Integer> list = new ArrayList<Integer>();
         for (int value : input) {
@@ -198,13 +180,11 @@ public class MoccaUtils {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     // Return the SMALLEST value from each column in the input matrix
     public static double[] min(double[][] input) {
         int rows = input.length;
         int cols = input[0].length;
         double[] minimums = new double[cols];
-
         // Not memory alignment friendly. :-(
         double smallest, value;
         for (int j = 0; j < cols; ++j) {
@@ -214,19 +194,16 @@ public class MoccaUtils {
                 smallest = Math.min(smallest, value);
             }// end for
             minimums[j] = smallest;
-
         }// end for
         return minimums;
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     // Return the LARGEST value from each column in the input matrix
     public static double[] max(double[][] input) {
         int rows = input.length;
         int cols = input[0].length;
         double[] maximums = new double[cols];
-
         // Not memory alignment friendly. :-(
         double largest, value;
         for (int j = 0; j < cols; ++j) {
@@ -236,15 +213,11 @@ public class MoccaUtils {
                 largest = Math.max(largest, value);
             }// end for
             maximums[j] = largest;
-
         }// end for
-
         return maximums;
-
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static double[] subtract(double[] minuend, double[] subtrahend) {
         /*
          * PRECONDITIONS: minuend and subtrahend are same length.
@@ -256,9 +229,7 @@ public class MoccaUtils {
         for (int i = 0; i < size; ++i) {
             difference[i] = minuend[i] - subtrahend[i];
         }// for
-
         return difference;
-
     }// method
 
     public static int countTrueValues(boolean[] input) {
@@ -295,5 +266,4 @@ public class MoccaUtils {
             System.exit(-5);
         }
     }
-
 }// end class

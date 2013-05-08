@@ -26,26 +26,21 @@ public class ResultsWriter {
             string += File.separator;
         }
         return string;
-
     }
 
     /* The name of a measure or parameter (key) and either the measurement or the value of the parameter */
     TreeMap<String, String> output = new TreeMap<String, String>();
-
     String path;
 
     File getFile(String name) {
-
         return new File(getPath() + name + "_" + padZeroesLeft(getKey(), keyFieldWidth) + extension);
     }
 
     String getKey() {
-
         return output.get(clustererExpKey);
     }
 
     CsvListWriter getListWriter(String name) throws IOException {
-
         FileWriter fw = new FileWriter(getFile(name));
         return new CsvListWriter(fw, new CsvPreference.Builder('"', separator, "\n").build());
     }
@@ -58,7 +53,6 @@ public class ResultsWriter {
         TreeMap<String, String> map = new TreeMap<String, String>();
         StringBuffer subspace = new StringBuffer();
         StringBuffer objs = new StringBuffer();
-
         // Subspace
         // subspace.append('[');
         for (boolean each : cluster.m_subspace) {
@@ -69,10 +63,8 @@ public class ResultsWriter {
         subspace.deleteCharAt(subspace.length() - 1);
         // subspace.append(']');
         map.put("SUBSPACE", subspace.toString());
-
         // Cardinality of object set
         map.put("CARDINALITY", ntoa(cluster.m_objects.size()));
-
         // Indexes of the object set
         objs.append('[');
         for (Integer each : cluster.m_objects) {
@@ -83,19 +75,15 @@ public class ResultsWriter {
         objs.deleteCharAt(objs.length() - 1);
         objs.append(']');
         map.put("OBJECTS", (objs.toString()));
-
         return map;
     }
 
     TreeMap<String, String> getRecord(MoccaCluster cluster) {
         TreeMap<String, String> map = new TreeMap<String, String>();
-
         // If MOCCA cluster, add in quality metric for the cluster
         map.put("QUALITY", (ntoa(cluster.quality)));
-
         // If MOCCA cluster, add in number of congregating dimensions
         map.put("NUM_CONGR_DIMS", ntoa(cluster.getNumCongregatingDims()));
-
         // Add generic cluster information
         map.putAll(getRecord((Cluster) cluster));
         return map;
@@ -110,13 +98,10 @@ public class ResultsWriter {
     }
 
     String padZeroesLeft(String str, int fieldWidth) {
-
         StringBuilder sb = new StringBuilder();
-
         for (int toPrepend = fieldWidth - str.length(); toPrepend > 0; toPrepend--) {
             sb.append('0');
         }
-
         sb.append(str);
         return sb.toString();
     }
@@ -126,17 +111,14 @@ public class ResultsWriter {
     }
 
     public void setClusterer(SubspaceClusterer clusterer) {
-
         // Set name of algorithm/subspace clusterer
         output.put(clustererNameKey, clusterer.getName());
-
         StringTokenizer st = new StringTokenizer(clusterer.getParameterString(), ";");
         while (st.hasMoreTokens()) {
             // paraters in form "param_name=param_value"
             String[] strings = st.nextToken().split("=");
             output.put(strings[0], strings[1]);
         }
-
         if (clusterer instanceof Mocca) {
             Mocca mocca = (Mocca) clusterer;
             put("actual_num_trials", mocca.getNumTrials());
@@ -145,9 +127,7 @@ public class ResultsWriter {
             put("estimated_discrim_set_size", mocca.getEstimatedDiscrimSetSize());
             put("actual_discrim_set_size", mocca.getDiscrimSetSize());
             put("estimated_discrim_set_size", mocca.getEstimatedDiscrimSetSize());
-
         }
-
     }
 
     public void setDataName(String name) {
@@ -164,12 +144,10 @@ public class ResultsWriter {
     }
 
     void verifyPath(String path) {
-
         File dir = new File(path);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-
         if (!dir.exists()) {
             Exception e = new Exception();
             System.err.printf("Could not access directory %s\n", path);
@@ -179,40 +157,31 @@ public class ResultsWriter {
     }// method
 
     public void writeClusters(List<Cluster> clusters) throws Exception {
-
         // Damn you Java. You're dispatch model is a griefer.
-
         // TODO: When news algorithms are exlored, the clusters will not be MoccaCluster. Wrap the cast in try/catch to
         // abort illegal attempt to cast a Cluster to a MoccaCluster
-
         // Protect against empty clusters
         if (clusters.isEmpty()) {
             return;
         }
-
         MoccaCluster first = (MoccaCluster) clusters.get(0);
         CsvListWriter writer = getListWriter("CLSTR");
-
         // Go through some silly hoops to get the header
         TreeMap<String, String> map = getRecord(first);
         String[] header = map.navigableKeySet().toArray(new String[0]);
         writer.writeHeader(header);
-
         // Write the data
         for (Cluster each : clusters) {
             map = getRecord((MoccaCluster) each);
             writer.write(map.values().toArray(new String[0]));
         }
-
         // Write the descriptive statistics
         writeDescriptiveStats(clusters);
-
         // Shutdown IO
         writer.close();
     }
 
     public void writeResults() throws Exception {
-
         CsvListWriter writer = getListWriter("RSLT");
         String[] header = output.navigableKeySet().toArray(new String[0]);
         writer.writeHeader(header);
@@ -221,48 +190,36 @@ public class ResultsWriter {
     }
 
     public void put(String name, int value) {
-
         // Convenience wrapper
         put(name, (double) value);
-
     }// method
 
     void writeDescriptiveStats(List<Cluster> clusters) {
         int size = clusters.size();
-
         // Computer and write statistics
         put("num_clusters", size);
-
         double maxQuality = -1;
         double minQuality = -1;
         double meanQuality = -1;
         double stddevQuality = -1;
         double medianQuality = -1;
-
         if (size > 0 && clusters.get(0) instanceof MoccaCluster) {
-
             double[] quality = new double[size];
-
             // Collect quality
             for (int i = 0; i < size; ++i) {
                 // Starting to look like C++. :-(
                 quality[i] = ((MoccaCluster) clusters.get(i)).quality;
             }// for
-
             maxQuality = StdStats.max(quality);
             minQuality = StdStats.min(quality);
             meanQuality = StdStats.mean(quality);
             stddevQuality = StdStats.stddev(quality);
             medianQuality = StdStats.median(quality);
         }// if
-
         put("quality_max", maxQuality);
         put("quality_min", minQuality);
         put("quality_mean", meanQuality);
         put("quality_std_dev", stddevQuality);
         put("quality_median", medianQuality);
-
     }
-
 }// class
-

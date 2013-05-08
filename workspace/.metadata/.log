@@ -689,3 +689,26 @@ Binding(F5,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.jdt.ui.javaEditorScope,,,system)
+!SESSION 2013-05-07 21:29:30.199 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.core.net 4 0 2013-05-07 21:37:26.693
+!MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'The proxy auto-configuration script could not be downloaded
+' #12167.
+
+!ENTRY com.instantiations.eclipse 1 0 2013-05-08 08:47:22.209
+!MESSAGE cannot support aboutToShutdown event - 2
+
+!ENTRY com.instantiations.common.core 2 0 2013-05-08 08:47:43.671
+!MESSAGE This version of CodePro Analytix and PlusPak was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+This version of CodePro AnalytiX was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+This version of EclipsePro Audit was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+This version of EclipsePro Test was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+This version of Code Coverage was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+This version of Shared was compiled for Eclipse 3.7 but is running on Eclipse 3.8.
+

@@ -1,12 +1,9 @@
 package weka.subspaceClusterer;
 
 public class MoccaSubspace {
-
     private double[][] discrimObjs;
     private double[] lower;
-
     private int numDimsDiscrimObjs, numCongregatingDims;
-
     private boolean[] subspace;
     private double[] upper;
     private double width;
@@ -20,9 +17,7 @@ public class MoccaSubspace {
     }
 
     public void eval() {
-
         double sheath = 0;
-
         /*
          * Create max and min values in each dimension from the discriminating set. Find the subspace and number of
          * congregating dimensions
@@ -30,28 +25,21 @@ public class MoccaSubspace {
         double[] minimums = MoccaUtils.min(discrimObjs);
         double[] maximums = MoccaUtils.max(discrimObjs);
         double lengths[] = MoccaUtils.subtract(maximums, minimums);
-
         subspace = MoccaUtils.lessThanOrEqualTo(lengths, width);
         numCongregatingDims = MoccaUtils.countTrueValues(getSubspace());
-
         /*
          * If the entire subspace is zero, it means the discriminating set does not congregate in any dimension. The
          * trial has failed to find a cluster
          */
         if (numCongregatingDims > 0) {
-
             /*
              * Calculate upper and lower bounds of the hyper volume that surrounds the cluster.
              */
-
             for (int i = 0; i < numDimsDiscrimObjs; ++i) {
-
                 sheath = width - lengths[i];
                 lower[i] = minimums[i] - sheath;
                 upper[i] = maximums[i] + sheath;
-
             }// for
-
         }// if
     }// method
 
@@ -74,7 +62,6 @@ public class MoccaSubspace {
      * @return the subspace
      */
     public boolean[] getSubspace() {
-
         return subspace.clone();
     }
 
@@ -84,5 +71,4 @@ public class MoccaSubspace {
     double[] getUpper() {
         return upper.clone();
     }
-
 }

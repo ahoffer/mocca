@@ -49,9 +49,7 @@ import weka.filters.unsupervised.attribute.Remove;
  * Used to uniquely identify a test run. It used in the filenames of the output files and is included  in the file contentsas to be used a foregin key .
 
  */
-
 public class MySubspaceClusterEvaluation {
-
     private class Task implements Callable<Void> {
         // State vars
         SubspaceClusterer clusterer;
@@ -65,16 +63,12 @@ public class MySubspaceClusterEvaluation {
 
         @Override
         public Void call() throws Exception {
-
             clusterer.buildSubspaceClusterer(dataSet);
             return null;
-
         }// method
-
     }// Task class
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static void main(String[] args) {
         MySubspaceClusterEvaluation eval = new MySubspaceClusterEvaluation(args);
         try {
@@ -90,42 +84,34 @@ public class MySubspaceClusterEvaluation {
     SubspaceClusterer m_clusterer;
     private ArrayList<Cluster> m_clusters = null;
     ResultsWriter m_writer = new ResultsWriter();
-
     /*
      * the command line args
      */
     String[] m_options;
 
     public MySubspaceClusterEvaluation(String[] options) {
-
         this.m_options = options;
     }
 
     /** The raw instances loaded from disk. */
     Instances m_dataSet;
-
     /** The data that is to clusters. The class attribute is removed and data may be scaled or normalized. **/
     Instances m_preprocessedDataSet;
-
     /* The metrics to perform on the clustering result. */
     ArrayList<ClusterQualityMeasure> m_metricsObjects = new ArrayList<ClusterQualityMeasure>();
-
     /* Used to measure the run time. */
     long m_startTime;
     long m_stoptTime;
-
     /**
      * A time limit in minutes. If the clustering process is interrupted if it does not complete before the time limit.
      */
     long m_timeLimit = 30;
-
     /**
      * The true clusters hidden in the data set. This is required for some metrics (RNIA, and CE).
      */
     ArrayList<Cluster> m_trueClusters;
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * Evaluates a clusterer with the options given.
      * 
@@ -133,51 +119,37 @@ public class MySubspaceClusterEvaluation {
      *            An array of strings containing options for clustering.
      * @throws Exception
      */
-
     public void run() throws Exception {
-
         // Set up
         setOptions();
-
         // Out.writeTrueFile("Lymphonma.true", m_dataSet);
-
         // Preprocess the data
         // Remove class attributes and scale data
         Instances data = removeClassAttribute(m_dataSet);
         m_preprocessedDataSet = runDataPreprocessor(data);
-
         // Generate clusters and time how long it takes
         startTimer();
-
         // TODO:Change this around that there is no so that if the timelimit is not specified, the thread is never
         // killed. That way, I don't need two methods to do the job of one.
         // runClustererWithTimeLimit();
         runClusterer();
-
         stopTimer();
-
         // Capture metrics
         m_writer.put("runtime_clustering_sec", getElapsedTime());
-
         // Run the metrics and time how long they take
         startTimer();
         runMetrics();
         stopTimer();
-
         // Capture metrics
         m_writer.put("runtime_metrics_sec", getElapsedTime());
-
         // Set clusterer name and options
         m_writer.setClusterer(m_clusterer);
-
         // Write report files
         m_writer.writeResults();
         m_writer.writeClusters(getClusters());
-
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public double minQuality(double[] quality) {
         return StdStats.min(quality);
     }
@@ -189,24 +161,18 @@ public class MySubspaceClusterEvaluation {
      * @return The results of applying quality metrics to the clustering result.
      */
     void runMetrics() {
-
         // PCA-assisted MOCCA loses reference to the original dimension, but dimensionality is used in certain metrics.
         // The answer is to set the subspace of the clusters to be the full space.
         ArrayList<Cluster> clusters = MoccaUtils.setToFullsapce(getClusters());
-
         // calculate each quality metric
         for (ClusterQualityMeasure metricObj : m_metricsObjects) {
-
             metricObj.calculateQuality(clusters, m_dataSet, m_trueClusters);
             m_writer.put(metricObj.getName(), metricObj.getOverallValue());
         }
-
     }// method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     ArrayList<Cluster> getClusters() {
-
         // Lazy init the cluster list field
         if (m_clusters == null) {
             m_clusters = new ArrayList<Cluster>();
@@ -218,7 +184,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * PRECONDITION: The field m_clusterer must be set before this method is called.
      * 
@@ -228,61 +193,48 @@ public class MySubspaceClusterEvaluation {
      */
     String getOptionString() {
         StringBuffer optionsText = new StringBuffer("");
-
         // General options
         optionsText.append("\n\nGeneral options:\n\n");
-
         optionsText.append("-sc <subspace clusterer>\n");
         optionsText.append("\tSpecifies the subspace clustering algorithm to\n");
         optionsText.append("\tevaluate. It must be one of the algorithms in \n");
         optionsText.append("\tin the package weka.subspaceClusterer.\n");
-
         optionsText.append("-t <name of input file>\n");
         optionsText.append("\tSpecifies the input arff file containing the\n");
         optionsText.append("\tdata set to cluster.\n");
-
         optionsText.append("-T <name of true cluster file>\n");
         optionsText.append("\tSpecifies the .true file containing the\n");
         optionsText.append("\ttrue clustering.\n");
-
         optionsText.append("-M <cluster quality measures to evaluate>\n");
         optionsText.append("\tSpecifies the subspace cluster quality metrics\n");
         optionsText.append("\tin the weka.clusterquality package to apply.\n");
         optionsText.append("\tSeparate metrics with a colon (':').\n");
         optionsText.append("\t\te.g. -M F1Measure:Entropy:CE\n");
-
         optionsText.append("-c <class index>\n");
         optionsText.append("\tSpecifies the index of the class attribute,\n");
         optionsText.append("\tstarting with 1. If supplied, the class  is\n");
         optionsText.append("\tignored during clustering but is used in a\n");
         optionsText.append("\tclasses to clusters evaluation.\n");
-
         optionsText.append("-timelimit <time limit for clustering>\n");
         optionsText.append("\tSpecifies a time limit in minutes for\n");
         optionsText.append("\tclustering. The value should be a whole number\n");
         optionsText.append("\tgreater than zero.\n");
-
         optionsText.append("\t-path. The directory where the output files are written\n");
-
         optionsText.append("-label <experiment label>\n");
         optionsText.append("\tUnique ID of this experimental run\n");
-
         // Get scheme-specific options
         optionsText.append("\nOptions specific to " + m_clusterer.getClass().getName() + ":\n\n");
         @SuppressWarnings("unchecked")
         Enumeration<Option> enu = ((OptionHandler) m_clusterer).listOptions();
-
         while (enu.hasMoreElements()) {
             Option option = (Option) enu.nextElement();
             optionsText.append(option.synopsis() + '\n');
             optionsText.append(option.description() + "\n");
         }// while
-
         return optionsText.toString();
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     Double getElapsedTime() {
         // Return number of SECONDS.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
@@ -290,7 +242,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * 
      * @param inst
@@ -300,7 +251,6 @@ public class MySubspaceClusterEvaluation {
     Instances removeClassAttribute(Instances inst) {
         Remove af = new Remove();
         Instances retI = null;
-
         try {
             if (inst.classIndex() < 0) {
                 retI = inst;
@@ -317,14 +267,11 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     boolean runClustererWithTimeLimit() {
         // Assume the clusterer compeletes without interruption.
         boolean timeout = false;
-
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Void> future = executor.submit(new Task(m_clusterer, m_preprocessedDataSet));
-
         try {
             future.get(m_timeLimit, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
@@ -335,9 +282,7 @@ public class MySubspaceClusterEvaluation {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         executor.shutdownNow();
-
         // Assume that no timeout means the clusterer ran successfully
         return !timeout;
     }
@@ -345,16 +290,13 @@ public class MySubspaceClusterEvaluation {
     Instances runDataPreprocessor(Instances data) {
         // Normalize values in data to [0,1]
         // Keeps width values in a smaller range, but may overweight outliers
-
         if (data == null) {
             System.err.printf("Must set the data before preprocessing it\n");
             System.exit(-3);
         }
-
         Instances newData = null;
         Normalize normalize = new Normalize();
         // normalize.setIgnoreClass(true);
-
         try {
             normalize.setInputFormat(data);
             newData = Filter.useFilter(data, normalize);
@@ -362,9 +304,7 @@ public class MySubspaceClusterEvaluation {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         return newData;
-
     }// method
 
     void runClusterer() {
@@ -377,7 +317,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * Sets the class using classString.
      * 
@@ -386,7 +325,6 @@ public class MySubspaceClusterEvaluation {
      */
     void setClassAttribute(String classString) throws Exception {
         int theClass = 0;
-
         if (m_dataSet == null) {
             throw new Exception("Attempted to set class without first setting a data set.");
         }
@@ -407,16 +345,13 @@ public class MySubspaceClusterEvaluation {
         if (theClass != -1) {
             if (theClass < 1 || theClass > m_dataSet.numAttributes())
                 throw new Exception("Class attribute is out of range. Did you forget -c last ?");
-
             if (!m_dataSet.attribute(theClass - 1).isNominal())
                 throw new Exception("Class attribute must be nominal!");
-
             m_dataSet.setClassIndex(theClass - 1);
         }
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * Set the clusterer using the class name.
      * 
@@ -438,11 +373,8 @@ public class MySubspaceClusterEvaluation {
      *             If there is a problem opening fileName or loading the data set.
      */
     void setDataSet(String filename) {
-
         DataSource source = null;
-
         MoccaUtils.testFileReadable(filename);
-
         try {
             source = new DataSource(filename);
             m_dataSet = source.getDataSet();
@@ -450,7 +382,6 @@ public class MySubspaceClusterEvaluation {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -459,9 +390,7 @@ public class MySubspaceClusterEvaluation {
      * @param metricClassesString
      */
     void setMetricObjects(String metricClassesString) {
-
         String[] classStrings = metricClassesString.split(":");
-
         for (int i = 0; i < classStrings.length; i++) {
             try {
                 Class<?> c = Class.forName("weka.clusterquality." + classStrings[i]);
@@ -477,7 +406,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * 
      * @param options
@@ -488,14 +416,12 @@ public class MySubspaceClusterEvaluation {
             if (Utils.getFlag('h', m_options)) {
                 throw new Exception("Help requested.");
             }
-
             String scName = Utils.getOption("sc", m_options);
             if (scName.length() == 0) {
                 System.err.println("No subspace clutsterin algorithm specified. Specify an algorithm with -sc.");
             } else {
                 this.setClustererObject(scName);
             }
-
             String dataSetFileName = Utils.getOption('t', m_options);
             if (dataSetFileName.length() == 0) {
                 throw new Exception("No input file, use -t");
@@ -503,14 +429,12 @@ public class MySubspaceClusterEvaluation {
                 setDataSet(dataSetFileName);
                 m_writer.setDataName(dataSetFileName);
             }
-
             String measureOptionString = Utils.getOption('M', m_options);
             if (measureOptionString.length() == 0) {
                 System.err.println("No metrics set. Use -M to specify quality metrics.");
             } else {
                 setMetricObjects(measureOptionString);
             }
-
             String trueFileName = Utils.getOption('T', m_options);
             if (trueFileName.length() == 0) {
                 // System.err.println("No true cluster file set. Some metrics "
@@ -519,34 +443,27 @@ public class MySubspaceClusterEvaluation {
             } else {
                 setTrueClusters(trueFileName);
             }
-
             String classString = Utils.getOption('c', m_options);
             setClassAttribute(classString);
-
             String timeLimit = Utils.getOption("timelimit", m_options);
             if (timeLimit.length() > 0) {
                 setTimeLimit(timeLimit);
             }
-
             String experimentName = Utils.getOption("label", m_options);
             if (experimentName.length() == 0) {
                 throw new Exception("No experiment label, use -label");
             }
             m_writer.setKey(experimentName);
-
             // If it is not specified, leave it as an empty string.
             m_writer.setPath(Utils.getOption("path", m_options));
-
         } catch (Exception e) {
             throw new Exception('\n' + e.getMessage() + getOptionString());
         }
-
         // Set options for the clusterer
         ((OptionHandler) m_clusterer).setOptions(m_options);
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * Set the time limit for clustering. The time limit is only modified if t is greater than zero.
      * 
@@ -561,7 +478,6 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /**
      * Sets the true clusters using the file referred to by fileName.
      * 
@@ -569,9 +485,7 @@ public class MySubspaceClusterEvaluation {
      * @throws Exception
      */
     void setTrueClusters(String filename) throws Exception {
-
         MoccaUtils.testFileReadable(filename);
-
         File trueClusterFile = new File(filename);
         m_trueClusters = SubspaceClusterTools.getClusterList(trueClusterFile, getNumDims());
     }
@@ -581,15 +495,12 @@ public class MySubspaceClusterEvaluation {
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     void startTimer() {
         m_startTime = System.nanoTime();
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     void stopTimer() {
         m_stoptTime = System.nanoTime();
     }
-
 }// class

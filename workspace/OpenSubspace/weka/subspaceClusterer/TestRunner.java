@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunner {
-
     static String dataSetExt = ".arff";
     static List<String> dataSets = new ArrayList<String>();
     static boolean dryrun = false;
@@ -19,14 +18,10 @@ public class TestRunner {
     static String trueSetExt = ".true";
 
     static void dispatch(List<String> commands) throws IOException, InterruptedException {
-
         // Keep the system busy, but don't overwhelm it.
         if (runningProcs.size() < numProcessors) {
             runningProcs.add(forkProcess(commands));
-        }
-
-        else {
-
+        } else {
             /*
              * TODO: Use a thread pool to manage each forked process, so that as soon as a process complted, the thread
              * is returned to the pool ready to be used. In the meanwhile, assume that the oldest process will be the
@@ -36,7 +31,6 @@ public class TestRunner {
             oldest.waitFor();
             runningProcs.remove(oldest);
             runningProcs.add(forkProcess(commands));
-
         }// else
     }// method
 
@@ -45,43 +39,31 @@ public class TestRunner {
             procBuilder = new ProcessBuilder();
             procBuilder.inheritIO();
         }
-
         procBuilder.command(commands);
         Process proc = procBuilder.start();
         return proc;
-
     }// method
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
         parseArgs(args);
-
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
-
         // Leave one processor free because I need to be able to use my laptop
         numProcessors--;
-
         setMetrics();
-
         // WINDOWS - Set platform dependent state
         setForWindows();
-
         // LINUX LAB - Set platform dependent state
         // setForLinuxLab();
-
         // Select the data sets to use.
         // TODO: Maybe I should just use every .arff in the data directory?. Yes. Do that.
         setDataSets();
-
         // Run tests
         run();
-
         // Pull all the results into one file
         if (!dryrun) {
             Consolidator.consolidate(outputPath, ResultsWriter.getSeparatedPath(outputPath) + "results.csv");
         }
-
         // Avoid the error
         // JDWP exit error AGENT_ERROR_NO_JNI_ENV
         System.exit(0);
@@ -97,10 +79,8 @@ public class TestRunner {
         for (String element : line) {
             System.out.printf("%s ", element);
         }
-
         // Move to the next line.
         System.out.printf("\n");
-
     }
 
     static String quote(String string) {
@@ -111,10 +91,8 @@ public class TestRunner {
     static void run() throws IOException, InterruptedException {
         int experimentLabel;
         List<List<String>> argLines;
-
         // Do not modify the arg list because it is used every time through the data set filename loop
         List<String> args;
-
         argLines = MoccaExperimentGenerator.getArgLines();
         printNumRuns(argLines);
         experimentLabel = 1;
@@ -123,13 +101,9 @@ public class TestRunner {
             // Remvoed this check when I externalized the file extensions.
             // I did that because I started working with .true files as well as .arff files.
             // if (Files.isReadable(datafile)) {
-
             String datafileName = datafile.toString();
-
             for (List<String> orginalArgLine : argLines) {
-
                 args = new ArrayList<String>(orginalArgLine);
-
                 // Build final command line by prepending/appending as necessary.
                 // PREPEND
                 args.add(0, "weka.subspaceClusterer.MySubspaceClusterEvaluation");
@@ -149,11 +123,9 @@ public class TestRunner {
                 args.add(datafileName + dataSetExt);
                 args.add("-T");
                 args.add(datafileName + trueSetExt);
-
                 if (dryrun) {
                     /***** DEBUG *****/
                     printCommandLine(args);
-
                 } else {
                     // Schedule the experiment
                     dispatch(args);
@@ -161,22 +133,17 @@ public class TestRunner {
                 // Set the ID for the next experiment to run
                 experimentLabel++;
             }// for
-
             // }// if
             //
             // else {
             // System.err.printf("File %s is not readable\n", datafile);
             // }// else
-
         }// for
-
         if (dryrun) {
             printNumRuns(argLines);
         }
-
         // For for all experiments to finish before exiting method.
         waitForAll();
-
     }// method
 
     public static void printNumRuns(List<List<String>> argLines) {
@@ -184,12 +151,9 @@ public class TestRunner {
     }
 
     public static void setDataSets() {
-
         dataSets.add("lymphoma");
         dataSets.add("diabetes");
-
         // dataSets.add("v.arff");
-
         // Datasets to cluster
         // dataSets.add("breast");
         // dataSets.add("glass");
@@ -197,7 +161,6 @@ public class TestRunner {
         // dataSets.add("N30.arff");
         // dataSets.add("S1500.arff");
         // dataSets.add("sonar");
-
         // Pendigits takes a really long time. Don't use it in normal runs.
         // dataSets.add("pendigits.arff");
     }
@@ -226,5 +189,4 @@ public class TestRunner {
             proc.waitFor();
         }
     }
-
 }// class

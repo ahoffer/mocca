@@ -5,9 +5,7 @@ import weka.core.Instances;
 import Jama.Matrix;
 
 public class MatrixUtils {
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Mean-center the columns of a matrix. This data must be mean-centered for proper PCA
      */
@@ -27,20 +25,15 @@ public class MatrixUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Mean-center the columns of a matrix if the mean of each attribute/dim is not known.
      */
     public static Matrix center(Matrix input) {
-
         return center(input, columnMeans(input));
-
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static Matrix columnMeans(Matrix input) {
-
         int cols = input.getColumnDimension();
         int rows = input.getRowDimension();
         Matrix rowVector = new Matrix(1, cols);
@@ -56,7 +49,6 @@ public class MatrixUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Given an (m x n) matrix, return the (n x n) covariance matrix
      */
@@ -67,13 +59,11 @@ public class MatrixUtils {
         int cols = input.getColumnDimension();
         double inputArray[][] = input.getArrayCopy();
         double outputArray[][] = new double[cols][cols];
-
         // Compute the covariance matrix
         double covar_ij;
         double[] colVec1, colVec2;
         for (int i = 0; i < cols; ++i) {
             for (int j = i; j < cols; ++j) {
-
                 colVec1 = copyColumn(inputArray, i);
                 colVec2 = copyColumn(inputArray, j);
                 covar_ij = dotProduct(colVec1, colVec2) / (rows - 1);
@@ -81,14 +71,11 @@ public class MatrixUtils {
                 outputArray[j][i] = covar_ij;
             }// end for
         }// end for
-
         Matrix covMatrix = new Matrix(outputArray);
-
         return covMatrix;
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Return the dot product of two column vectors.
      */
@@ -99,31 +86,25 @@ public class MatrixUtils {
         if (rows1 != rows2) {
             System.err.println("Dimension error in dotProduct.");
         }// end if
-
         for (int i = 0; i < rows1; ++i) {
             sum += colVec1[i] * colVec2[i];
         }// end for
-
         return sum;
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static Instances toInstances(Instances template, Matrix values) {
         double array[][] = values.getArray();
         weka.core.Instances output = new Instances(template, template.numInstances());
-
         for (int i = 0; i < values.getRowDimension(); ++i) {
             for (int j = 0; j < values.getColumnDimension(); ++j) {
                 output.instance(i).setValue(j, array[i][j]);
             }// end for
         }// end for
-
         return output;
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Convert the data in an Instances object to a Matrix object.
      */
@@ -141,18 +122,15 @@ public class MatrixUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Return a sub-matrix with the given rows
      */
     public static Matrix getRowsByIndex(Matrix input, int[] indexes) {
         int cols = input.getColumnDimension();
         return input.getMatrix(indexes, 0, cols - 1);
-
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     // Return the largest value from each column
     public static Matrix max(Matrix input) {
         int cols = input.getColumnDimension();
@@ -172,7 +150,6 @@ public class MatrixUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     /*
      * Find the smallest value from each column of a (m x n) matrix. ----------- Return a (1 x n) vector.
      */
@@ -194,17 +171,14 @@ public class MatrixUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-
     public static Matrix fliplr(Matrix input) {
         // For some reason, Matrix.setMatrix call fails. Code up my own flip
         // left-right
         int cols, rows, colIdx;
         double value;
-
         cols = input.getColumnDimension();
         rows = input.getRowDimension();
         Matrix flipColumns = new Matrix(rows, cols);
-
         for (int j = 0; j < cols; ++j) {
             colIdx = cols - 1 - j;
             for (int i = 0; i < rows; ++i) {
@@ -231,13 +205,9 @@ public class MatrixUtils {
         }
         int colsA = A.getColumnDimension();
         int colsB = B.getColumnDimension();
-
         Matrix mat = new Matrix(rows, colsA + colsB);
-
         mat.setMatrix(0, rows - 1, 0, colsA - 1, A);
         mat.setMatrix(0, rows - 1, colsA, colsA + colsB - 1, B);
         return mat;
     }// end method
-
 }// end class
-
