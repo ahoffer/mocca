@@ -9,46 +9,46 @@ import java.util.HashSet;
 import java.util.List;
 
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
 
 public class MoccaUtils {
     // Pick a small values that means zero.
     public static double epsilon = 1E-8;
 
-    public static boolean greaterThanZero(double d) {
-        return d > epsilon;
+    public static void backspace(StringBuffer sb) {
+        sb.deleteCharAt(sb.length() - 1);
     }
+
+    public static int countTrueValues(boolean[] input) {
+        int count = 0;
+        for (boolean b : input) {
+            if (b) {
+                count++;
+            }// end if
+        }// end for
+        return count;
+    }// end method
 
     public static boolean equalToOne(double d) {
         return Math.abs(d - 1) < epsilon;
     }
 
-    public static ArrayList<Cluster> setToFullsapce(List<Cluster> clusters) {
-        // Return a list of cluster objects where all the subspaces have been set to the full space.
-        // These clusters are only useful when evaluating the CE or RNIA metrics.
-        // Copy the objects so the original clusters are not mutated.
-        ArrayList<Cluster> newClusters = new ArrayList<Cluster>();
-        Cluster temp;
-        for (Cluster each : clusters) {
-            temp = new Cluster(each.m_subspace.clone(), new ArrayList<Integer>(each.m_objects));
-            for (int i = 0; i < temp.m_subspace.length; ++i) {
-                temp.m_subspace[i] = true;
-            }// for
-            newClusters.add(temp);
-        }// for
-        return newClusters;
-    }// method
+    public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
+        int length = input.length;
+        boolean result[] = new boolean[length];
+        for (int i = 0; i < length; ++i) {
+            result[i] = (input[i] >= value) ? true : false;
+        }
+        return result;
+    }
+
+    public static boolean greaterThanZero(double d) {
+        return d > epsilon;
+    }
 
     public static boolean hasClassAttribute(Instances data) {
         return data.classIndex() > 0;
-    }
-
-    public static int numDims(Instances data) {
-        int temp = data.numAttributes();
-        return hasClassAttribute(data) ? temp - 1 : temp;
-    }
-
-    public static void backspace(StringBuffer sb) {
-        sb.deleteCharAt(sb.length() - 1);
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -144,59 +144,14 @@ public class MoccaUtils {
         return count;
     }// end method
 
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    /*
-     * Convert a list of integers to an array of primitive integers.
-     */
-    public static int[] toArray(List<Integer> input) {
-        int size = input.size();
-        int array[] = new int[size];
-        for (int i = 0; i < size; ++i) {
-            array[i] = input.get(i).intValue();
-        }// end for
-        return array;
-    }// end method
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    /*
-     * Convert a list of Strings to an array of Strings.
-     */
-    public static String[] toStringArray(List<String> input) {
-        int size = input.size();
-        String array[] = new String[size];
-        for (int i = 0; i < size; ++i) {
-            array[i] = input.get(i);
-        }// end for
-        return array;
-    }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    public static ArrayList<Integer> toList(int input[]) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        for (int value : input) {
-            list.add(value);
+    public static boolean[] lessThanOrEqualTo(double[] input, double value) {
+        int length = input.length;
+        boolean result[] = new boolean[length];
+        for (int i = 0; i < length; ++i) {
+            result[i] = (input[i] <= value) ? true : false;
         }
-        return list;
+        return result;
     }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    // Return the SMALLEST value from each column in the input matrix
-    public static double[] min(double[][] input) {
-        int rows = input.length;
-        int cols = input[0].length;
-        double[] minimums = new double[cols];
-        // Not memory alignment friendly. :-(
-        double smallest, value;
-        for (int j = 0; j < cols; ++j) {
-            smallest = Double.POSITIVE_INFINITY;
-            for (int i = 0; i < rows; ++i) {
-                value = input[i][j];
-                smallest = Math.min(smallest, value);
-            }// end for
-            minimums[j] = smallest;
-        }// end for
-        return minimums;
-    }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     // Return the LARGEST value from each column in the input matrix
@@ -218,6 +173,46 @@ public class MoccaUtils {
     }// end method
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+    // Return the SMALLEST value from each column in the input matrix
+    public static double[] min(double[][] input) {
+        int rows = input.length;
+        int cols = input[0].length;
+        double[] minimums = new double[cols];
+        // Not memory alignment friendly. :-(
+        double smallest, value;
+        for (int j = 0; j < cols; ++j) {
+            smallest = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < rows; ++i) {
+                value = input[i][j];
+                smallest = Math.min(smallest, value);
+            }// end for
+            minimums[j] = smallest;
+        }// end for
+        return minimums;
+    }// end method
+
+    public static int numDims(Instances data) {
+        int temp = data.numAttributes();
+        return hasClassAttribute(data) ? temp - 1 : temp;
+    }
+
+    public static ArrayList<Cluster> setToFullsapce(List<Cluster> clusters) {
+        // Return a list of cluster objects where all the subspaces have been set to the full space.
+        // These clusters are only useful when evaluating the CE or RNIA metrics.
+        // Copy the objects so the original clusters are not mutated.
+        ArrayList<Cluster> newClusters = new ArrayList<Cluster>();
+        Cluster temp;
+        for (Cluster each : clusters) {
+            temp = new Cluster(each.m_subspace.clone(), new ArrayList<Integer>(each.m_objects));
+            for (int i = 0; i < temp.m_subspace.length; ++i) {
+                temp.m_subspace[i] = true;
+            }// for
+            newClusters.add(temp);
+        }// for
+        return newClusters;
+    }// method
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public static double[] subtract(double[] minuend, double[] subtrahend) {
         /*
          * PRECONDITIONS: minuend and subtrahend are same length.
@@ -232,38 +227,69 @@ public class MoccaUtils {
         return difference;
     }// method
 
-    public static int countTrueValues(boolean[] input) {
-        int count = 0;
-        for (boolean b : input) {
-            if (b) {
-                count++;
-            }// end if
-        }// end for
-        return count;
-    }// end method
-
-    public static boolean[] lessThanOrEqualTo(double[] input, double value) {
-        int length = input.length;
-        boolean result[] = new boolean[length];
-        for (int i = 0; i < length; ++i) {
-            result[i] = (input[i] <= value) ? true : false;
-        }
-        return result;
-    }
-
-    public static boolean[] greaterThanOrEqualTo(double[] input, double value) {
-        int length = input.length;
-        boolean result[] = new boolean[length];
-        for (int i = 0; i < length; ++i) {
-            result[i] = (input[i] >= value) ? true : false;
-        }
-        return result;
-    }
-
     public static void testFileReadable(String filename) {
         if (!Files.isReadable(Paths.get(filename))) {
             System.err.printf("File %s is not readable.\n", filename);
             System.exit(-5);
         }
     }
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+    /*
+     * Convert a list of integers to an array of primitive integers.
+     */
+    public static int[] toArray(List<Integer> input) {
+        int size = input.size();
+        int array[] = new int[size];
+        for (int i = 0; i < size; ++i) {
+            array[i] = input.get(i).intValue();
+        }// end for
+        return array;
+    }// end method
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+    public static ArrayList<Integer> toList(int input[]) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int value : input) {
+            list.add(value);
+        }
+        return list;
+    }
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+    /*
+     * Convert a list of Strings to an array of Strings.
+     */
+    public static String[] toStringArray(List<String> input) {
+        int size = input.size();
+        String array[] = new String[size];
+        for (int i = 0; i < size; ++i) {
+            array[i] = input.get(i);
+        }// end for
+        return array;
+    }
+
+    /**
+     * 
+     * @param inst
+     *            The set of instances to remove the class label from.
+     * @return A set of instances sans class label.
+     */
+    public static Instances removeClassAttribute(Instances inst) {
+        Remove af = new Remove();
+        Instances retI = null;
+        try {
+            if (inst.classIndex() < 0) {
+                retI = inst;
+            } else {
+                af.setAttributeIndices("" + (inst.classIndex() + 1));
+                af.setInvertSelection(false);
+                af.setInputFormat(inst);
+                retI = Filter.useFilter(inst, af);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return retI;
+    }// method
 }// end class

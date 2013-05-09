@@ -17,6 +17,10 @@ import weka.core.Utils;
 import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
+    enum Flavor {
+        chocolate, vanilla
+    }
+
     private static final long serialVersionUID = 5624336775621682596L;
 
     public static void main(String[] argv) throws IOException {
@@ -27,19 +31,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
      * In general, do not set default values. Values should be set from command line. If there is an error in the
      * command line settings, default values hide the error.
      */
-    private double alpha;
-    private double beta;
     List<Cluster> clusters = new ArrayList<Cluster>();
-    private double clusterSimilarityThreshold;
-    Instances dataAsInstances;
-    private double epsilon;
-    private double gamma; // Gamma zero means "do not use PCA"
-    private int maxiter;
-    private int minDiscrimSetSize = 2; // Algorithm needs at least two discriminating points.
-    int numDims;
-    int numInstances;
-    private double subspaceSimilarityThreshold;
-    private double width;
+    double clusterSimilarityThreshold, subspaceSimilarityThreshold, width, epsilon, alpha, beta;
+    Flavor flavor;
+    Instances instances;
+    int maxiter, numDims, numInstances, minDiscrimSetSize;
 
     private void add(MoccaCluster newCluster) {
         double subspaceSimilarity, clusterSimilarity;
@@ -89,9 +85,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     @Override
     public void buildSubspaceClusterer(Instances data) throws Exception {
-        // NOTE: The class column has already been removed from the instances
-        // Set instance variables
-        this.dataAsInstances = data;
+        this.instances = MoccaUtils.removeClassAttribute(data);
+        flavor = Flavor.vanilla; // Default uses no PCA
+        minDiscrimSetSize = 2; // Algorithm needs at least two discriminating points.
         numDims = MoccaUtils.numDims(data);
         numInstances = data.numInstances();
         // Do it!
@@ -106,10 +102,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         setSubspaceClustering(clusters);
         // Print results
         toString();
-    }
-
-    public boolean gammaIs100Percent() {
-        return MoccaUtils.equalToOne(getGamma());
     }
 
     public double getAlpha() {
@@ -189,13 +181,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return numTrials;
     }
 
-    public int getEstimatedRotationSetSize() {
-        return (int) Math.round(gamma * numInstances);
-    }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    public double getGamma() {
-        return gamma;
+    public Flavor getFlavor() {
+        return flavor;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -241,8 +228,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("" + width);
         options.add("-maxiter");
         options.add("" + maxiter);
-        options.add("-g");
-        options.add("" + gamma);
+        options.add("-flavor");
+        options.add("" + flavor);
         options.add("-mindiscrim");
         options.add("" + getMinDiscrimSetSize());
         return MoccaUtils.toStringArray(options);
@@ -252,16 +239,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     public String getParameterString() {
         return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace similarity threshold="
                 + subspaceSimilarityThreshold + "; cluster similarity threshold=" + clusterSimilarityThreshold
-                + "; width=" + width + "; gamma=" + gamma + "; maxiter=" + maxiter;
-    }
-
-    // TODO: I think I will be able to delete this method soon.
-    public int getRotationSetSize() {
-        /*
-         * The rotation set size must equal to or greater than the discriminating set size because the discriminating
-         * set is sampled (without replacement) from the rotation set.
-         */
-        return Math.min(getMinDiscrimSetSize(), getEstimatedRotationSetSize());
+                + "; width=" + width + "; falvor=" + flavor + "; maxiter=" + maxiter;
     }
 
     public double getSubspaceSimilarityThreshold() {
@@ -298,64 +276,46 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return vector.elements();
     }
 
+    public void printHeartBeat(int trialNum) {
+        // DEBUG PRINT
+        if (trialNum % 10000 == 0 && trialNum > 0) {
+            System.out.println(String.format("%,d", trialNum));
+        }
+    }
+
     void run() throws Exception {
         MoccaSubspace subspace;
         Shuffler shuffler;
-        Matrix pointsToCluster, originalDataAsMatrix;
         int numCongregatingDims;
         ArrayList<Integer> pointIndexes;
-        boolean dataHasBeenRotated;
         Pca pca = null;
         shuffler = new Shuffler(numInstances, 1);
-
-        originalDataAsMatrix = MatrixUtils.toMatrix(dataAsInstances);
-        /*
-         * The original data is only modified if PCA-assist is used. There is no need to create a copy.
-         */
-        pointsToCluster = originalDataAsMatrix;
-        /*
-         * If gamma is 100%, PCA and subsequent rotation of the data need only be performed once because the results of
-         * the PCA will not change between trials.
-         */
-        dataHasBeenRotated = false;
+        Matrix objects = MatrixUtils.toMatrix(instances);
+        Matrix objectsToCluster = objects.copy();
         // LOOP
         for (int k = 0; k < getNumTrials(); k++) {
-            // DEBUG PRINT
-            if (k % 10000 == 0 && k > 0) {
-                System.out.println(String.format("%,d", k));
+            printHeartBeat(k);
+            // Randomly select discriminating set
+            int samples[] = shuffler.next(getDiscrimSetSize());
+            Matrix sampleObjects = MatrixUtils.getRowsByIndex(objects, samples);
+            if (flavor == Flavor.chocolate) {
+                // Align data to least significant principle components
+                // ********************DEBUG************************
+                System.out.println("Original Points");
+                objects.print(8, 4);
+                pca = new Pca(sampleObjects);
+                objectsToCluster = pca.rotate(objects);
+                System.out.println("Rotated Points");
+                objectsToCluster.print(8, 4);
             }
-            if (usePca()) {
-                if (gammaIs100Percent()) {
-                    if (!dataHasBeenRotated) {
-                        pca = new Pca(originalDataAsMatrix);
-                        pointsToCluster = pca.rotate(originalDataAsMatrix);
-                        dataHasBeenRotated = true;
-                    }
-                } else {
-                    // Randomly select rotation set based on gamma
-                    int rotationIndexes[] = shuffler.next(getRotationSetSize());
-                    // Get rotation objects
-                    Matrix roationObjs = MatrixUtils.getRowsByIndex(originalDataAsMatrix, rotationIndexes);
-                    // Find the principal components and rotate the data
-                    pca = new Pca(roationObjs);
-                    pointsToCluster = pca.rotate(originalDataAsMatrix);
-                }
-                // DEBUG
-                // System.out.println("Original Points");
-                // originalDataAsMatrix.print(8, 4);
-                // System.out.println("Rotated Points");
-                // pointsToCluster.print(8, 4);
-            }// end if
-             // Randomly select discriminating set
-            int discrimSetIndexes[] = shuffler.next(getDiscrimSetSize());
-            Matrix discrimPoints = MatrixUtils.getRowsByIndex(pointsToCluster, discrimSetIndexes);
+            Matrix discrimObjects = MatrixUtils.getRowsByIndex(objectsToCluster, samples);
             // Determine the subspace where the points congregate, if any
-            subspace = new MoccaSubspace(discrimPoints.getArray(), width, numDims);
-            subspace.eval();
+            subspace = new MoccaSubspace(discrimObjects.getArray(), width, numDims);
+            subspace.computeCongregratingSubspace();
             numCongregatingDims = subspace.getNumCongregatingDims();
             if (numCongregatingDims > 0) {
                 // Determine which points are in the cluster
-                pointIndexes = getCongregatingObjects(pointsToCluster, subspace);
+                pointIndexes = getCongregatingObjects(objectsToCluster, subspace);
                 // Create cluster object.
                 MoccaCluster newCluster = new MoccaCluster(subspace.getSubspace(), pointIndexes, numCongregatingDims,
                         beta);
@@ -385,10 +345,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             this.epsilon = epsilon;
     }
 
-    public void setGamma(double g) {
-        if (g >= 0.0 && g <= 1.0) {
-            gamma = g;
-        }
+    public void setFlavor(Flavor flavor) {
+        this.flavor = flavor;
     }
 
     public void setMaxiter(int d) {
@@ -425,9 +383,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         if (optionString.length() != 0) {
             setWidth(Double.parseDouble(optionString));
         }
-        optionString = Utils.getOption("g", options);
+        optionString = Utils.getOption("flavor", options);
         if (optionString.length() != 0) {
-            setGamma(Double.parseDouble(optionString));
+            setFlavor(Flavor.valueOf(optionString));
         }
         optionString = Utils.getOption("maxiter", options);
         if (optionString.length() != 0) {
@@ -452,10 +410,5 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     public void setWidth(double w) {
         if (w > 0.0)
             this.width = w;
-    }
-
-    private boolean usePca() {
-        // If gamma is greater than zero, use PCA.
-        return gamma > 0;
     }
 } // end class

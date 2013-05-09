@@ -16,7 +16,7 @@ public class MoccaSubspace {
         upper = new double[numDimsDiscrimObjs];
     }
 
-    public void eval() {
+    public void computeCongregratingSubspace() {
         double sheath = 0;
         /*
          * Create max and min values in each dimension from the discriminating set. Find the subspace and number of

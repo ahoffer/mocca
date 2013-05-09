@@ -1,1 +1,8 @@
 1368028000455	Delete element
+1368056540352	Extract method 'printHeartBeat'
+1368056870961	Rename method 'eval'
+1368058092658	Delete element
+1368058134299	Rename field 'dataAsInstances'
+1368059100187	Delete element
+1368059104057	Delete element
+1368059413465	Encapsulate field 'flavor'

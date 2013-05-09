@@ -21,7 +21,6 @@ import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
-import weka.filters.unsupervised.attribute.Remove;
 
 /*
  * OPTIONS
@@ -125,7 +124,7 @@ public class MySubspaceClusterEvaluation {
         // Out.writeTrueFile("Lymphonma.true", m_dataSet);
         // Preprocess the data
         // Remove class attributes and scale data
-        Instances data = removeClassAttribute(m_dataSet);
+        Instances data = MoccaUtils.removeClassAttribute(m_dataSet);
         m_preprocessedDataSet = runDataPreprocessor(data);
         // Generate clusters and time how long it takes
         startTimer();
@@ -239,31 +238,6 @@ public class MySubspaceClusterEvaluation {
         // Return number of SECONDS.
         // PRECONDITIONS. The methods statrt() and start must have been called at least once.
         return Double.valueOf(Math.round((m_stoptTime - m_startTime) / 1e9));
-    }
-
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    /**
-     * 
-     * @param inst
-     *            The set of instances to remove the class label from.
-     * @return A set of instances sans class label.
-     */
-    Instances removeClassAttribute(Instances inst) {
-        Remove af = new Remove();
-        Instances retI = null;
-        try {
-            if (inst.classIndex() < 0) {
-                retI = inst;
-            } else {
-                af.setAttributeIndices("" + (inst.classIndex() + 1));
-                af.setInvertSelection(false);
-                af.setInputFormat(inst);
-                retI = Filter.useFilter(inst, af);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return retI;
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/

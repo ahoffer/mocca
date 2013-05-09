@@ -41,8 +41,8 @@ public class Pca {
                 numNonZeroEigenVals++;
             }// end if
         }// end for
-        // Verify number of non zero eigenvalues is the same as the rank of
-        // the covariance matrix
+         // Verify number of non zero eigenvalues is the same as the rank of
+         // the covariance matrix
         if (numNonZeroEigenVals != covRank) {
             System.err.printf("Contrainst violation: nNumber of non-zeroSOMETHING WHACKY IN PCA");
         }
@@ -72,16 +72,7 @@ public class Pca {
         return this;
     }// end method
 
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public Matrix rotate(Matrix input) {
-        /*
-         * Let D be the data matrix and T (transform) be the principle components.
-         */
-        // 1) D * T
-        // By default, pcs are ordered from least to mostsignificant.
         return input.times(principleComponents);
-        // 2) D * fliplr(T)
-        // Re-order the pcs so most significant pc is the first column.
-        // return input.times(MatrixUtils.fliplr(getRotationMatrix()));
     }// end method
 }// end class
