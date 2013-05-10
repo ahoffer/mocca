@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="i9.data.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Instance"/>
 <fullyQualifiedTypeName name="weka.core.Matrix"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.PcaInterface"/>
@@ -60,4 +59,5 @@
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.TrueFileUtils"/>
 </qualifiedTypeNameHistroy>

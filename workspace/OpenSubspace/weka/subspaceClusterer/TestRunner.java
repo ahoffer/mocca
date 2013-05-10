@@ -133,11 +133,11 @@ public class TestRunner {
                 // Set the ID for the next experiment to run
                 experimentLabel++;
             }// for
-            // }// if
-            //
-            // else {
-            // System.err.printf("File %s is not readable\n", datafile);
-            // }// else
+             // }// if
+             //
+             // else {
+             // System.err.printf("File %s is not readable\n", datafile);
+             // }// else
         }// for
         if (dryrun) {
             printNumRuns(argLines);
@@ -147,11 +147,11 @@ public class TestRunner {
     }// method
 
     public static void printNumRuns(List<List<String>> argLines) {
-        System.out.printf("Number of experiments =%,d\n", argLines.size() * dataSets.size());
+        System.out.printf("Number of runs=%,d\n", argLines.size() * dataSets.size());
     }
 
     public static void setDataSets() {
-        dataSets.add("lymphoma");
+        // dataSets.add("lymphoma");
         dataSets.add("diabetes");
         // dataSets.add("v.arff");
         // Datasets to cluster
@@ -173,7 +173,7 @@ public class TestRunner {
     }
 
     public static void setForWindows() {
-        outputPath = ResultsWriter.getSeparatedPath("C:\\results_may2");
+        outputPath = ResultsWriter.getSeparatedPath("C:\\results_may9");
         dataPath = ResultsWriter.getSeparatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = ".;\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*";
         javaExecutable = "java.exe";

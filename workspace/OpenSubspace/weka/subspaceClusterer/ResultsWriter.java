@@ -16,7 +16,7 @@ public class ResultsWriter {
     static String clustererExpKey = "experiment_ID";
     static String clustererNameKey = "algorithm";
     static String dataNameKey = "dataset";
-    static String extension = ".csv";
+    static String fileExtension = ".csv";
     static int keyFieldWidth = 6;
     static char separator = ',';
     static char spacer = ',';
@@ -29,19 +29,27 @@ public class ResultsWriter {
     }
 
     /* The name of a measure or parameter (key) and either the measurement or the value of the parameter */
-    TreeMap<String, String> output = new TreeMap<String, String>();
+    TreeMap<String, String> resultsMap = new TreeMap<String, String>();
     String path;
 
     File getFile(String name) {
-        return new File(getPath() + name + "_" + padZeroesLeft(getKey(), keyFieldWidth) + extension);
+        return new File(getPath() + name + "_" + padZeroesLeft(getKey(), keyFieldWidth) + fileExtension);
     }
 
     String getKey() {
-        return output.get(clustererExpKey);
+        return resultsMap.get(clustererExpKey);
     }
 
-    CsvListWriter getListWriter(String name) throws IOException {
-        FileWriter fw = new FileWriter(getFile(name));
+    CsvListWriter getListWriter(String name) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(getFile(name));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.err.printf("\nCould not write to file %s. Is the file open in another program?\n", name);
+            System.exit(-2);
+        }
         return new CsvListWriter(fw, new CsvPreference.Builder('"', separator, "\n").build());
     }
 
@@ -107,17 +115,17 @@ public class ResultsWriter {
     }
 
     public void put(String name, Double value) {
-        output.put(name, ntoa(value));
+        resultsMap.put(name, ntoa(value));
     }
 
     public void setClusterer(SubspaceClusterer clusterer) {
         // Set name of algorithm/subspace clusterer
-        output.put(clustererNameKey, clusterer.getName());
+        resultsMap.put(clustererNameKey, clusterer.getName());
         StringTokenizer st = new StringTokenizer(clusterer.getParameterString(), ";");
         while (st.hasMoreTokens()) {
             // paraters in form "param_name=param_value"
             String[] strings = st.nextToken().split("=");
-            output.put(strings[0], strings[1]);
+            resultsMap.put(strings[0], strings[1]);
         }
         if (clusterer instanceof Mocca) {
             Mocca mocca = (Mocca) clusterer;
@@ -131,11 +139,11 @@ public class ResultsWriter {
     }
 
     public void setDataName(String name) {
-        output.put(dataNameKey, name);
+        resultsMap.put(dataNameKey, name);
     }
 
     public void setKey(String key) {
-        output.put(clustererExpKey, key);
+        resultsMap.put(clustererExpKey, key);
     }
 
     public void setPath(String path) {
@@ -175,17 +183,15 @@ public class ResultsWriter {
             map = getRecord((MoccaCluster) each);
             writer.write(map.values().toArray(new String[0]));
         }
-        // Write the descriptive statistics
-        writeDescriptiveStats(clusters);
         // Shutdown IO
         writer.close();
     }
 
     public void writeResults() throws Exception {
         CsvListWriter writer = getListWriter("RSLT");
-        String[] header = output.navigableKeySet().toArray(new String[0]);
+        String[] header = resultsMap.navigableKeySet().toArray(new String[0]);
         writer.writeHeader(header);
-        writer.write(output.values().toArray(new String[0]));
+        writer.write(resultsMap.values().toArray(new String[0]));
         writer.close();
     }
 
@@ -194,7 +200,7 @@ public class ResultsWriter {
         put(name, (double) value);
     }// method
 
-    void writeDescriptiveStats(List<Cluster> clusters) {
+    void recordDescriptiveStats(List<Cluster> clusters) {
         int size = clusters.size();
         // Computer and write statistics
         put("num_clusters", size);

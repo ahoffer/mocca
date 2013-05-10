@@ -17,28 +17,26 @@ import weka.core.Utils;
 import Jama.Matrix;
 
 public class Mocca extends SubspaceClusterer implements OptionHandler {
-    enum Flavor {
-        chocolate, vanilla
-    }
-
     private static final long serialVersionUID = 5624336775621682596L;
 
     public static void main(String[] argv) throws IOException {
         runSubspaceClusterer(new Mocca(), argv);
     }
 
-    /*
-     * In general, do not set default values. Values should be set from command line. If there is an error in the
-     * command line settings, default values hide the error.
-     */
     List<Cluster> clusters = new ArrayList<Cluster>();
     double clusterSimilarityThreshold, subspaceSimilarityThreshold, width, epsilon, alpha, beta;
-    Flavor flavor;
+    double qualityThreshold = 0; // Keep all clusters by default.
     Instances instances;
-    int maxiter, numDims, numInstances, minDiscrimSetSize;
+    int maxiter, numDims, numInstances;
+    int minDiscrimSetSize = 2;
+    boolean usePca = false;
 
     private void add(MoccaCluster newCluster) {
         double subspaceSimilarity, clusterSimilarity;
+        if (newCluster.getQuality() < getQualityThreshold()) {
+            // Do not keep cluster
+            return;
+        }
         /*
          * Modifying a list invalidates any iterator objects created from it. Do not remove objects while iterating over
          * the list. Add them to a "remove items list" and remove them before exiting.
@@ -86,8 +84,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     @Override
     public void buildSubspaceClusterer(Instances data) throws Exception {
         this.instances = MoccaUtils.removeClassAttribute(data);
-        flavor = Flavor.vanilla; // Default uses no PCA
-        minDiscrimSetSize = 2; // Algorithm needs at least two discriminating points.
         numDims = MoccaUtils.numDims(data);
         numInstances = data.numInstances();
         // Do it!
@@ -181,10 +177,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         return numTrials;
     }
 
-    public Flavor getFlavor() {
-        return flavor;
-    }
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public int getMaxiter() {
         return maxiter;
@@ -228,18 +220,31 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         options.add("" + width);
         options.add("-maxiter");
         options.add("" + maxiter);
-        options.add("-flavor");
-        options.add("" + flavor);
+        options.add("-pca");
+        options.add("" + getPca());
         options.add("-mindiscrim");
         options.add("" + getMinDiscrimSetSize());
+        options.add("-minqual");
+        options.add("" + getQualityThreshold());
         return MoccaUtils.toStringArray(options);
     }
 
     @Override
     public String getParameterString() {
-        return "alpha=" + alpha + "; beta=" + beta + "; epsilon=" + epsilon + "; subspace similarity threshold="
-                + subspaceSimilarityThreshold + "; cluster similarity threshold=" + clusterSimilarityThreshold
-                + "; width=" + width + "; falvor=" + flavor + "; maxiter=" + maxiter;
+        return "alpha=" + alpha + ";beta=" + beta + ";epsilon=" + epsilon + ";subspace similarity threshold="
+                + subspaceSimilarityThreshold + ";cluster similarity threshold=" + clusterSimilarityThreshold
+                + ";width=" + width + ";pca=" + getPca() + ";maxiter=" + maxiter + ";minqual=" + getQualityThreshold();
+    }
+
+    String getPca() {
+        if (usePca) {
+            return "y";
+        }
+        return "n";
+    }
+
+    public double getQualityThreshold() {
+        return qualityThreshold;
     }
 
     public double getSubspaceSimilarityThreshold() {
@@ -252,6 +257,10 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     public String globalInfo() {
         return "Monte Carlo Cluster Analysis (MOCCA)";
+    }
+
+    boolean isPcaAssisted() {
+        return usePca;
     }
 
     /*
@@ -298,15 +307,15 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
             // Randomly select discriminating set
             int samples[] = shuffler.next(getDiscrimSetSize());
             Matrix sampleObjects = MatrixUtils.getRowsByIndex(objects, samples);
-            if (flavor == Flavor.chocolate) {
+            if (isPcaAssisted()) {
                 // Align data to least significant principle components
                 // ********************DEBUG************************
-                System.out.println("Original Points");
-                objects.print(8, 4);
+                // System.out.println("Original Points");
+                // objects.print(8, 4);
                 pca = new Pca(sampleObjects);
                 objectsToCluster = pca.rotate(objects);
-                System.out.println("Rotated Points");
-                objectsToCluster.print(8, 4);
+                // System.out.println("Rotated Points");
+                // objectsToCluster.print(8, 4);
             }
             Matrix discrimObjects = MatrixUtils.getRowsByIndex(objectsToCluster, samples);
             // Determine the subspace where the points congregate, if any
@@ -319,6 +328,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
                 // Create cluster object.
                 MoccaCluster newCluster = new MoccaCluster(subspace.getSubspace(), pointIndexes, numCongregatingDims,
                         beta);
+                if (newCluster.getCardinality() > numInstances) {
+                    System.err.println("There are most objects in the clusters than objects!");
+                }
                 // Add cluster if it meets certain criteria
                 add(newCluster);
             }// if
@@ -343,10 +355,6 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     public void setEpsilon(double epsilon) {
         if (epsilon > 0.0 && epsilon < 1.0)
             this.epsilon = epsilon;
-    }
-
-    public void setFlavor(Flavor flavor) {
-        this.flavor = flavor;
     }
 
     public void setMaxiter(int d) {
@@ -383,9 +391,9 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         if (optionString.length() != 0) {
             setWidth(Double.parseDouble(optionString));
         }
-        optionString = Utils.getOption("flavor", options);
+        optionString = Utils.getOption("pca", options);
         if (optionString.length() != 0) {
-            setFlavor(Flavor.valueOf(optionString));
+            setPca(optionString);
         }
         optionString = Utils.getOption("maxiter", options);
         if (optionString.length() != 0) {
@@ -395,6 +403,18 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
         if (optionString.length() != 0) {
             setMinDiscrimSetSize(Integer.parseInt(optionString));
         }
+        optionString = Utils.getOption("minqual", options);
+        if (optionString.length() != 0) {
+            setQualityThreshold(Double.parseDouble(optionString));
+        }
+    }
+
+    void setPca(String val) {
+        usePca = val.equalsIgnoreCase("y");
+    }
+
+    public void setQualityThreshold(double qualityThreshold) {
+        this.qualityThreshold = qualityThreshold;
     }
 
     /*

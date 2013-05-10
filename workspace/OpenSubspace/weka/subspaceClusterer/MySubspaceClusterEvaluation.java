@@ -121,9 +121,7 @@ public class MySubspaceClusterEvaluation {
     public void run() throws Exception {
         // Set up
         setOptions();
-        // Out.writeTrueFile("Lymphonma.true", m_dataSet);
-        // Preprocess the data
-        // Remove class attributes and scale data
+        //TrueFileUtils.writeTrueFile("fcps_engytime.true", m_dataSet);
         Instances data = MoccaUtils.removeClassAttribute(m_dataSet);
         m_preprocessedDataSet = runDataPreprocessor(data);
         // Generate clusters and time how long it takes
@@ -144,6 +142,7 @@ public class MySubspaceClusterEvaluation {
         // Set clusterer name and options
         m_writer.setClusterer(m_clusterer);
         // Write report files
+        m_writer.recordDescriptiveStats(getClusters());
         m_writer.writeResults();
         m_writer.writeClusters(getClusters());
     }
@@ -175,9 +174,7 @@ public class MySubspaceClusterEvaluation {
         // Lazy init the cluster list field
         if (m_clusters == null) {
             m_clusters = new ArrayList<Cluster>();
-            // if (m_clusterer.getSubspaceClustering() != null) {
             m_clusters = (ArrayList<Cluster>) m_clusterer.getSubspaceClustering();
-            // }
         }
         return m_clusters;
     }

@@ -6,8 +6,14 @@ import i9.subspace.base.Cluster;
 
 public class MoccaCluster extends Cluster {
     private static final long serialVersionUID = 1L;
-    public double quality;
+
+    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
+    public static double quality(int cardinality, int numCongregatingDims, double beta) {
+        return cardinality * Math.pow(1.0 / beta, numCongregatingDims);
+    }
+
     int numCongregatingDims;
+    public double quality;
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public MoccaCluster(boolean[] subspace, List<Integer> objects, int numCongregatingDims, double beta) {
@@ -19,12 +25,9 @@ public class MoccaCluster extends Cluster {
         this.quality = quality(getCardinality(), numCongregatingDims, beta);
     }
 
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    @Override
-    public String toStringWeka() {
-        // TODO Auto-generated method stub
-        return String.format("%,4.2f", quality) + " " + (super.toStringWeka());
-    }// end method
+    int getCardinality() {
+        return m_objects.size();
+    }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /*
@@ -38,6 +41,14 @@ public class MoccaCluster extends Cluster {
         smallerCardinality = Math.min(getCardinality(), otherCluster.getCardinality());
         normalizedOverlap = overlap / (double) smallerCardinality;
         return normalizedOverlap;
+    }
+
+    int getNumCongregatingDims() {
+        return numCongregatingDims;
+    }
+
+    public double getQuality() {
+        return quality;
     }
 
     public double getSubspaceSimilarity(MoccaCluster otherCluster) {
@@ -55,16 +66,10 @@ public class MoccaCluster extends Cluster {
         return normalizedOverlap;
     }// method
 
-    int getCardinality() {
-        return m_objects.size();
-    }
-
-    int getNumCongregatingDims() {
-        return numCongregatingDims;
-    }
-
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
-    public static double quality(int cardinality, int numCongregatingDims, double beta) {
-        return cardinality * Math.pow(1.0 / beta, numCongregatingDims);
-    }
+    @Override
+    public String toStringWeka() {
+        // TODO Auto-generated method stub
+        return String.format("%,4.2f", quality) + " " + (super.toStringWeka());
+    }// end method
 }// end class
