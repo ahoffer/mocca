@@ -92,7 +92,6 @@ public class MatrixUtils {
         return sum;
     }// end method
 
-    /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public static Instances toInstances(Instances template, Matrix values) {
         double array[][] = values.getArray();
         weka.core.Instances output = new Instances(template, template.numInstances());
@@ -102,7 +101,7 @@ public class MatrixUtils {
             }// end for
         }// end for
         return output;
-    }// end method
+    }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /*

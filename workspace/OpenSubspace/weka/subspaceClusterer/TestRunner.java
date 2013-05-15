@@ -49,7 +49,7 @@ public class TestRunner {
         // Set platform independent state
         numProcessors = Runtime.getRuntime().availableProcessors();
         // Leave one processor free because I need to be able to use my laptop
-        numProcessors--;
+        // numProcessors--;
         setMetrics();
         // WINDOWS - Set platform dependent state
         setForWindows();
@@ -173,7 +173,7 @@ public class TestRunner {
     }
 
     public static void setForWindows() {
-        outputPath = ResultsWriter.getSeparatedPath("C:\\results_may9");
+        outputPath = ResultsWriter.getSeparatedPath("C:\\results_breast_may11");
         dataPath = ResultsWriter.getSeparatedPath("C:\\Users\\ahoffer\\Documents\\GitHub\\sepc\\data");
         classPath = ".;\\Users\\ahoffer\\Documents\\GitHub\\sepc\\workspace\\OpenSubspace\\lib\\*";
         javaExecutable = "java.exe";

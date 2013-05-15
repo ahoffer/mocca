@@ -1,7 +1,5 @@
 Quotable:
 
-
-
 "Our observation is that PCA was only marginally better, if at all, than a random projection despite its computational intensity"
   -Clustering With EM and K-Means, Alldrin
 
@@ -18,10 +16,10 @@ Due to the lack of publicly available and sufciently complex clustering test sui
   
 Aaron
  -Slightly correlated data will not have a significant advantage
+ -Clusters almost aligned to the axis are almost as easy to detect as cluster exactly aligned to the axis.
  -Hypothesis: Higher dimensional ellipsoids are more globular than lower dimensional ellipsoids
      -Curse of dimensionality starts to affect the subspace as the number of dimensions in the subspace grows
-     -Strong correlations of a few variables easy to detect with ANOVA. No need for cluster analysis
  -Many non-globular clusters are unoriented clusters
  -Test for compactness of discovered clusters versus true clusters.
  -If the width is large enough, even elliptical clusters look globular. Draw a picture of an ellipse and a width comparable in length to the major axis. For comparison, draw a globular cluster. Show that the value of width that detects the globular cluster also detects the elliptical cluster.
- -Random project and PCA are both considered dimensionality reduction techniques. 
+ -Random projection and PCA are both considered dimensionality reduction techniques. 

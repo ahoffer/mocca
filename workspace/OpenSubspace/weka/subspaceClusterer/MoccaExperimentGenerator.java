@@ -9,15 +9,15 @@ public class MoccaExperimentGenerator {
 
     // TODO: Use JSON to read write all experiment parameters.
     static String[] pca = { "y", "n" };
-    static int[] minDiscrimSetSize = { 2, 3, 6, 25 };
+    static int[] minDiscrimSetSize = { 2, 3, 4 };
     static double[] alphas = { 0.01 };
-    static double[] widths = { 0.05, 0.15, 0.25 };
+    static double[] widths = { 0.05, 0.1, 0.2 };
     static double[] qualityThresholds = { 0, 1e4 };
-    static double[] betas = { 0.35, 0.5 };
-    static double[] epsilons = { 0.01 };
+    static double[] betas = { 0.1, 0.2, 0.4 };
+    static double[] epsilons = { 0.001 };
     static double[] subspaceSimilarityThresholds = { -1 };
     static double[] clusterSimilarityThresholds = { 0, 0.1, 0.2 };
-    static int maxiter =200000;
+    static int maxiter = 1000000;
     static String subspaceClutererName = "Mocca";
 
     public static List<List<String>> getArgLines() {

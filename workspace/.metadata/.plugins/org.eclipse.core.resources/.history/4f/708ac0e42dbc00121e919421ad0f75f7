@@ -1,0 +1,35 @@
+package weka.filters;
+
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.subspaceClusterer.MatrixUtils;
+
+public class Rotate extends SimpleBatchFilter {
+    @Override
+    public String getRevision() {
+        // TODO Auto-generated method stub
+        return "A";
+    }
+
+    @Override
+    protected Instances determineOutputFormat(Instances arg0) throws Exception {
+        return getOutputFormat();
+    }
+
+    @Override
+    protected Instances process(Instances arg0) throws Exception {
+       MatrixUtils.toMatrix(input)
+    }
+
+    @Override
+    public String globalInfo() {
+      "return rotate some points in 2D space"
+    }
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+    }
+}
