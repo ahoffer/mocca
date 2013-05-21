@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/OpenSubspace/weka/subspaceClusterer/Run.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="weka.subspaceClusterer.Run"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-w 0.1 -i 0.15 -s -1 -a 0.01 -e 0.01 -b 0.2 -minqual 0 -label 0 -pca y -sc Mocca -path &quot;/temp/&quot; -c last  -M F1Measure:Accuracy:Entropy:Coverage -t &quot;C:\Users\ahoffer\Documents\GitHub\sepc\data\breast.arff&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="OpenSubspace"/>
+</launchConfiguration>

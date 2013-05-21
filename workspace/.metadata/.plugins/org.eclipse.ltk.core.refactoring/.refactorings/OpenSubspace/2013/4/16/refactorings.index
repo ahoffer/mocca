@@ -1,23 +1,2 @@
-1365953599056	Extract method 'formatPath'
-1365953631816	Introduce parameter for 'formatPath'
-1365954115449	Rename method 'formatPath'
-1365971811796	Delete element
-1365971821765	Delete elements
-1365971829723	Delete element
-1366129732505	Rename field 'numDims'
-1366129774023	Rename method 'getNumDims'
-1366129876260	Rename local variable 'numDims'
-1366130087676	Rename method 'getNumFullspaceDims'
-1366130280148	Rename field 'numDimsFullspace'
-1366130332509	Rename method 'getNumDimsFullspace'
-1366134862933	Infer generic type arguments
-1366143704452	Rename local variable 'aLine'
-1366175408603	Rename type 'MoccaBuilder'
-1366254733830	Delete element
-1366310065216	Extract method 'setDryrun'
-1366310130621	Rename method 'setDryrun'
-1366310246726	Extract method 'waitForAll'
-1366310343730	Rename type 'MoccaExperimentBuilder'
-1366310443832	Extract method 'setDataSets'
-1366310463295	Extract method 'setForWindows'
-1366310497043	Extract method 'setForLinuxLab'
+1365975344807	Delete element
+1365975365000	Delete elements

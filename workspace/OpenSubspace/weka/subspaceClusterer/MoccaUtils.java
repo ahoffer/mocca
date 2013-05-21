@@ -2,8 +2,6 @@ package weka.subspaceClusterer;
 
 import i9.subspace.base.Cluster;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +13,10 @@ import weka.filters.unsupervised.attribute.Remove;
 public class MoccaUtils {
     // Pick a small values that means zero.
     public static double epsilon = 1E-8;
+
+    public static boolean isZero(double d) {
+        return Math.abs(d) < epsilon;
+    }
 
     public static void backspace(StringBuffer sb) {
         sb.deleteCharAt(sb.length() - 1);
@@ -226,13 +228,6 @@ public class MoccaUtils {
         }// for
         return difference;
     }// method
-
-    public static void testFileReadable(String filename) {
-        if (!Files.isReadable(Paths.get(filename))) {
-            System.err.printf("File %s is not readable.\n", filename);
-            System.exit(-5);
-        }
-    }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     /*

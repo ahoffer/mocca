@@ -6,11 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Scanner;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 public class Consolidator {
     public static void main(String[] args) throws IOException {
@@ -18,18 +19,16 @@ public class Consolidator {
     }
 
     static void consolidate(String path, String consolidatedFilename) throws IOException {
-        DirectoryStream<Path> stream;
+        File dir = new File(path);
+        IOFileFilter fileFilter = new WildcardFileFilter("RSLT*");
+        Iterator<File> iterator = FileUtils.iterateFiles(dir, fileFilter, null);
         Scanner scanner;
-        PrintWriter writer;
-        // Create output file
-        // fname = ResultsWriter.separatedPath(path) + name;
-        writer = new PrintWriter(new BufferedWriter(new FileWriter(consolidatedFilename)));
-        // Grab all result files
-        stream = Files.newDirectoryStream(Paths.get(path), "RSLT*.csv");
+        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(consolidatedFilename)));
+        // stream = Files.newDirectoryStream(Paths.get(path), "RSLT*.csv");
         boolean headerIsWritten = false;
         // Iterate over result files
-        for (Path aPath : stream) {
-            File file = aPath.toFile();
+        while (iterator.hasNext()) {
+            File file = iterator.next();
             FileInputStream fis = new FileInputStream(file);
             scanner = new Scanner(fis);
             // Each file should have exactly two lines: a header and values. Grab them.
@@ -39,12 +38,12 @@ public class Consolidator {
                 writer.println(header);
                 headerIsWritten = true;
             }// if
-            // Write data
+             // Write data
             writer.println(result);
             // Shutdown IO
             scanner.close();
         }// for
-        // Shutdown IO
+         // Shutdown IO
         writer.close();
     }// method
 }

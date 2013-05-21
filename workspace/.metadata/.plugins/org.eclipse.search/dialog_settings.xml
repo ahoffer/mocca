@@ -2,8 +2,6 @@
 <section name="Workbench">
 	<section name="">
 		<item value="1000" key="org.eclipse.search.resultpage.limit"/>
-		<item value="TRUE" key="org.eclipse.jdt.search.resultpage.limit_enabled"/>
-		<item value="1000" key="org.eclipse.jdt.search.resultpage.limit"/>
 	</section>
 	<section name="org.eclipse.jdt.ui.JavaSearchResultPage">
 		<item value="TRUE" key="org.eclipse.jdt.search.resultpage.limit_enabled"/>
@@ -49,7 +47,7 @@
 		<item value="12" key="HISTORY_SIZE"/>
 		<section name="HISTORY11">
 			<item value="false" key="isRegExSearch"/>
-			<item value="pointsToCluster rows" key="textPattern"/>
+			<item value="constraint violation" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
@@ -59,13 +57,15 @@
 			</list>
 		</section>
 		<section name="EXTENSIONS">
-			<item value="*" key="2"/>
-			<item value="Evalutor.java" key="1"/>
-			<item value="*.java" key="0"/>
+			<item value="Evalutor.java" key="3"/>
+			<item value="*.java" key="2"/>
+			<item value="*.java, *.class" key="1"/>
+			<item value="*.class, *.java" key="0"/>
+			<item value="*" key="4"/>
 		</section>
 		<section name="HISTORY2">
 			<item value="false" key="isRegExSearch"/>
-			<item value="rotation set size" key="textPattern"/>
+			<item value="clusterquality" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
@@ -76,7 +76,7 @@
 		</section>
 		<section name="HISTORY3">
 			<item value="false" key="isRegExSearch"/>
-			<item value="objectSim" key="textPattern"/>
+			<item value="Not a valid subspace measure clas" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
@@ -87,18 +87,19 @@
 		</section>
 		<section name="HISTORY0">
 			<item value="false" key="isRegExSearch"/>
-			<item value="Flavor=" key="textPattern"/>
+			<item value="clusterin" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
+				<item value="*.class"/>
 			</list>
 			<list key="workingSets">
 			</list>
 		</section>
 		<section name="HISTORY10">
 			<item value="false" key="isRegExSearch"/>
-			<item value="System.err" key="textPattern"/>
+			<item value="debug here" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
@@ -109,38 +110,17 @@
 		</section>
 		<section name="HISTORY1">
 			<item value="false" key="isRegExSearch"/>
-			<item value="falvor" key="textPattern"/>
+			<item value="Accuracy" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
+				<item value="*.class"/>
 				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
 		</section>
 		<section name="HISTORY9">
-			<item value="false" key="isRegExSearch"/>
-			<item value="trials" key="textPattern"/>
-			<item value="0" key="scope"/>
-			<item value="true" key="ignoreCase"/>
-			<list key="fileNamePatterns">
-				<item value="*.java"/>
-			</list>
-			<list key="workingSets">
-			</list>
-		</section>
-		<section name="HISTORY8">
-			<item value="false" key="isRegExSearch"/>
-			<item value="1000" key="textPattern"/>
-			<item value="0" key="scope"/>
-			<item value="true" key="ignoreCase"/>
-			<list key="fileNamePatterns">
-				<item value="*.java"/>
-			</list>
-			<list key="workingSets">
-			</list>
-		</section>
-		<section name="HISTORY5">
 			<item value="false" key="isRegExSearch"/>
 			<item value="instanceO" key="textPattern"/>
 			<item value="0" key="scope"/>
@@ -151,7 +131,7 @@
 			<list key="workingSets">
 			</list>
 		</section>
-		<section name="HISTORY4">
+		<section name="HISTORY8">
 			<item value="false" key="isRegExSearch"/>
 			<item value="instanceSim" key="textPattern"/>
 			<item value="0" key="scope"/>
@@ -162,9 +142,31 @@
 			<list key="workingSets">
 			</list>
 		</section>
+		<section name="HISTORY5">
+			<item value="false" key="isRegExSearch"/>
+			<item value="falvor" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value="true" key="ignoreCase"/>
+			<list key="fileNamePatterns">
+				<item value="*.java"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY4">
+			<item value="false" key="isRegExSearch"/>
+			<item value="Flavor=" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value="true" key="ignoreCase"/>
+			<list key="fileNamePatterns">
+				<item value="*.java"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
 		<section name="HISTORY7">
 			<item value="false" key="isRegExSearch"/>
-			<item value="constraint violation" key="textPattern"/>
+			<item value="objectSim" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">
@@ -175,7 +177,7 @@
 		</section>
 		<section name="HISTORY6">
 			<item value="false" key="isRegExSearch"/>
-			<item value="debug here" key="textPattern"/>
+			<item value="rotation set size" key="textPattern"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="ignoreCase"/>
 			<list key="fileNamePatterns">

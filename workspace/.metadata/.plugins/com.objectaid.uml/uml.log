@@ -1,4 +1,4 @@
-2013-05-15 20:12:05.960 [Worker-2] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Diagram Add-On 1.1.x - EVAL until 2013-05-23
-2013-05-15 20:12:05.975 [Worker-2] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Sequence Diagram 1.1.x - EVAL until 2013-05-23
-2013-05-15 20:12:07.083 [Worker-5] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[ucls]: com.objectaid.uml.cls.model.ClassDiagramFactory@24eecb5c
-2013-05-15 20:12:07.083 [Worker-5] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[useq]: com.objectaid.uml.seq.model.SequenceDiagramFactory@672250e1
+2013-05-21 09:31:55.982 [Worker-3] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Diagram Add-On 1.1.x - EVAL until 2013-05-23
+2013-05-21 09:31:55.992 [Worker-3] INFO    com.objectaid.uml.license.LicenseManager initialize: found license Sequence Diagram 1.1.x - EVAL until 2013-05-23
+2013-05-21 09:31:57.241 [Worker-2] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[ucls]: com.objectaid.uml.cls.model.ClassDiagramFactory@3c1e8020
+2013-05-21 09:31:57.278 [Worker-2] INFO    com.objectaid.uml.model.manage.DiagramManager getFactories: com.objectaid.uml.diagramFactories[useq]: com.objectaid.uml.seq.model.SequenceDiagramFactory@2a78475f

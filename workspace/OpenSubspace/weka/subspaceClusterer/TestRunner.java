@@ -1,10 +1,10 @@
 package weka.subspaceClusterer;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
 
 public class TestRunner {
     static String dataSetExt = ".arff";
@@ -37,7 +37,6 @@ public class TestRunner {
     static Process forkProcess(List<String> commands) throws IOException {
         if (procBuilder == null) {
             procBuilder = new ProcessBuilder();
-            procBuilder.inheritIO();
         }
         procBuilder.command(commands);
         Process proc = procBuilder.start();
@@ -97,11 +96,7 @@ public class TestRunner {
         printNumRuns(argLines);
         experimentLabel = 1;
         for (String dataFname : dataSets) {
-            Path datafile = Paths.get(dataPath, dataFname);
-            // Remvoed this check when I externalized the file extensions.
-            // I did that because I started working with .true files as well as .arff files.
-            // if (Files.isReadable(datafile)) {
-            String datafileName = datafile.toString();
+            String datafileName = FilenameUtils.concat(dataPath, dataFname);
             for (List<String> orginalArgLine : argLines) {
                 args = new ArrayList<String>(orginalArgLine);
                 // Build final command line by prepending/appending as necessary.

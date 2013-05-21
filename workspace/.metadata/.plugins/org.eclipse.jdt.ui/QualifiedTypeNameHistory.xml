@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="Jama.EigenvalueDecomposition"/>
-<fullyQualifiedTypeName name="java.util.HashSet"/>
-<fullyQualifiedTypeName name="java.util.Random"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.Shuffler"/>
-<fullyQualifiedTypeName name="java.util.Collections"/>
-<fullyQualifiedTypeName name="java.util.Comparator"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaSubspace"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Callable"/>
 <fullyQualifiedTypeName name="java.util.concurrent.ExecutorService"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
@@ -53,11 +46,18 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.Mocca"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.TrueFileUtils"/>
-<fullyQualifiedTypeName name="weka.subspaceClusterer.MatrixUtils"/>
 <fullyQualifiedTypeName name="Jama.Matrix"/>
 <fullyQualifiedTypeName name="weka.core.converters.ArffSaver"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="weka.core.Capabilities"/>
 <fullyQualifiedTypeName name="weka.core.Capabilities.Capability"/>
+<fullyQualifiedTypeName name="org.apache.commons.io.FileUtils"/>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="org.apache.commons.io.filefilter.IOFileFilter"/>
+<fullyQualifiedTypeName name="org.apache.commons.io.filefilter.WildcardFileFilter"/>
+<fullyQualifiedTypeName name="org.apache.commons.io.FilenameUtils"/>
+<fullyQualifiedTypeName name="weka.clusterquality.Accuracy"/>
+<fullyQualifiedTypeName name="weka.clusterquality.ClusterQualityMeasure"/>
+<fullyQualifiedTypeName name="weka.subspaceClusterer.MatrixUtils"/>
 <fullyQualifiedTypeName name="weka.subspaceClusterer.MoccaUtils"/>
 </qualifiedTypeNameHistroy>

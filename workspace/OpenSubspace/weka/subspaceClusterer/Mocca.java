@@ -195,7 +195,11 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
     public int getNumTrials() {
-        return Math.min(getEstimatedNumTrials(), getMaxiter());
+        if (MoccaUtils.isZero(getMaxiter())) {
+            return getEstimatedNumTrials();
+        } else {
+            return Math.min(getEstimatedNumTrials(), getMaxiter());
+        }
     }
 
     /*-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----*/
@@ -287,8 +291,8 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
 
     public void printHeartBeat(int trialNum) {
         // DEBUG PRINT
-        if (trialNum % 10000 == 0 && trialNum > 0) {
-            System.out.println(String.format("%,d", trialNum));
+        if (trialNum % 50000 == 0 && trialNum > 0) {
+            System.out.println(String.format("%,d of %,d", trialNum, getNumTrials()));
         }
     }
 
@@ -358,8 +362,7 @@ public class Mocca extends SubspaceClusterer implements OptionHandler {
     }
 
     public void setMaxiter(int d) {
-        if (d > 0)
-            this.maxiter = d;
+        this.maxiter = d;
     }
 
     public void setMinDiscrimSetSize(int minDiscrimSetSize) {
