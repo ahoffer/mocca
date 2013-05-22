@@ -1,25 +1,44 @@
 #!/bin/bash
-#First argument is the highest number of the job files
+#First argument is the number jobs
+#Second argument is the slot limt
+
 LAST=$(($1 - 1))
-STOP=-1
-STEP=99
+START=0
+SLOTLIMIT=$2
+STOP=$((SLOTLIMIT-1))
+RUNNING=0
+JOB="/home/hoffer/donothing"
 
-while [[ "$STOP" -lt "$LAST" ]]
+#DEBUG
+echo "Before loop $JOB $START $STOP"
+
+while [ "$STOP" -lt "$LAST" ] 
 do
-  OUTPUT=$(qstat -u hoffer)
-  if [[ -z "$OUTPUT" ]]
-  then
-      START=$(($STOP + 1))
-      STOP=$(($START + $STEP))
-      if [[ "$STOP" -gt "$LAST" ]]
-      then
-        STOP=$LAST
-      fi
-      echo "submitting $START - $STOP"
-      ~/runsome $START $STOP
+  #DEBUG
+  echo "Top of loop start=$START, stop=$STOP, num running=$RUNNING"
 
-  else ./
-      echo "sleeping..."
-      sleep 5
+  if [ $RUNNING -lt "$SLOTLIMIT" ]
+  then
+    STOP=$((START+1))
+    echo "  Submitting $START $STOP"
+    $JOB $START $STOP
+    START=$STOP
+  else 
+    echo "sleeping..."
+    sleep 2
   fi
+  OUTPUT=$(qstat -u hoffer)
+  LINES=$($OUTPUT | wc -l)
+  
+  if [ $LINES -eq 0 ] 
+  then 
+    RUNNING=0
+  else
+    RUNNING= RUNNING=$((LINES-6))
+  fi
+
+  #DEBUG
+  echo "Lines $LINES, Running $RUNNING"
+  
+  
 done
