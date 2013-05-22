@@ -1,0 +1,2 @@
+ qselect -u hoffer | cut -d. -f1 | xargs qdel
+

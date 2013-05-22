@@ -1,0 +1,4 @@
+rm -f $RCAC_SCRATCH/jobs/*
+rm -f $RCAC_SCRATCH/results/*
+rm -f $RCAC_SCRATCH/out/*
+

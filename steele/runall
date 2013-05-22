@@ -1,0 +1,25 @@
+#!/bin/bash
+#First argument is the highest number of the job files
+LAST=$(($1 - 1))
+STOP=-1
+STEP=99
+
+while [[ "$STOP" -lt "$LAST" ]]
+do
+  OUTPUT=$(qstat -u hoffer)
+  if [[ -z "$OUTPUT" ]]
+  then
+      START=$(($STOP + 1))
+      STOP=$(($START + $STEP))
+      if [[ "$STOP" -gt "$LAST" ]]
+      then
+        STOP=$LAST
+      fi
+      echo "submitting $START - $STOP"
+      ~/runsome $START $STOP
+
+  else ./
+      echo "sleeping..."
+      sleep 5
+  fi
+done

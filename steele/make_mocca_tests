@@ -1,0 +1,83 @@
+#!/bin/bash
+
+#Set the name of the algorithm's Java class
+ALGO=Mocca
+
+#Name of the dataset
+DATASET=breast
+
+#JVM arguments
+ARGS=""
+
+#Main class
+MAIN="weka.subspaceClusterer.Run"
+
+#Directories
+CPATH=$RCAC_SCRATCH/oss
+JOBS=$RCAC_SCRATCH/jobs
+RESULTDIR=$RCAC_SCRATCH/results
+DATAFILES=$RCAC_SCRATCH/data/*.arff
+
+#MOCCA algorithm parameters
+alpha=0.05
+exp_label=0
+
+#Create the scripts that will run the jobs. 
+#Each jobfile will is one run in the experiement. 
+#Each loop below varies one parameter of the experiment.
+
+for pca in y n
+do 
+for minDiscrimSetSize in 2 3 5 
+#for minDiscrimSetSize in 2 
+do
+for width in 0.01 0.05 0.1 0.5
+#for width in 0.05 
+do
+for epsilon in 0.005 0.01 
+#for epsilon in 0.1 0.2
+do
+for qualityThreshold in 0 1e3 
+#for qualityThreshold in 0
+do
+for beta in 0.25 0.4
+#for beta in 0.1 
+do
+for subspaceSimilarityThreshold in -1 0.1 0.25 0.5 0.8 
+#for subspaceSimilarityThreshold in -1
+do
+for clusterSimilarityThreshold in 0 0.05 0.1 0.15 0.25 0.8 1.0
+#for clusterSimilarityThreshold in  0.1 
+do
+for file in $DATAFILES
+do
+
+    JOBFILE=$JOBS/$exp_label.sh
+
+    #Load java into environment
+    echo "module load java" >> $JOBFILE
+
+    #Set up the executable command
+    CMD="java $ARGS -cp \"$CPATH/*\" $MAIN -sc $ALGO -label $exp_label -a $alpha -b $beta -e $epsilon -w $width -pca $pca -minqual $qualityThreshold -i $clusterSimilarityThreshold -s $subspaceSimilarityThreshold -path $RESULTDIR -t $file -M F1Measure:Accuracy:Entropy:Coverage -c last"
+
+    #Run clustering algo
+    echo $CMD >> $JOBFILE
+    
+    #Make the job executable
+    chmod u+x $JOBFILE 
+
+    #Update the label
+    exp_label=$((exp_label + 1))
+
+done
+done
+done
+done
+done
+done
+done 
+done
+done
+
+echo "Created $((exp_label)) files.  PBS_ARRAYID 0 - $((exp_label-1))."
+

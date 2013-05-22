@@ -1,0 +1,2 @@
+#!/bin/bash
+$RCAC_SCRATCH/jobs/$PBS_ARRAYID.sh
