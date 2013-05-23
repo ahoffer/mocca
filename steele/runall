@@ -2,43 +2,36 @@
 #First argument is the number jobs
 #Second argument is the slot limt
 
-LAST=$(($1 - 1))
-START=0
-SLOTLIMIT=$2
-STOP=$((SLOTLIMIT-1))
-RUNNING=0
-JOB="/home/hoffer/donothing"
+NEXTJOB=$1
+LAST=$2
+SLOTLIMIT=$3
 
-#DEBUG
-echo "Before loop $JOB $START $STOP"
+JOB="/home/hoffer/runone"
+TOTAL=0
+SCHLAFEN=6
+Q=standby
 
-while [ "$STOP" -lt "$LAST" ] 
+#I am missing jobs because they take a while to show up.
+#first, submit slotlimit -1, then wait 20 seconds or so.
+
+while [ $NEXTJOB -le $LAST ] 
 do
   #DEBUG
-  echo "Top of loop start=$START, stop=$STOP, num running=$RUNNING"
+  #echo "Top of loop start=$START, stop=$STOP, num running=$RUNNING"
 
-  if [ $RUNNING -lt "$SLOTLIMIT" ]
+  if [ $TOTAL -lt "$SLOTLIMIT" ]
   then
-    STOP=$((START+1))
-    echo "  Submitting $START $STOP"
-    $JOB $START $STOP
-    START=$STOP
+    echo "Submitting $NEXTJOB"
+    $JOB $NEXTJOB
+    NEXTJOB=$((NEXTJOB+1))
   else 
     echo "sleeping..."
-    sleep 2
+    sleep $SCHLAFEN
   fi
-  OUTPUT=$(qstat -u hoffer)
-  LINES=$($OUTPUT | wc -l)
   
-  if [ $LINES -eq 0 ] 
-  then 
-    RUNNING=0
-  else
-    RUNNING= RUNNING=$((LINES-6))
-  fi
-
+  TOTAL=$(qstat -u hoffer $Q | grep -c hoffer)
+  
   #DEBUG
-  echo "Lines $LINES, Running $RUNNING"
-  
-  
+  echo "Num in process $TOTAL, Next job num $NEXTJOB "
+
 done

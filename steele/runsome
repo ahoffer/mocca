@@ -1,9 +1,0 @@
-#!/bin/bash
-#PBS -l walltime=0:30:00
-#PBS -l nodes=1:ppn=1
-#PBS -q tg_workq
-
-for LABEL in $(seq $1 $2)
-do
-  qsub $RCAC_SCRATCH/jobs/$LABEL.sh -A TG-AST080043 -e $RCAC_SCRATCH/out -j eo
-done

@@ -1,2 +1,10 @@
 #!/bin/bash
-$RCAC_SCRATCH/jobs/$PBS_ARRAYID.sh
+
+if [ -z $2 ] 
+then 
+  Q=standby
+else 
+    Q=$2
+fi
+
+qsub $RCAC_SCRATCH/jobs/$1.sh -A TG-AST080043 -e $RCAC_SCRATCH/out -j eo  -l nodes=1:ppn=1  -l walltime=0:030:00 -q $Q
