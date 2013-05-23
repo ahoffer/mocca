@@ -1,0 +1,11 @@
+#!/bin/bash
+ordinal=0
+for line in $(cat $1)
+do
+  while [[ $line -ne $ordinal ]]
+  do 
+    echo $ordinal
+    ordinal=$((ordinal+1)) 
+  done
+  ordinal=$((ordinal+1)) 
+done

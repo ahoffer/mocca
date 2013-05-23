@@ -1,0 +1,10 @@
+#!/bin/bash
+#First argument is first task to run
+#Second argument is last task to run
+#Third argument is queue name
+
+for LABEL in $(seq $1 $2)
+do
+  /home/hoffer/runone $LABEL $3
+  sleep 0.1
+done

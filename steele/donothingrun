@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -z $1 ] 
+then 
+  Q=standby
+else 
+  Q=$1
+fi
+
+qsub /home/hoffer/donothing -A TG-AST080043 -q $Q

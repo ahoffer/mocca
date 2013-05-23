@@ -1,37 +1,30 @@
 #!/bin/bash
-#First argument is the number jobs
-#Second argument is the slot limt
+#First argument is the nest job to run
+#Second argument is the last jobb to run
+#Third argument is limit on the number of concurrent jobs
+#Fourth arguemnt is queue name
+#Fifth argument is the name of the script to run. Use absolute path.
 
 NEXTJOB=$1
 LAST=$2
-SLOTLIMIT=$3
+LIMIT=$3
+Q=$4
+JOB=$5
+SCHLAFEN=10
 
-JOB="/home/hoffer/runone"
-TOTAL=0
-SCHLAFEN=6
-Q=standby
-
-#I am missing jobs because they take a while to show up.
-#first, submit slotlimit -1, then wait 20 seconds or so.
-
-while [ $NEXTJOB -le $LAST ] 
+while [[ $NEXTJOB -le $LAST ]]
 do
-  #DEBUG
-  #echo "Top of loop start=$START, stop=$STOP, num running=$RUNNING"
-
-  if [ $TOTAL -lt "$SLOTLIMIT" ]
-  then
-    echo "Submitting $NEXTJOB"
-    $JOB $NEXTJOB
-    NEXTJOB=$((NEXTJOB+1))
-  else 
-    echo "sleeping..."
-    sleep $SCHLAFEN
-  fi
-  
   TOTAL=$(qstat -u hoffer $Q | grep -c hoffer)
-  
-  #DEBUG
-  echo "Num in process $TOTAL, Next job num $NEXTJOB "
-
+  SLOT=$((LIMIT-TOTAL))
+  while [[ $SLOT -gt 0 && $NEXTJOB -le $LAST ]]
+  do
+    echo "Submitting $NEXTJOB"
+    $JOB $NEXTJOB $Q
+    NEXTJOB=$((NEXTJOB+1))
+    SLOT=$((SLOT-1))
+    sleep 0.1
+  done   
+  echo "sleeping..."
+  sleep $SCHLAFEN
 done
+  echo "All jobs submitted to $Q"
