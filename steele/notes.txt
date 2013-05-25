@@ -5,9 +5,13 @@ tg_workq = 20000 -> 26879
 nohup ./runall 14834 19999 999 standby /home/hoffer/runone &
 ./runsome 20002 26879 tg_workq
 
-TEST IT
+#TEST IT
 ./runall 2 10 4 tg_debug /home/hoffer/donothingrun
 
+#Finish it
 
-Which jobs produced result files
+#Which jobs produced result files
  ls scratch/results | grep RSLT | egrep -o [0-9]+ | sed 's/0*//' > resultnumbers
+ 
+#Get number of results 
+ls scratch/results | grep -c RSLT

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SUBMIT ALL TO STANDBY
+for job in $(cat $1)
+do
+  /home/hoffer/runone $job standby &
+  sleep 0.25
+done
+
+
+#SUBMIT ALL TO TG_WORKQ
+# for job in $(cat $1)
+# do
+  # /home/hoffer/runone $job tg_workq &
+  # sleep 0.25
+# done
