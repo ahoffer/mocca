@@ -21,6 +21,7 @@ DATAFILES=$RCAC_SCRATCH/data/*.arff
 #MOCCA algorithm parameters
 alpha=0.05
 exp_label=0
+maxiter=2000000
 
 #Create the scripts that will run the jobs. 
 #Each jobfile will is one run in the experiement. 
@@ -28,26 +29,19 @@ exp_label=0
 
 for pca in y n
 do 
-for minDiscrimSetSize in 2 3 5 
-#for minDiscrimSetSize in 2 
+for minDiscrimSetSize in 2 3 4
 do
-for width in 0.01 0.05 0.1 0.5
-#for width in 0.05 
+for width in 0.0005 0.001 0.01 0.08
 do
-for epsilon in 0.005 0.01 
-#for epsilon in 0.1 0.2
+for epsilon in 0.005 
 do
-for qualityThreshold in 0 1e3 
-#for qualityThreshold in 0
+for qualityThreshold in 0
 do
-for beta in 0.25 0.4
-#for beta in 0.1 
+for beta in 0.25 0.35
 do
-for subspaceSimilarityThreshold in -1 0.1 0.25 0.5 0.8 
-#for subspaceSimilarityThreshold in -1
+for subspaceSimilarityThreshold in -1
 do
-for clusterSimilarityThreshold in 0 0.05 0.1 0.15 0.25 0.8 1.0
-#for clusterSimilarityThreshold in  0.1 
+for clusterSimilarityThreshold in 0 0.15 
 do
 for file in $DATAFILES
 do
@@ -58,7 +52,7 @@ do
     echo "module load java" >> $JOBFILE
 
     #Set up the executable command
-    CMD="java $ARGS -cp \"$CPATH/*\" $MAIN -sc $ALGO -label $exp_label -a $alpha -b $beta -e $epsilon -w $width -pca $pca -minqual $qualityThreshold -i $clusterSimilarityThreshold -s $subspaceSimilarityThreshold -path $RESULTDIR -t $file -M F1Measure:Accuracy:Entropy:Coverage -c last"
+    CMD="java $ARGS -cp \"$CPATH/*\" $MAIN -sc $ALGO -label $exp_label -a $alpha -maxiter $maxiter -pca $pca -mindiscrim $minDiscrimSetSize -w $width -e $epsilon -minqual $qualityThreshold -b $beta -s $subspaceSimilarityThreshold -i $clusterSimilarityThreshold -t $file -path $RESULTDIR -M F1Measure:Accuracy:Entropy:Coverage -c last"
 
     #Run clustering algo
     echo $CMD >> $JOBFILE
