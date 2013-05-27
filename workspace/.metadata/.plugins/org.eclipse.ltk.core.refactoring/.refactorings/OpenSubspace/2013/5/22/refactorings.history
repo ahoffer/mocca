@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Inline local variable &apos;weka.subspaceClusterer.Mocca.add().other&apos; in &apos;weka.subspaceClusterer.Mocca.add()&apos;&#x0D;&#x0A;- Original project: &apos;OpenSubspace&apos;&#x0D;&#x0A;- Original element: &apos;weka.subspaceClusterer.Mocca.add().other&apos;" description="Inline local variable &apos;other&apos;" id="org.eclipse.jdt.ui.inline.temp" input="/&lt;weka.subspaceClusterer{Mocca.java" selection="1742 5" stamp="1369544481622" version="1.0"/>
+</session>

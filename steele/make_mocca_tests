@@ -21,7 +21,7 @@ DATAFILES=$RCAC_SCRATCH/data/*.arff
 #MOCCA algorithm parameters
 alpha=0.05
 exp_label=0
-maxiter=2000000
+maxiter=2500000
 
 #Create the scripts that will run the jobs. 
 #Each jobfile will is one run in the experiement. 
@@ -29,7 +29,7 @@ maxiter=2000000
 
 for pca in y n
 do 
-for minDiscrimSetSize in 2 3 4
+for minDiscrimSetSize in 2 3 4 5
 do
 for width in 0.0005 0.001 0.01 0.08
 do

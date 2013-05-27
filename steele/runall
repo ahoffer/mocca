@@ -1,5 +1,5 @@
 #!/bin/bash
-#First argument is the nest job to run
+#First argument is the next job to run
 #Second argument is the last jobb to run
 #Third argument is limit on the number of concurrent jobs
 #Fourth arguemnt is queue name

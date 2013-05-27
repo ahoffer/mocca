@@ -1,17 +1,21 @@
-Jobs = 26880
-standby = 0-> 19999 (pick up at 14834)
-tg_workq = 20000 -> 26879
 
+#RUN IT. Run all tests on the standby queue.
 nohup ./runall 14834 19999 999 standby /home/hoffer/runone &
+
+#RUN SOME. Run a range of tests on the tg_workq queue.
 ./runsome 20002 26879 tg_workq
 
-#TEST IT
-./runall 2 10 4 tg_debug /home/hoffer/donothingrun
-
-#Finish it
-
-#Which jobs produced result files
- ls scratch/results | grep RSLT | egrep -o [0-9]+ | sed 's/0*//' > resultnumbers
- 
 #Get number of results 
 ls scratch/results | grep -c RSLT
+
+#Find which jobs produced result files
+ ls scratch/results | grep RSLT | egrep -o [0-9]+ | sed 's/0*//' > resultnumbers
+ 
+#Compile results
+module load java
+java -cp "scratch/oss/*" weka.subspaceClusterer.Consolidator "scratch/results" "may27_results.csv"
+
+
+-----------------------------------------------------------------
+#TEST IT
+./runall 2 10 4 tg_debug /home/hoffer/donothingrun
